@@ -11,7 +11,7 @@ import FirebaseStorage
 
 protocol FirebaseStorageFoundation {
     var storage: Storage { get set }
-    func postUIImage(path: String, imageName: String, _ image: UIImage?) async throws -> String
+    func postUIImage(path: String, imageName: String, image: UIImage?) async throws -> String
     func postData(path: String, data: Data) async throws -> String
     func postPhotosPickerItem(path: String, imageName: String, item: PhotosPickerItem) async throws -> String
     func postPhotosPickerItems(path: String, imageName: String, items: [PhotosPickerItem]) async throws -> [String]
