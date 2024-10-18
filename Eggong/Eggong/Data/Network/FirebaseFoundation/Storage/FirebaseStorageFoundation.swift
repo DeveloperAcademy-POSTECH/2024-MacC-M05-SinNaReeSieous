@@ -13,12 +13,13 @@ protocol FirebaseStorageFoundation {
     var storage: Storage { get set }
     func postUIImage(path: String, imageName: String, _ image: UIImage?) async throws -> String
     func postData(path: String, data: Data) async throws -> String
-    func postPhotosPickerItem(path: String, imageName: String, _ item: PhotosPickerItem) async throws -> String
+    func postPhotosPickerItem(path: String, imageName: String, item: PhotosPickerItem) async throws -> String
+    func postPhotosPickerItems(path: String, imageName: String, items: [PhotosPickerItem]) async throws -> [String]
 }
 
 extension FirebaseStorageFoundation {
     
-    /// UIImagePicker를 사용할 때 사용하기 편하게 이미지를 업로드 할 수 있는
+    /// UIImagePicker를 사용할 때 사용하기 편하게 이미지를 업로드 할 수 있다.
     func postUIImage(path: String, imageName: String, image: UIImage?) async throws -> String {
         guard let image else {
             throw FirebaseError.dataNotFound
