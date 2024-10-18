@@ -17,6 +17,8 @@ protocol FirebaseStorageFoundation {
 }
 
 extension FirebaseStorageFoundation {
+    
+    /// UIImagePicker를 사용할 때 사용하기 편하게 이미지를 업로드 할 수 있는
     func postUIImage(path: String, imageName: String, _ image: UIImage?) async throws -> String {
         guard let image else {
             throw FirebaseError.dataNotFound
@@ -29,6 +31,7 @@ extension FirebaseStorageFoundation {
         return try await postData(path: imagePath, data: imageData)
     }
     
+    /// SwiftUI용으로 새로 나온 PhotosPicker 를 사용할 때 편하게 이미지를 업로드 할 수 있는 함수
     func postPhotosPickerItem(path: String, imageName: String, _ item: PhotosPickerItem) async throws -> String {
         guard let data = try? await item.loadTransferable(type: Data.self) else {
             throw FirebaseError.encodingFailed
@@ -38,6 +41,7 @@ extension FirebaseStorageFoundation {
         return try await postData(path: imagePath, data: data)
     }
     
+    /// 범용적으로 Data 타입의 값을 업로드 할 수 있는 함수, 다른 메서드를 위한 기초 함수. 다운로드 URL을 반환한다.
     func postData(path: String, data: Data) async throws -> String {
         let dataRef = storage.reference(withPath: path)
         
@@ -51,6 +55,7 @@ extension FirebaseStorageFoundation {
         }
     }
     
+    /// 다운로드 URL을 String 타입으로 반환받는 메서드
     func getStorageURLString(path: String?) async throws -> String {
         guard let path else {
             throw FirebaseError.invalidPath

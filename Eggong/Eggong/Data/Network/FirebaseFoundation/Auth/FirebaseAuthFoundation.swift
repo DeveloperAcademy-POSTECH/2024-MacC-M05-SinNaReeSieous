@@ -18,12 +18,14 @@ protocol FirebaseAuthFoundation: AnyObject {
 
 extension FirebaseAuthFoundation {
     
+    /// 애플 인증을 위해 request.nonce에 넣어줘야하는 랜덤 암호문 반환
     func updateHashNonce() -> String {
         let nonce = randomNonceString()
         self.currentNonce = nonce
         return sha256(nonce)
     }
     
+    /// 애플에서 보내준 인증 정보로 Firebase에 로그인
     func loginWithFirebase(_ authorization: ASAuthorization) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             guard let nonce = self.currentNonce else {
@@ -56,6 +58,7 @@ extension FirebaseAuthFoundation {
         }
     }
     
+    // 암호문 생성을 위해 랜덤한 문자열을 생성
     private func randomNonceString(length: Int = 32) -> String {
         precondition(length > 0)
         var randomBytes = [UInt8](repeating: 0, count: length)
@@ -76,6 +79,7 @@ extension FirebaseAuthFoundation {
         return String(nonce)
     }
     
+    /// 랜덤 문자열을 특정 방식(SAH256)으로 암호화
     private func sha256(_ input: String) -> String {
         let inputData = Data(input.utf8)
         let hashedData = SHA256.hash(data: inputData)
