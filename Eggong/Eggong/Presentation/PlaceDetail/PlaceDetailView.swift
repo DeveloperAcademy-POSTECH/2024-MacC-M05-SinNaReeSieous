@@ -8,11 +8,45 @@
 import SwiftUI
 
 struct PlaceDetailView: View {
+    
+    // MARK: - Body
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            headerView
+            descriptionView
+            storyImageView
+            storyView
+            footerView
+        }
     }
 }
 
+private extension PlaceDetailView {
+    // MARK: - View
+    
+    var headerView: some View {
+        PlaceDetailHeaderView()
+    }
+    
+    var descriptionView: some View {
+        PlaceDetailDescriptionView()
+    }
+    
+    var storyImageView: some View {
+        PlaceDetailStoryImageView()
+    }
+    
+    var storyView: some View {
+        PlaceDetailStoryView()
+    }
+    
+    var footerView: some View {
+        PlaceDetailFooterView()
+    }
+}
+
+// MARK: - Preview
 #Preview {
     PlaceDetailView()
 }
