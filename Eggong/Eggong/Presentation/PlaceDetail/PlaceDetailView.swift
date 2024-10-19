@@ -11,10 +11,12 @@ struct PlaceDetailView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
+    @State private var selectedIndex: Int = 0
+    
     // MARK: Body
     
     var body: some View {
-        VStack {
+        ScrollView {
             headerView
             descriptionView
             storyImageView
@@ -50,10 +52,7 @@ private extension PlaceDetailView {
     // MARK: View
     
     var headerView: some View {
-        VStack {
-            PlaceDetailHeaderView()
-            Spacer()
-        }
+        PlaceDetailHeaderView()
     }
     
     var descriptionView: some View {
@@ -61,11 +60,11 @@ private extension PlaceDetailView {
     }
     
     var storyImageView: some View {
-        PlaceDetailStoryImageView()
+        PlaceDetailStoryImageView(selectedIndex: $selectedIndex)
     }
     
     var storyView: some View {
-        PlaceDetailStoryView()
+        PlaceDetailStoryView(selectedIndex: selectedIndex)
     }
     
     var footerView: some View {
