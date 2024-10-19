@@ -50,29 +50,9 @@ private extension PlaceDetailView {
     // MARK: View
     
     var headerView: some View {
-        ZStack(alignment: .bottomLeading) {
-            Image(.sampleThumbnail)
-                .resizable()
-                .scaledToFill()
-                .frame(maxHeight: 340)
-                .clipped()
-                .overlay {
-                    Rectangle()
-                        .fill(Color.black.opacity(0.3))
-                }
-            
-            VStack(alignment: .leading) {
-                Text("카페 휙")
-                    .font(.largeTitle.bold())
-                
-                HStack(spacing: 20) {
-                    Text("따뜻한")
-                    Text("자유로운")
-                    Text("풋풋한")
-                }
-                .font(.caption)
-            }
-            .padding(16)
+        VStack {
+            PlaceDetailHeaderView()
+            Spacer()
         }
     }
     

@@ -9,7 +9,32 @@ import SwiftUI
 
 struct PlaceDetailHeaderView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack(alignment: .bottomLeading) {
+            Image(.sampleThumbnail)
+                .resizable()
+                .scaledToFill()
+                .frame(maxHeight: 340)
+                .clipped()
+                .overlay {
+                    Rectangle()
+                        .fill(Color.black.opacity(0.3))
+                }
+            
+            VStack(alignment: .leading) {
+                Text("카페 휙")
+                    .font(.largeTitle.bold())
+                    .foregroundStyle(.white)
+                
+                HStack(spacing: 20) {
+                    Text("따뜻한")
+                    Text("자유로운")
+                    Text("풋풋한")
+                }
+                .foregroundStyle(.white)
+                .font(.caption)
+            }
+            .padding(16)
+        }
     }
 }
 
