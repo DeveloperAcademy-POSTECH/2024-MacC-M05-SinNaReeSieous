@@ -13,6 +13,7 @@ import PhotosUI
 
 protocol PlaceDetailService: FirebaseFirestoreFoundation, FirebaseStorageFoundation {
     func getPlaceDetail(id: String?) async throws -> PlaceDetail
+    func postPlaceDetail(_ placeDetail: PlaceDetail, placeID: String?, items: [PhotosPickerItem]) async throws 
 }
 
 final class DefaultPlaceDetailService: PlaceDetailService {
