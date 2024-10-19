@@ -13,7 +13,7 @@ struct PlaceDetailStoryImageView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text("이야기 보기")
-                .padding(16)
+                .padding(.horizontal, 16)
                 .font(.title2.bold())
             
             GeometryReader { geometry in

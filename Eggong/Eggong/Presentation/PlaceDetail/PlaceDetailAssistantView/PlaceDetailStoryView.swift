@@ -22,7 +22,7 @@ struct PlaceDetailStoryView: View {
         }
         .transition(.opacity)
         .animation(.easeInOut(duration: 0.3), value: selectedIndex)
-        .padding(16)
+        .padding(.horizontal, 16)
     }
 }
 

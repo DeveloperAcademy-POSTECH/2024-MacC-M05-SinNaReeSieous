@@ -16,12 +16,14 @@ struct PlaceDetailView: View {
     // MARK: Body
     
     var body: some View {
-        ScrollView {
-            headerView
-            descriptionView
-            storyImageView
-            storyView
-            footerView
+        ScrollView() {
+            VStack(spacing: 50) {
+                headerView
+                descriptionView
+                storyImageView
+                storyView
+                footerView
+            }
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden(true)
@@ -36,7 +38,8 @@ struct PlaceDetailView: View {
                 Button {
                     // TODO: 신고하기 View로 이동
                 } label: {
-                    Image(systemName: "light.beacon.min")
+                    Image(systemName: "light.beacon.min.fill")
+                        .foregroundStyle(.white)
                 }
             }
         }

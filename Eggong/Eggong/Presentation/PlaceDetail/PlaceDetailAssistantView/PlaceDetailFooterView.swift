@@ -45,9 +45,10 @@ struct PlaceDetailFooterView: View {
             }
             
             ActionButton(state: .enabled, tapAction: {})
-                .padding(.vertical, 50)
+                .padding(.top, 40)
+                .padding(.bottom, 30)
         }
-        .padding(16)
+        .padding(.horizontal, 16)
     }
 }
 
