@@ -12,15 +12,17 @@ struct Place: FirebaseCodable, Identifiable {
     var name: String
     var keywords: [String]
     var description: String
-    var uploadDate: String
     var imageURLString: String
+    var uploadDate: Date
+    var distance: Int
     
     enum CodingKeys: String, CodingKey {
         case id
         case name
         case keywords
         case description
-        case uploadDate
         case imageURLString
+        case uploadDate
+        case distance
     }
 }
