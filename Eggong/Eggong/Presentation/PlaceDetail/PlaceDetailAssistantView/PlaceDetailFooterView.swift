@@ -43,6 +43,9 @@ struct PlaceDetailFooterView: View {
                         .font(.caption.bold())
                 }
             }
+            
+            ActionButton(state: .enabled, tapAction: {})
+                .padding(.vertical, 50)
         }
         .padding(16)
     }
