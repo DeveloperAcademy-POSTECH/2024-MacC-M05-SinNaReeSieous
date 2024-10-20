@@ -13,7 +13,7 @@ struct HomePlaceOrderTabView: View {
     
     var body: some View {
         VStack {
-            HStack {
+            HStack(alignment: .bottom) {
                 tabButton(tab: .random, text: "무작위")
                 tabButton(tab: .distance, text: "거리순")
                 tabButton(tab: .latest, text: "최신순")
