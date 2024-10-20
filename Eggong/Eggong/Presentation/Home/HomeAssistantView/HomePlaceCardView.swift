@@ -10,8 +10,8 @@ import SwiftUI
 import Kingfisher
 
 struct HomePlaceCardView: View {
-    @State var place: Place = Place.dummy1
-    @State var user: User = User.dummy
+    @Binding var place: Place
+    @Binding var user: User
     
     let placeService: PlaceService = DefaultPlaceService()
     let userService: UserService = DefaultUserService()
@@ -39,7 +39,6 @@ struct HomePlaceCardView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 36)
-        .task { await fetchData() }
         .onAppear {
             for fontFamily in UIFont.familyNames {
                 for fontName in UIFont.fontNames(forFamilyName: fontFamily) {
@@ -193,18 +192,8 @@ private extension HomePlaceCardView {
             return ["카페", place.name]
         }
     }
-    
-    // MARK: Action
-    func fetchData() async {
-        do {
-            self.place = try await placeService.getPlaces().first ?? Place.dummy1
-            self.user = try await userService.getUser(id: StringLiterals.Network.dummyUserID)
-        } catch {
-            print(error)
-        }
-    }
 }
 
 #Preview {
-    HomePlaceCardView()
+    HomePlaceCardView(place: .constant(.dummy1), user: .constant(.dummy))
 }
