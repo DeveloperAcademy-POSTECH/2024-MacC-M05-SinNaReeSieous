@@ -23,7 +23,7 @@ enum StringLiterals {
         
         //User
         static let userPath = "Users"
-        static let dummyUserID = "262179B1-2AD6-416B-9323-E62C5A19D0A9"
+        static let dummyUserID = "J4TRZmkvNbUqPM9xT2NVOa6DZrw2"
         static func userImagePath(id: String) -> String {
             return "\(userPath)/\(id)"
         }
