@@ -10,7 +10,7 @@ import SwiftUI
 import Kingfisher
 
 struct HomePlaceCardView: View {
-    @State var place: Place = Place.dummy
+    @State var place: Place = Place.dummy1
     @State var user: User = User.dummy
     
     let placeService: PlaceService = DefaultPlaceService()
@@ -30,7 +30,7 @@ struct HomePlaceCardView: View {
             HStack(alignment: .top) {
                 NameAndDescription
                 Spacer()
-                if isFavorite { FavoriteMark.offset(x: 12) }
+                if isFavorite { FavoriteMark.offset(x: 8) }
             }
         }
         .padding(8)
@@ -39,6 +39,7 @@ struct HomePlaceCardView: View {
             if isBookmarked { Bookmark.offset(x: -18, y: -10) }
         }
         .padding(.horizontal, 16)
+        .padding(.vertical, 36)
         .task { await fetchData() }
         .onAppear {
             for fontFamily in UIFont.familyNames {
@@ -192,7 +193,7 @@ private extension HomePlaceCardView {
     // MARK: Action
     func fetchData() async {
         do {
-            self.place = try await placeService.getPlaces().first ?? Place.dummy
+            self.place = try await placeService.getPlaces().first ?? Place.dummy1
             self.user = try await userService.getUser(id: StringLiterals.Network.dummyUserID)
         } catch {
             print(error)
