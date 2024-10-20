@@ -10,11 +10,11 @@ import SwiftUI
 import Kingfisher
 
 struct HomePlaceCardView: View {
-    @State var place: Place = Place.dummyPlace
-    @State var isBookmarked: Bool = true
-    @State var isFavorite: Bool = true
+    @State var place: Place = Place.dummy
+    @State var user: User = User.dummy
     
     let placeService: PlaceService = DefaultPlaceService()
+    let userService: UserService = DefaultUserService()
     let imageHorizontalPadding: CGFloat = 24
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -48,7 +48,8 @@ struct HomePlaceCardView: View {
         .padding(.horizontal, 16)
         .task {
             do {
-                self.place = try await placeService.getPlaces().first ?? Place.dummyPlace
+                self.place = try await placeService.getPlaces().first ?? Place.dummy
+                self.user = try await userService.getUser(id: StringLiterals.Network.dummyUserID)
             } catch {
                 print(error)
             }
@@ -130,10 +131,16 @@ private extension HomePlaceCardView {
     
     // MARK: Computed Values
     
+    var isBookmarked: Bool {
+        user.bookmarkPlaces.contains(place.id ?? "")
+    }
+    var isFavorite: Bool {
+        user.favoritePlaces.contains(place.id ?? "")
+    }
+    
     var imageWidth: CGFloat {
         UIScreen.screenSize.width-imageHorizontalPadding*2
     }
-    
     var imageHeight: CGFloat {
         imageWidth/345*349
     }
@@ -142,7 +149,6 @@ private extension HomePlaceCardView {
         let sortedKeywords = place.keywords.sorted(by: {$0.count < $1.count})
         return sortedKeywords.joined(separator: "\n")
     }
-    
     var placeName: [String] {
         if place.name.contains(where: {$0 == " "}) {
             return place.name
