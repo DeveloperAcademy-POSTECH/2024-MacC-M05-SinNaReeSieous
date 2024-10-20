@@ -20,6 +20,7 @@ struct ActionButton: View {
             }
         }
         
+        // TODO: 컬러시스템 확정 이후 컬러변경
         var background: Color {
             switch self {
             case .enabled: return .yellow

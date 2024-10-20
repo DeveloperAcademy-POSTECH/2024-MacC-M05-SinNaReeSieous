@@ -16,7 +16,7 @@ struct PlaceDetailView: View {
     // MARK: Body
     
     var body: some View {
-        ScrollView() {
+        ScrollView {
             VStack(spacing: 50) {
                 headerView
                 descriptionView

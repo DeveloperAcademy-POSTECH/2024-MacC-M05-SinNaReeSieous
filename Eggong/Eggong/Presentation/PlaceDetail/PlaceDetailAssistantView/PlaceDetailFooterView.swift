@@ -44,6 +44,7 @@ struct PlaceDetailFooterView: View {
                 }
             }
             
+            // TODO: 방문 여부에 따라 state 값 변경
             ActionButton(state: .enabled, tapAction: {})
                 .padding(.top, 40)
                 .padding(.bottom, 30)
