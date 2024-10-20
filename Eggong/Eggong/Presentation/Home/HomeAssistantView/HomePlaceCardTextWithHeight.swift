@@ -10,13 +10,13 @@ import SwiftUI
 struct HomePlaceCardTextWithHeight: View {
     let text: String
     let size: CGFloat
-    let weight: SDGothicNeoFontWeight
+    let font: Font
     let height: CGFloat
     
     var body: some View {
         Text(text)
             .foregroundStyle(.black)
-            .font(.SDGothicNeo(size: size, weight: .bold))
+            .font(font)
             .kerning(-size*0.02)
             .frame(height: height)
     }

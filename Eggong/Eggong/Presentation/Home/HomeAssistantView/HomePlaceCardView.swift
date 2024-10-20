@@ -69,7 +69,7 @@ private extension HomePlaceCardView {
                 HomePlaceCardTextWithHeight(
                     text: $0,
                     size: 18,
-                    weight: .bold,
+                    font: .pretendard(size: 18, weight: .semiBold),
                     height: 21
                 )
                 .frame(width: imageWidth/2, alignment: .leading)
@@ -83,7 +83,7 @@ private extension HomePlaceCardView {
                 HomePlaceCardTextWithHeight(
                     text: $0,
                     size: 18,
-                    weight: .bold,
+                    font: .pretendard(size: 18, weight: .semiBold),
                     height: 21
                 )
                 .frame(width: imageWidth/2, alignment: .leading)
@@ -106,12 +106,7 @@ private extension HomePlaceCardView {
     var NameAndDescription: some View {
         VStack(alignment: .leading, spacing: 12) {
             Name
-            HomePlaceCardTextWithHeight(
-                text: place.description,
-                size: 12,
-                weight: .extraBold,
-                height: 12
-            )
+            Description
         }
     }
     
@@ -121,11 +116,20 @@ private extension HomePlaceCardView {
                 HomePlaceCardTextWithHeight(
                     text: $0,
                     size: 48,
-                    weight: .extraBold,
+                    font: .appleSDGothicNeo(size: 48, weight: .extraBold),
                     height: 46
                 )
             }
         }
+    }
+    
+    var Description: some View {
+        HomePlaceCardTextWithHeight(
+            text: place.description,
+            size: 12,
+            font: .appleSDGothicNeo(size: 12, weight: .extraBold),
+            height: 12
+        )
     }
     
     // MARK: View-Marks
@@ -143,7 +147,7 @@ private extension HomePlaceCardView {
                 .font(.system(size: 12, weight: .regular))
             Text("아끼는 공간")
                 .foregroundStyle(.white)
-                .font(.SDGothicNeo(size: 10, weight: .extraBold))
+                .font(.appleSDGothicNeo(size: 10, weight: .extraBold))
                 .frame(height: 12)
         }
         .padding(.horizontal, 8)
