@@ -24,14 +24,13 @@ struct HomePlaceCardView: View {
     }()
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 0) {
             DateAndKeyword
             Thumbnail
-            HStack(alignment: .top) {
-                NameAndDescription
-                Spacer()
-                if isFavorite { FavoriteMark.offset(x: 8) }
-            }
+                .overlay(alignment: .bottomTrailing) {
+                    if isFavorite { FavoriteMark.offset(x: 8, y: 26) }
+                }
+            NameAndDescription
         }
         .padding(8)
         .background { RoundedRectangle(cornerRadius: 8).fill(Color(.brown50)) }
@@ -58,10 +57,11 @@ private extension HomePlaceCardView {
     // MARK: View-DateAndKeyword
     
     var DateAndKeyword: some View {
-        HStack(alignment: .top) {
+        HStack(alignment: .top, spacing: 0) {
             DateTextStack
             KeywordTextStack
         }
+        .padding(.bottom, 16)
     }
     
     var DateTextStack: some View {
@@ -70,7 +70,7 @@ private extension HomePlaceCardView {
                 HomePlaceCardTextWithHeight(
                     text: $0,
                     size: 18,
-                    font: .pretendard(size: 18, weight: .semiBold),
+                    font: .pretendard(size: 18, weight: .bold),
                     height: 21
                 )
                 .frame(width: imageWidth/2, alignment: .leading)
@@ -84,7 +84,7 @@ private extension HomePlaceCardView {
                 HomePlaceCardTextWithHeight(
                     text: $0,
                     size: 18,
-                    font: .pretendard(size: 18, weight: .semiBold),
+                    font: .pretendard(size: 18, weight: .bold),
                     height: 21
                 )
                 .frame(width: imageWidth/2, alignment: .leading)
@@ -100,15 +100,19 @@ private extension HomePlaceCardView {
             .scaledToFill()
             .frame(width: imageWidth, height: imageHeight)
             .clipShape(RoundedRectangle(cornerRadius: 4))
+            .padding(.bottom, 10)
     }
     
     // MARK: View-NameAndDescription
     
     var NameAndDescription: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 10) {
             Name
+                .padding(.leading, 2)
             Description
+                .padding(.leading, 7)
         }
+        .frame(width: imageWidth, alignment: .leading)
     }
     
     var Name: some View {
