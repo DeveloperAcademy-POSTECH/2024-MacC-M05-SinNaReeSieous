@@ -11,16 +11,29 @@
 		39B636B02CC2107800376B1D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 39B636AF2CC2107800376B1D /* FirebaseAuth */; };
 		39B636B22CC2107800376B1D /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 39B636B12CC2107800376B1D /* FirebaseFirestore */; };
 		39B636B42CC2107800376B1D /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 39B636B32CC2107800376B1D /* FirebaseStorage */; };
-		79775E792CC4F57000F0AA96 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 79775E782CC4F57000F0AA96 /* Kingfisher */; };
+		39BDACDC2CC3A88800C74FD1 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 39BDACDB2CC3A88800C74FD1 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		79234AEC2CBE6DE0001B7433 /* Eggong.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eggong.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		39BDACE12CC3BD3A00C74FD1 /* Exceptions for "Eggong" folder in "Eggong" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 79234AEB2CBE6DE0001B7433 /* Eggong */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		79234AEE2CBE6DE0001B7433 /* Eggong */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				39BDACE12CC3BD3A00C74FD1 /* Exceptions for "Eggong" folder in "Eggong" target */,
+			);
 			path = Eggong;
 			sourceTree = "<group>";
 		};
@@ -35,7 +48,7 @@
 				39B636B42CC2107800376B1D /* FirebaseStorage in Frameworks */,
 				39B636B02CC2107800376B1D /* FirebaseAuth in Frameworks */,
 				39B636B22CC2107800376B1D /* FirebaseFirestore in Frameworks */,
-				79775E792CC4F57000F0AA96 /* Kingfisher in Frameworks */,
+				39BDACDC2CC3A88800C74FD1 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,7 +95,7 @@
 				39B636AF2CC2107800376B1D /* FirebaseAuth */,
 				39B636B12CC2107800376B1D /* FirebaseFirestore */,
 				39B636B32CC2107800376B1D /* FirebaseStorage */,
-				79775E782CC4F57000F0AA96 /* Kingfisher */,
+				39BDACDB2CC3A88800C74FD1 /* Kingfisher */,
 			);
 			productName = Eggong;
 			productReference = 79234AEC2CBE6DE0001B7433 /* Eggong.app */;
@@ -114,7 +127,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				39B636AC2CC2107800376B1D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				79775E772CC4F57000F0AA96 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				39BDACDA2CC3A88800C74FD1 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 79234AED2CBE6DE0001B7433 /* Products */;
@@ -277,6 +290,7 @@
 				DEVELOPMENT_TEAM = MXGCKXDXUM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Eggong/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -309,6 +323,7 @@
 				DEVELOPMENT_TEAM = MXGCKXDXUM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Eggong/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -362,7 +377,7 @@
 				minimumVersion = 11.3.0;
 			};
 		};
-		79775E772CC4F57000F0AA96 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+		39BDACDA2CC3A88800C74FD1 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
 			requirement = {
@@ -393,9 +408,9 @@
 			package = 39B636AC2CC2107800376B1D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
 		};
-		79775E782CC4F57000F0AA96 /* Kingfisher */ = {
+		39BDACDB2CC3A88800C74FD1 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 79775E772CC4F57000F0AA96 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			package = 39BDACDA2CC3A88800C74FD1 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
