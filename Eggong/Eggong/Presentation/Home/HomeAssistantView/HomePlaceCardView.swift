@@ -24,34 +24,27 @@ struct HomePlaceCardView: View {
     }()
     
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 16) {
             DateAndKeyword
-                .padding(.bottom, 16)
             Thumbnail
             HStack(alignment: .top) {
                 NameAndDescription
                 Spacer()
-                if isFavorite {
-                    FavoriteMark
-                        .offset(x: 12, y: 16)
-                }
+                if isFavorite { FavoriteMark.offset(x: 12) }
             }
         }
         .padding(8)
-        .background { RoundedRectangle(cornerRadius: 8).fill(Color(.brown50))}
+        .background { RoundedRectangle(cornerRadius: 8).fill(Color(.brown50)) }
         .overlay(alignment: .topTrailing) {
-            if isBookmarked {
-                Bookmark
-                    .offset(x: -18, y: -10)
-            }
+            if isBookmarked { Bookmark.offset(x: -18, y: -10) }
         }
         .padding(.horizontal, 16)
-        .task {
-            do {
-                self.place = try await placeService.getPlaces().first ?? Place.dummy
-                self.user = try await userService.getUser(id: StringLiterals.Network.dummyUserID)
-            } catch {
-                print(error)
+        .task { await fetchData() }
+        .onAppear {
+            for fontFamily in UIFont.familyNames {
+                for fontName in UIFont.fontNames(forFamilyName: fontFamily) {
+                    print(fontName)
+                }
             }
         }
     }
@@ -61,22 +54,44 @@ struct HomePlaceCardView: View {
 
 private extension HomePlaceCardView {
     
-    // MARK: View
+    // MARK: View-DateAndKeyword
     
     var DateAndKeyword: some View {
         HStack(alignment: .top) {
-            Text(dateFormatter.string(from: place.uploadDate))
-                .foregroundStyle(.black)
-                .font(.SDGothicNeo(size: 18, weight: .semibold))
-                .kerning(-18*0.02)
-                .frame(width: imageWidth/2, alignment: .leading)
-            Text(keywordText)
-                .foregroundStyle(.black)
-                .font(.SDGothicNeo(size: 18, weight: .semibold))
-                .kerning(-18*0.02)
-                .frame(width: imageWidth/2, alignment: .leading)
+            DateTextStack
+            KeywordTextStack
         }
     }
+    
+    var DateTextStack: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(dateTexts, id: \.self) {
+                HomePlaceCardTextWithHeight(
+                    text: $0,
+                    size: 18,
+                    weight: .bold,
+                    height: 21
+                )
+                .frame(width: imageWidth/2, alignment: .leading)
+            }
+        }
+    }
+    
+    var KeywordTextStack: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(keywordTexts, id: \.self) {
+                HomePlaceCardTextWithHeight(
+                    text: $0,
+                    size: 18,
+                    weight: .bold,
+                    height: 21
+                )
+                .frame(width: imageWidth/2, alignment: .leading)
+            }
+        }
+    }
+    
+    // MARK: View-Thumbnail
     
     var Thumbnail: some View {
         KFImage(URL(string: place.imageURLString))
@@ -86,28 +101,34 @@ private extension HomePlaceCardView {
             .clipShape(RoundedRectangle(cornerRadius: 4))
     }
     
-    var Name: some View {
-        VStack(alignment: .leading, spacing: -18) {
-            Text(placeName[0])
-                .foregroundStyle(.black)
-                .font(.SDGothicNeo(size: 48, weight: .extraBold))
-                .kerning(-48*0.02)
-            Text(placeName[1])
-                .foregroundStyle(.black)
-                .font(.SDGothicNeo(size: 48, weight: .extraBold))
-                .kerning(-48*0.02)
+    // MARK: View-NameAndDescription
+    
+    var NameAndDescription: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Name
+            HomePlaceCardTextWithHeight(
+                text: place.description,
+                size: 12,
+                weight: .extraBold,
+                height: 12
+            )
         }
     }
     
-    var NameAndDescription: some View {
+    var Name: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Name
-            Text(place.description)
-                .foregroundStyle(.black)
-                .font(.SDGothicNeo(size: 12, weight: .extraBold))
-                .kerning(-12*0.02)
+            ForEach(placeNames, id: \.self) {
+                HomePlaceCardTextWithHeight(
+                    text: $0,
+                    size: 48,
+                    weight: .extraBold,
+                    height: 46
+                )
+            }
         }
     }
+    
+    // MARK: View-Marks
     
     var Bookmark: some View {
         Image(systemName: "bookmark.fill")
@@ -123,6 +144,7 @@ private extension HomePlaceCardView {
             Text("아끼는 공간")
                 .foregroundStyle(.white)
                 .font(.SDGothicNeo(size: 10, weight: .extraBold))
+                .frame(height: 12)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
@@ -145,17 +167,31 @@ private extension HomePlaceCardView {
         imageWidth/345*349
     }
     
-    var keywordText: String {
-        let sortedKeywords = place.keywords.sorted(by: {$0.count < $1.count})
-        return sortedKeywords.joined(separator: "\n")
+    var dateTexts: [String] {
+        return dateFormatter.string(from: place.uploadDate)
+            .split { $0 == "\n" }
+            .map{ String($0) }
     }
-    var placeName: [String] {
+    var keywordTexts: [String] {
+        return place.keywords.sorted(by: {$0.count < $1.count})
+    }
+    var placeNames: [String] {
         if place.name.contains(where: {$0 == " "}) {
             return place.name
                 .split{ $0 == " " }
                 .map{ String($0) }
         } else {
             return ["카페", place.name]
+        }
+    }
+    
+    // MARK: Action
+    func fetchData() async {
+        do {
+            self.place = try await placeService.getPlaces().first ?? Place.dummy
+            self.user = try await userService.getUser(id: StringLiterals.Network.dummyUserID)
+        } catch {
+            print(error)
         }
     }
 }
