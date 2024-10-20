@@ -12,6 +12,7 @@ struct PlaceDetailView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State private var selectedIndex: Int = 0
+    @State private var scrollOffset: CGFloat = 0
     
     // MARK: Body
     
@@ -24,6 +25,17 @@ struct PlaceDetailView: View {
                 storyView
                 footerView
             }
+            .background(
+                GeometryReader { geo in
+                    Color.clear
+                        .onAppear {
+                            scrollOffset = geo.frame(in: .global).minY
+                        }
+                        .onChange(of: geo.frame(in: .global).minY) { _, newValue in
+                            scrollOffset = newValue
+                        }
+                }
+            )
         }
         .ignoresSafeArea()
         .navigationBarBackButtonHidden(true)
@@ -55,7 +67,9 @@ private extension PlaceDetailView {
     // MARK: View
     
     var headerView: some View {
-        PlaceDetailHeaderView()
+        PlaceDetailHeaderView(scrollOffset: scrollOffset)
+            .frame(height: 340 + (scrollOffset > 0 ? scrollOffset : 0))
+            .offset(y: scrollOffset > 0 ? -scrollOffset : 0)
     }
     
     var descriptionView: some View {

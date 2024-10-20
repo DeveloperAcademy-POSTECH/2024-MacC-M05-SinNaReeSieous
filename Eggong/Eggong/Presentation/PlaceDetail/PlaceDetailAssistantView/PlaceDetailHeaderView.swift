@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct PlaceDetailHeaderView: View {
+    var scrollOffset: CGFloat
+    
     var body: some View {
         ZStack(alignment: .bottomLeading) {
             Image(.sampleThumbnail)
                 .resizable()
                 .scaledToFill()
-                .frame(maxHeight: 340)
+                .frame(height: max(340 + scrollOffset, 340))
                 .clipped()
                 .overlay {
                     Rectangle()
@@ -35,9 +37,10 @@ struct PlaceDetailHeaderView: View {
             }
             .padding(16)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
 #Preview {
-    PlaceDetailHeaderView()
+    PlaceDetailHeaderView(scrollOffset: 0)
 }
