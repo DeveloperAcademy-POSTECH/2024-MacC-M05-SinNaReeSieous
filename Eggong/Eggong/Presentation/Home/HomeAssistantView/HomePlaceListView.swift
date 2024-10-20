@@ -1,5 +1,5 @@
 //
-//  HomePlaceCardListView.swift
+//  HomePlaceListView.swift
 //  Eggong
 //
 //  Created by YunhakLee on 10/20/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HomePlaceCardListView: View {
+struct HomePlaceListView: View {
     @State var places: [Place] = [Place.dummy1, Place.dummy2, Place.dummy3]
     @State var user: User = User.dummy
     
@@ -48,7 +48,7 @@ struct HomePlaceCardListView: View {
     }
 }
 
-extension HomePlaceCardListView {
+extension HomePlaceListView {
     
     // MARK: Action
     
@@ -62,5 +62,5 @@ extension HomePlaceCardListView {
     }
 }
 #Preview {
-    HomePlaceCardListView()
+    HomePlaceListView()
 }

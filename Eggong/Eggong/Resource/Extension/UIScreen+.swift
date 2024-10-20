@@ -9,4 +9,5 @@ import UIKit
 
 extension UIScreen {
     static let screenSize = UIScreen.main.bounds
+    static let isSe = screenSize.height <= 667
 }
