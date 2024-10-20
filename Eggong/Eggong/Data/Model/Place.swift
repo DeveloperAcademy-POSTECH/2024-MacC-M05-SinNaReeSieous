@@ -28,7 +28,7 @@ struct Place: FirebaseCodable, Identifiable {
 }
 
 extension Place {
-    static let dummyPlace = Place(
+    static let dummy = Place(
         name: "카페 휙",
         keywords: ["따뜻한", "자유로운", "풋풋한"],
         description: "서툴지만 한걸음씩 따뜻하게",
