@@ -7,7 +7,6 @@
 
 import Foundation
 
-//HomeTabView
 enum Tab {
     case random
     case distance
