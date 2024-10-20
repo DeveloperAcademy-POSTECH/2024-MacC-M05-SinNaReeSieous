@@ -25,11 +25,14 @@ struct HomePlaceListView: View {
                     ForEach($places) { place in
                         GeometryReader {
                             let minY = $0.frame(in: .scrollView(axis: .vertical)).minY
-                            HomePlaceCardView(place: place, user: $user)
-                                .frame(width: size.width, height: cardHeihgt)
-                                .scaleEffect(min(((1-0.92)/cardHeihgt*minY+1), 1),
-                                             anchor: .center)
-                                .offset(y: minY < 0 ? -minY : 0)
+                            NavigationLink(destination: PlaceDetailView(placeID: place.id)) {
+                                HomePlaceCardView(place: place, user: $user)
+                                    .frame(width: size.width, height: cardHeihgt)
+                                    .scaleEffect(min(((1-0.92)/cardHeihgt*minY+1), 1),
+                                                 anchor: .center)
+                                    .offset(y: minY < 0 ? -minY : 0)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                         .frame(height: cardHeihgt)
                     }
@@ -43,7 +46,7 @@ struct HomePlaceListView: View {
         }
         .frame(width: UIScreen.screenSize.width)
         .task {
-            //   await fetchData()
+               await fetchData()
         }
     }
 }

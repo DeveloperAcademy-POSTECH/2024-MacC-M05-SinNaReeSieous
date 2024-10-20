@@ -46,6 +46,10 @@ struct HomePlaceCardView: View {
                 }
             }
         }
+        .task {
+          //  try? await placeService.postDocument(path: StringLiterals.Network.placeDetailPath, id: PlaceDetail.dummy.id, data: PlaceDetail.dummy)
+            //try? await placeService.postDocument(path: StringLiterals.Network.placePath, id: Place.dummy1.id, data: Place.dummy1)
+        }
     }
     
     
