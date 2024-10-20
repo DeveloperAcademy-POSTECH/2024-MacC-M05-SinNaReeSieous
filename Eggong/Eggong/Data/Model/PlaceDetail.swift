@@ -11,7 +11,7 @@ struct PlaceDetail: FirebaseCodable, Identifiable {
     var id: String?
     var name: String
     var keywords: [String]
-    var thumbnailImageURLString: String
+    var imageURLString: String
     var makingStory: String
     var storyImageURLStrings: [String]
     var stories: [String]
@@ -20,7 +20,7 @@ struct PlaceDetail: FirebaseCodable, Identifiable {
         case id
         case name
         case keywords
-        case thumbnailImageURLString
+        case imageURLString
         case makingStory
         case storyImageURLStrings
         case stories
