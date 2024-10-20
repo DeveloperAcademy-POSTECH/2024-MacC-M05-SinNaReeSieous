@@ -69,7 +69,7 @@ private extension HomePlaceCardView {
                 HomePlaceCardTextWithHeight(
                     text: $0,
                     size: 18,
-                    font: .pretendard(size: 18, weight: .bold),
+                    font: .pretendard(size: 18, weight: .semiBold),
                     height: 21
                 )
                 .frame(width: imageWidth/2, alignment: .leading)
