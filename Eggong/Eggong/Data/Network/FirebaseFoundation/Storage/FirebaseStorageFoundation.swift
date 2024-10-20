@@ -14,7 +14,7 @@ protocol FirebaseStorageFoundation {
     func postUIImage(path: String, imageName: String, image: UIImage?) async throws -> String
     func postData(path: String, data: Data) async throws -> String
     func postPhotosPickerItem(path: String, imageName: String, item: PhotosPickerItem) async throws -> String
-    func postPhotosPickerItems(path: String, imageName: String, items: [PhotosPickerItem]) async throws -> [String]
+    func postPhotosPickerItems(path: String, imageNames: [String], items: [PhotosPickerItem]) async throws -> [String]
 }
 
 extension FirebaseStorageFoundation {
@@ -43,13 +43,13 @@ extension FirebaseStorageFoundation {
     }
     
     /// 여러 PhotosPickerItem을 동시에 업로드 할때. post 코드는 병렬로 호출되어서 동시에 진행된다.
-    func postPhotosPickerItems(path: String, imageName: String, items: [PhotosPickerItem]) async throws -> [String] {
+    func postPhotosPickerItems(path: String, imageNames: [String], items: [PhotosPickerItem]) async throws -> [String] {
         var results = Array(repeating: "", count: items.count)
         
         try await withThrowingTaskGroup(of: (Int, String).self) { group in
             for (index, item) in items.enumerated() {
                 group.addTask {
-                    let url = try await postPhotosPickerItem(path: path, imageName: imageName, item: item)
+                    let url = try await postPhotosPickerItem(path: path, imageName: imageNames[index], item: item)
                     return (index, url)
                 }
             }
