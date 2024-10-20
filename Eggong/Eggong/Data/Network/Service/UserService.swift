@@ -12,23 +12,25 @@ import FirebaseStorage
 import PhotosUI
 
 protocol UserService: FirebaseFirestoreFoundation, FirebaseStorageFoundation {
-    func getUser() async throws -> User
-    func postUser(_ user: User, item: PhotosPickerItem) async throws
+    func getUser(id: String?) async throws -> User
+    func postUser(_ user: User, id: String?, item: PhotosPickerItem) async throws
 }
 
 final class DefaultUserService: UserService {
     var db: Firestore = Firestore.firestore()
     var storage: Storage = Storage.storage()
     
-    func getUser() async throws -> User {
+    func getUser(id: String?) async throws -> User {
         try await getDocument(
             path: StringLiterals.Network.userPath,
-            documentID: StringLiterals.Network.dummyUserID,
+            documentID: id,
             type: User.self)
     }
     
-    func postUser(_ user: User, item: PhotosPickerItem) async throws {
-        let id = StringLiterals.Network.dummyUserID
+    func postUser(_ user: User, id: String?, item: PhotosPickerItem) async throws {
+        guard let id else {
+            throw FirebaseError.invalidPath
+        }
         _ = try await postDocument(
             path: StringLiterals.Network.userPath,
             id: id,
