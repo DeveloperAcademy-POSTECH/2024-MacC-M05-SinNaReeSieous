@@ -38,6 +38,7 @@ struct PlaceDetailStoryImageView: View {
                         .tag(2)
                 }
                 .tabViewStyle(.page)
+                .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
             }
             .frame(height: 480)
         }
