@@ -13,8 +13,6 @@ struct HomePlaceCardView: View {
     @Binding var place: Place
     @Binding var user: User
     
-    let placeService: PlaceService = DefaultPlaceService()
-    let userService: UserService = DefaultUserService()
     let imageHorizontalPadding: CGFloat = 24
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -39,20 +37,7 @@ struct HomePlaceCardView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 36)
-        .onAppear {
-            for fontFamily in UIFont.familyNames {
-                for fontName in UIFont.fontNames(forFamilyName: fontFamily) {
-                    print(fontName)
-                }
-            }
-        }
-        .task {
-          //  try? await placeService.postDocument(path: StringLiterals.Network.placeDetailPath, id: PlaceDetail.dummy.id, data: PlaceDetail.dummy)
-            //try? await placeService.postDocument(path: StringLiterals.Network.placePath, id: Place.dummy1.id, data: Place.dummy1)
-        }
     }
-    
-    
 }
 
 private extension HomePlaceCardView {

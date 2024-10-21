@@ -12,13 +12,13 @@ struct HomePlaceOrderTabView: View {
     @Binding var selectedTab: Tab
     
     var body: some View {
-        VStack {
-            HStack(alignment: .bottom) {
+            HStack(spacing: 8) {
                 tabButton(tab: .random, text: "무작위")
                 tabButton(tab: .distance, text: "거리순")
                 tabButton(tab: .latest, text: "최신순")
             }
-        }
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
     }
 }
     
@@ -28,14 +28,13 @@ struct HomePlaceOrderTabView: View {
         Button {
             selectedTab = tab
         } label: {
-            VStack {
+            VStack(spacing: selectedTab == tab ? 7 : 9) {
                 Text(text)
-                    .foregroundStyle(selectedTab == tab ? .orange : .gray)
-                    .fontWeight(selectedTab == tab ? .heavy : .bold)
-                    .font(selectedTab == tab ? .system(size: 16) : .system(size: 13))
+                    .foregroundStyle(selectedTab == tab ? .accent : .gray60)
+                    .font(selectedTab == tab ? .pretendard(size: 16, weight: .black) : .pretendard(size: 14, weight: .bold))
                 Rectangle()
-                    .fill(selectedTab == tab ? .orange : .gray)
-                    .frame(width: 115, height: selectedTab == tab ? 4 : 2)
+                    .fill(selectedTab == tab ? .accent : .gray60)
+                    .frame(height: selectedTab == tab ? 4 : 2)
             }
         }
     }

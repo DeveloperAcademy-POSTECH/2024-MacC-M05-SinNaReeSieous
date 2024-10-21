@@ -18,6 +18,7 @@ struct PlaceDetailView: View {
     @State private var scrollOffset: CGFloat = 0
     
     let placeDetailService: PlaceDetailService = DefaultPlaceDetailService()
+    let userService: UserService = DefaultUserService()
     
     // MARK: Body
     
@@ -53,9 +54,9 @@ struct PlaceDetailView: View {
             
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    // TODO: 신고하기 View로 이동
+                    // TODO: Bookmark
                 } label: {
-                    Image(systemName: "light.beacon.min.fill")
+                    Image(systemName: "bookmark")
                         .foregroundStyle(.white)
                 }
             }
