@@ -96,12 +96,12 @@ private extension PlaceDetailView {
             
             VStack(alignment: .leading) {
                 Text(placeDetail.name)
-                    .font(.largeTitle.bold())
+                    .font(.pretendard(size: 46, weight: .bold))
                     .foregroundStyle(.white)
                 
                 Text(keywordText)
+                    .font(.pretendard(size: 13, weight: .medium))
                     .foregroundStyle(.white)
-                    .font(.caption)
             }
             .padding(16)
         }
@@ -115,9 +115,10 @@ private extension PlaceDetailView {
                 Text("카페를 어떤 공간으로")
                 Text("만들고 싶으셨나요?")
             }
-            .font(.title2.bold())
+            .font(.pretendard(size: 28, weight: .extraBold))
             
             Text(placeDetail.makingStory)
+                .font(.pretendard(size: 16, weight: .medium))
                 .padding(.top, 8)
         }
         .padding(.horizontal, 16)
@@ -126,8 +127,8 @@ private extension PlaceDetailView {
     var storyImageView: some View {
         VStack(alignment: .leading) {
             Text("이야기 보기")
+                .font(.pretendard(size: 28, weight: .extraBold))
                 .padding(.horizontal, 16)
-                .font(.title2.bold())
             
             GeometryReader { geometry in
                 TabView(selection: $selectedIndex) {
@@ -170,10 +171,13 @@ private extension PlaceDetailView {
         ZStack {
             if selectedIndex == 0 {
                 Text(placeDetail.stories[0])
+                    .font(.pretendard(size: 15, weight: .regular))
             } else if selectedIndex == 1 {
                 Text(placeDetail.stories[1])
+                    .font(.pretendard(size: 15, weight: .regular))
             } else if selectedIndex == 2 {
                 Text(placeDetail.stories[2])
+                    .font(.pretendard(size: 15, weight: .regular))
             }
         }
         .transition(.opacity)
@@ -184,7 +188,7 @@ private extension PlaceDetailView {
     var footerView: some View {
         VStack(alignment: .leading) {
             Text("더 자세한 정보")
-                .font(.title2.bold())
+                .font(.pretendard(size: 28, weight: .extraBold))
                 .padding(.bottom, 10)
             
             HStack {

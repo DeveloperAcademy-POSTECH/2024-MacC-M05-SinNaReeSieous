@@ -20,10 +20,9 @@ struct ActionButton: View {
             }
         }
         
-        // TODO: 컬러시스템 확정 이후 컬러변경
         var background: Color {
             switch self {
-            case .enabled: return .yellow
+            case .enabled: return .accent
             case .disabled: return .gray
             }
         }
@@ -38,11 +37,11 @@ struct ActionButton: View {
         } label: {
             Label {
                 Text("아끼는 공간 등록하기")
-                    .font(.callout.bold())
+                    .font(.pretendard(size: 17, weight: .semiBold))
             } icon: {
                 Image(systemName: "heart.fill")
             }
-            .font(.callout.bold())
+            .font(.pretendard(size: 17, weight: .semiBold))
             .foregroundStyle(state.foreground)
             .frame(maxWidth: .infinity)
             .frame(height: 56)
