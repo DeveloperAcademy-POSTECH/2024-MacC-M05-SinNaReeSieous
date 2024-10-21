@@ -13,8 +13,6 @@ struct HomePlaceCardView: View {
     @Binding var place: Place
     @Binding var user: User
     
-    let placeService: PlaceService = DefaultPlaceService()
-    let userService: UserService = DefaultUserService()
     let imageHorizontalPadding: CGFloat = 24
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -39,16 +37,7 @@ struct HomePlaceCardView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 36)
-        .onAppear {
-            for fontFamily in UIFont.familyNames {
-                for fontName in UIFont.fontNames(forFamilyName: fontFamily) {
-                    print(fontName)
-                }
-            }
-        }
     }
-    
-    
 }
 
 private extension HomePlaceCardView {
@@ -69,7 +58,7 @@ private extension HomePlaceCardView {
                 HomePlaceCardTextWithHeight(
                     text: $0,
                     size: 18,
-                    font: .pretendard(size: 18, weight: .bold),
+                    font: .pretendard(size: 18, weight: .semiBold),
                     height: 21
                 )
                 .frame(width: imageWidth/2, alignment: .leading)

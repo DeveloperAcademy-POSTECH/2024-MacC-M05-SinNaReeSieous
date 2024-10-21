@@ -23,5 +23,5 @@ struct HomePlaceCardTextWithHeight: View {
 }
 
 #Preview {
-    PlaceDetailView()
+    HomePlaceCardTextWithHeight(text: "", size: 24, font: .body, height: 24)
 }

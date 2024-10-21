@@ -13,10 +13,12 @@ struct PlaceDetailView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State var placeDetail = PlaceDetail.dummy
+    @Binding var placeID: String?
     @State private var selectedIndex: Int = 0
     @State private var scrollOffset: CGFloat = 0
     
     let placeDetailService: PlaceDetailService = DefaultPlaceDetailService()
+    let userService: UserService = DefaultUserService()
     
     // MARK: Body
     
@@ -52,22 +54,22 @@ struct PlaceDetailView: View {
             
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    // TODO: 신고하기 View로 이동
+                    // TODO: Bookmark
                 } label: {
-                    Image(systemName: "light.beacon.min.fill")
+                    Image(systemName: "bookmark")
                         .foregroundStyle(.white)
                 }
             }
         }
-        .gesture(DragGesture().onEnded { gesture in
-            if gesture.translation.width > 100 {
-                self.presentationMode.wrappedValue.dismiss()
-            }
-        })
+        // 원래 제스처를 선호해서요 !! 일단 원래 제스처를 사용할 수 있게 바꿨어요
+//        .gesture(DragGesture().onEnded { gesture in
+//            if gesture.translation.width > 100 {
+//                self.presentationMode.wrappedValue.dismiss()
+//            }
+//        })
         .task {
             do {
-                // TODO: getPlaceDetail id 처리
-                self.placeDetail = try await placeDetailService.getPlaceDetail(id: placeDetail.id)
+                self.placeDetail = try await placeDetailService.getPlaceDetail(id: placeID)
             } catch {
                 print(error)
             }
@@ -81,6 +83,9 @@ private extension PlaceDetailView {
     var headerView: some View {
         ZStack(alignment: .bottomLeading) {
             KFImage(URL(string: placeDetail.imageURLString))
+                .placeholder {
+                    Image(.placeHolder)
+                }
                 .resizable()
                 .scaledToFill()
                 .frame(height: max(340 + scrollOffset, 340))
@@ -129,18 +134,27 @@ private extension PlaceDetailView {
             GeometryReader { geometry in
                 TabView(selection: $selectedIndex) {
                     KFImage(URL(string: placeDetail.storyImageURLStrings[0]))
+                        .placeholder {
+                            Image(.placeHolder)
+                        }
                         .resizable()
                         .scaledToFill()
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .clipped()
                         .tag(0)
                     KFImage(URL(string: placeDetail.storyImageURLStrings[1]))
+                        .placeholder {
+                            Image(.placeHolder)
+                        }
                         .resizable()
                         .scaledToFill()
                         .frame(width: geometry.size.width, height: geometry.size.height)
                         .clipped()
                         .tag(1)
                     KFImage(URL(string: placeDetail.storyImageURLStrings[2]))
+                        .placeholder {
+                            Image(.placeHolder)
+                        }
                         .resizable()
                         .scaledToFill()
                         .frame(width: geometry.size.width, height: geometry.size.height)
@@ -226,5 +240,5 @@ private extension PlaceDetailView {
 
 // MARK: - Preview
 #Preview {
-    PlaceDetailView()
+    PlaceDetailView(placeID: .constant(Place.dummy1.id))
 }
