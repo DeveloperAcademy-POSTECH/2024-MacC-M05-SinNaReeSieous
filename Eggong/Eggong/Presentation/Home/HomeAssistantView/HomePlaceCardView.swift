@@ -120,7 +120,7 @@ private extension HomePlaceCardView {
                 HomePlaceCardTextWithHeight(
                     text: $0,
                     size: 48,
-                    font: .appleSDGothicNeo(size: 48, weight: .extraBold),
+                    font: .pretendard(size: 48, weight: .extraBold),
                     height: 46
                 )
             }
@@ -131,7 +131,7 @@ private extension HomePlaceCardView {
         HomePlaceCardTextWithHeight(
             text: place.description,
             size: 12,
-            font: .appleSDGothicNeo(size: 12, weight: .extraBold),
+            font: .pretendard(size: 12, weight: .extraBold),
             height: 12
         )
     }
@@ -151,7 +151,7 @@ private extension HomePlaceCardView {
                 .font(.system(size: 12, weight: .regular))
             Text("아끼는 공간")
                 .foregroundStyle(.white)
-                .font(.appleSDGothicNeo(size: 10, weight: .extraBold))
+                .font(.pretendard(size: 10, weight: .extraBold))
                 .frame(height: 12)
         }
         .padding(.horizontal, 8)
