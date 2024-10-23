@@ -36,7 +36,7 @@ struct HomePlaceListView: View {
                 }
                 .scrollTargetLayout()
             }
-            .scrollTargetBehavior(.viewAligned(limitBehavior: .alwaysByOne))
+            .scrollTargetBehavior(.viewAligned(limitBehavior: .always))
             .scrollIndicators(.hidden)
             .safeAreaPadding(.top, 36)
             .safeAreaPadding(.bottom, UIScreen.screenSize.height-203-cardHeight)
