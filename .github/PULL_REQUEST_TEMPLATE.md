@@ -1,12 +1,12 @@
 close #
 
 ## *⛳️ Work Description*
--
+- 
 
 ## *📸 Screenshot*
-|기능|스크린샷|
-|:--:|:--:|
-|ex)로그인|<img width="250" alt="AppFlow" src="https://github.com/Team-PLAT/Plat-iOS/assets/113565086/e624fb82-8dfb-4c5b-a148-23f920877c73">|
+| iPhone SE 3rd | iPhone 13 mini | iPhone 15 Pro | iPhone 15 Pro Max |
+| -- | -- | -- | -- |
+| ![Simulator Screen Recording - iPhone SE (3rd generation) - 2024-10-05 at 17 07 43](https://github.com/user-attachments/assets/44f72605-a7d6-4be5-8616-8848a06c008d) | ![Simulator Screen Recording - iPhone 13 mini - 2024-10-05 at 17 08 26](https://github.com/user-attachments/assets/0af5f21e-aace-4e11-b316-9dd537188aa4) | ![Simulator Screen Recording - iPhone 15 Pro - 2024-10-05 at 17 09 24](https://github.com/user-attachments/assets/ef89ef84-aaa8-4d01-b172-7ba26bfa967a) | ![Simulator Screen Recording - iPhone 15 Pro Max - 2024-10-05 at 17 10 12](https://github.com/user-attachments/assets/87edd9e5-885b-4dd5-be7a-e8dc296b116b) |
 
 
 ## *📢 To Reviewers*
