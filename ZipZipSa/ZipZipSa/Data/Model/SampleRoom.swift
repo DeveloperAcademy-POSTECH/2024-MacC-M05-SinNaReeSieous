@@ -12,16 +12,27 @@ import SwiftData
 @Model
 final class SampleRoom: Identifiable {
     var id: UUID
-    var date: String
+    @Attribute(.externalStorage) var mainPictureData: Data?
     @Attribute(.externalStorage) var model: Data?
     var latitude: Double
     var longitude: Double
     
-    init(id: UUID, date: String, model: Data, latitude: Double, longitude: Double) {
+    init(id: UUID, mainPicture: UIImage?, model: Data, latitude: Double, longitude: Double) {
         self.id = id
-        self.date = date
+        self.mainPictureData = mainPicture?.pngData()
         self.model = model
         self.latitude = latitude
         self.longitude = longitude
+    }
+    
+    // UIImage를 가져오기 위한 computed property
+    var mainPicture: UIImage? {
+        get {
+            guard let data = mainPictureData else { return nil }
+            return UIImage(data: data)
+        }
+        set {
+            mainPictureData = newValue?.pngData()
+        }
     }
 }

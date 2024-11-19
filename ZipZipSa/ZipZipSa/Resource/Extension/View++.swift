@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// ResultCardView를 이미지로 변환하여 저장 및 공유하기 위한 View Extension
 extension View {
     func asUIImage(size: CGSize) -> UIImage {
         let controller = UIHostingController(rootView: self)
@@ -15,7 +16,6 @@ extension View {
         view?.bounds = CGRect(origin: .zero, size: size)
         view?.backgroundColor = .white
         
-        // 고해상도 캡처를 위해 scale 설정
         let renderer = UIGraphicsImageRenderer(size: size)
         return renderer.image { _ in
             view?.drawHierarchy(in: view!.bounds, afterScreenUpdates: true)
