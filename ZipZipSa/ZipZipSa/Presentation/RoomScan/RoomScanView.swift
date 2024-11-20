@@ -63,7 +63,7 @@ struct RoomScanView: View {
                                     .foregroundStyle(.gray)
                                     .frame(width: 165, height: 50)
                                     .overlay(
-                                        Text("그만두기")
+                                        Text(ZipLiteral.RoomScan.cancle)
                                             .foregroundStyle(Color.white)
                                     )
                             }
@@ -79,7 +79,7 @@ struct RoomScanView: View {
                                     .foregroundStyle(.primary)
                                     .frame(width: 165, height: 50)
                                     .overlay(
-                                        Text("완료하기")
+                                        Text(ZipLiteral.RoomScan.done)
                                             .foregroundStyle(Color.white)
                                     )
                             }
@@ -95,7 +95,7 @@ struct RoomScanView: View {
                                     .foregroundStyle(Color.gray)
                                     .frame(width: 160, height: 50)
                                     .overlay(
-                                        Text("다시찍기")
+                                        Text(ZipLiteral.RoomScan.reScasn)
                                             .foregroundStyle(Color.white)
                                     )
                             }
@@ -118,7 +118,7 @@ struct RoomScanView: View {
                                     .foregroundStyle(.primary)
                                     .frame(width: 165, height: 50)
                                     .overlay(
-                                        Text(isProcessing ? "저장 중..." : "저장하기")
+                                        Text(isProcessing ? ZipLiteral.RoomScan.processing : ZipLiteral.RoomScan.save)
                                             .foregroundStyle(Color.white)
                                     )
                             }
@@ -143,8 +143,6 @@ struct RoomScanView: View {
             if let room {
                 ResultCardView(room: room, hasRoomModel: $hasRoomModel)
                     .presentationDragIndicator(.visible)
-            } else {
-                Text("3D 모델 데이터 로드 실패")
             }
         }
     }
