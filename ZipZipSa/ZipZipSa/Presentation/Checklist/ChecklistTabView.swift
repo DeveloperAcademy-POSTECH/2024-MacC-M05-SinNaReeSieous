@@ -11,12 +11,6 @@ struct ChecklistTabView: View {
     @Binding var selectedSpaceType: SpaceType
     
     var body: some View {
-        TopSpaceButtonStack
-    }
-}
-
-private extension ChecklistTabView {
-    var TopSpaceButtonStack: some View {
         HStack {
             ForEach(SpaceType.allCases.indices, id: \.self) { index in
                 let type = SpaceType.allCases[index]
@@ -24,11 +18,15 @@ private extension ChecklistTabView {
             }
         }
     }
+}
+
+private extension ChecklistTabView {
+    
+    // MARK: - View
     
     func TopSpaceButton(type: SpaceType) -> some View {
         Button {
-            print("Change Space Type: \(type.text)")
-            selectedSpaceType = type
+            changeSpaceType(to: type)
         } label: {
             Text(type.text)
                 .foregroundStyle(.black)
@@ -41,7 +39,15 @@ private extension ChecklistTabView {
                 }
         }
     }
+    
+    // MARK: - Action
+    
+    func changeSpaceType(to selectedSpaceType: SpaceType) {
+        self.selectedSpaceType = selectedSpaceType
+    }
 }
+
+
 
 #Preview {
     ChecklistTabView(selectedSpaceType: .constant(.exterior))
