@@ -32,8 +32,11 @@ private extension ChecklistTabView {
                 .foregroundStyle(.black)
                 .padding(12)
                 .background {
-                    RoundedRectangle(cornerRadius: 15,
-                                     style: .continuous)
+                    UnevenRoundedRectangle(
+                        cornerRadii: RectangleCornerRadii(
+                            bottomLeading: 15,
+                            bottomTrailing: 15,
+                            topTrailing: 15))
                     .fill(type == selectedSpaceType ? Color.blue
                           : Color.white)
                 }
