@@ -6,13 +6,32 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		795DC35D2CEDDB670053E173 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 795DC35C2CEDDB670053E173 /* Config.xcconfig */; };
+		795DC3602CEDDBCF0053E173 /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 795DC35F2CEDDBCF0053E173 /* GoogleMaps */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		393FD8D32CE2045D00B1CEE7 /* ZipZipSa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZipZipSa.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		795DC35C2CEDDB670053E173 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		795DC3622CEDDC310053E173 /* Exceptions for "ZipZipSa" folder in "ZipZipSa" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 393FD8D22CE2045D00B1CEE7 /* ZipZipSa */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		393FD8D52CE2045D00B1CEE7 /* ZipZipSa */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				795DC3622CEDDC310053E173 /* Exceptions for "ZipZipSa" folder in "ZipZipSa" target */,
+			);
 			path = ZipZipSa;
 			sourceTree = "<group>";
 		};
@@ -23,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				795DC3602CEDDBCF0053E173 /* GoogleMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -32,6 +52,7 @@
 		393FD8CA2CE2045D00B1CEE7 = {
 			isa = PBXGroup;
 			children = (
+				795DC35C2CEDDB670053E173 /* Config.xcconfig */,
 				393FD8D52CE2045D00B1CEE7 /* ZipZipSa */,
 				393FD8D42CE2045D00B1CEE7 /* Products */,
 			);
@@ -65,6 +86,7 @@
 			);
 			name = ZipZipSa;
 			packageProductDependencies = (
+				795DC35F2CEDDBCF0053E173 /* GoogleMaps */,
 			);
 			productName = ZipZipSa;
 			productReference = 393FD8D32CE2045D00B1CEE7 /* ZipZipSa.app */;
@@ -94,6 +116,9 @@
 			);
 			mainGroup = 393FD8CA2CE2045D00B1CEE7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				795DC35E2CEDDBCF0053E173 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 393FD8D42CE2045D00B1CEE7 /* Products */;
 			projectDirPath = "";
@@ -109,6 +134,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				795DC35D2CEDDB670053E173 /* Config.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,6 +272,7 @@
 		};
 		393FD8E22CE2045E00B1CEE7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 795DC35C2CEDDB670053E173 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -255,6 +282,7 @@
 				DEVELOPMENT_TEAM = MXGCKXDXUM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ZipZipSa/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "앱에서 공간을 스캔하기 위해 카메라에 접근합니다. 카메라는 사용자가 공간을 스캔할 때만 사용됩니다.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "앱에서 집의 주소를 저장하고, 통근거리 및 주변시설정보를 가져오기 위해 위치정보를 사용합니다.";
@@ -283,6 +311,7 @@
 		};
 		393FD8E32CE2045E00B1CEE7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 795DC35C2CEDDB670053E173 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -292,6 +321,7 @@
 				DEVELOPMENT_TEAM = MXGCKXDXUM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ZipZipSa/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "앱에서 공간을 스캔하기 위해 카메라에 접근합니다. 카메라는 사용자가 공간을 스캔할 때만 사용됩니다.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "앱에서 집의 주소를 저장하고, 통근거리 및 주변시설정보를 가져오기 위해 위치정보를 사용합니다.";
@@ -340,6 +370,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		795DC35E2CEDDBCF0053E173 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/ios-maps-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		795DC35F2CEDDBCF0053E173 /* GoogleMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 795DC35E2CEDDBCF0053E173 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
+			productName = GoogleMaps;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 393FD8CB2CE2045D00B1CEE7 /* Project object */;
 }
