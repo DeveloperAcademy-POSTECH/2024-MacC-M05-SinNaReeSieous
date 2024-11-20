@@ -8,18 +8,21 @@
 import SwiftUI
 
 struct CheckListRowAnswerSectionView: View {
-    @Binding var selectedCategory: [CheckListCategory]
     @Binding var answers: [UUID: Set<Int>]
     @Binding var scores: [UUID: Float]
     let checkListItem: CheckListItem
     
+    private let horizontalSpacing: CGFloat = 8
+    private let verticalSpacing: CGFloat = 8
+    
     var body: some View {
-        VStack(alignment: .leading) {
-            CategoryChipStack
-            Question
-            if captionType != .none {
-                Caption
+        LazyVGrid(columns: columns, spacing: 8) {
+            ForEach(answerOptions.indices, id: \.self) { index in
+                AnswerButton(index: index)
             }
+        }
+        .onChange(of: scores) { oldValue, newValue in
+            print(newValue)
         }
     }
 }
@@ -28,117 +31,63 @@ private extension CheckListRowAnswerSectionView {
     
     // MARK: - View
     
-    var CategoryChipStack: some View {
-        HStack {
-            ForEach(chipData.indices, id:\.self) { index in
-                let chip = chipData[index]
-                CategoryChip(text: chip.text, color: chip.clolr)
-            }
-        }
-    }
-    
-    func CategoryChip(text: String, color: Color) -> some View {
-        Text(text)
-            .padding(.vertical, 4)
-            .padding(.horizontal, 8)
-            .background {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(color)
-            }
-    }
-    
-    var Question: some View {
-        Text(checkListItem.question.question)
-            .bold()
-            .font(.title3)
-    }
-    
-    var Caption: some View {
-        HStack(alignment: .top) {
-            Image(captionType == .remark ? .remark : .crossTip)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 22, height: 20)
-            Text(captionText)
-                .lineLimit(nil)
-                .font(.caption)
-                .padding(.top, 4)
-        }
-    }
-    
     func AnswerButton(index: Int) -> some View {
         Button {
-            applyAnswerResult(index: index)
+            applyAnswerResult(index: index, isSelected: answers[checkListItem.id]?.contains(index) ?? false)
         } label: {
-            Text(checkListItem.question.answerOptions[index])
-                .background {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(answers[checkListItem.id]?.contains(index) ?? false ? .blue : .white)
+            RoundedRectangle(cornerRadius: 10)
+                .fill(answers[checkListItem.id]?.contains(index) ?? false ? .blue : .white)
+                .frame(height: 43)
+                .overlay {
+                    Text(checkListItem.question.answerOptions[index])
+                        .foregroundStyle(.black)
                 }
         }
     }
     
-    
     // MARK: - Computede Values
     
-    var chipData: [(text: String, clolr: Color)] {
-        var result: [(String, Color)]  = []
-        if checkListItem.checkListType == .advanced {
-            result.append((checkListItem.checkListType.text, .gray))
-        }
-        if checkListItem.basicCategory.isSelectable {
-            result.append((checkListItem.basicCategory.text, .green))
-        }
-       
-        let crossChip = checkListItem.crossTip.keys.filter { selectedCategory.contains($0) }.map { ($0.text, Color.green) }
-        
-        result += crossChip
-        
-        return result
+    var answerType: AnswerType {
+        checkListItem.question.answerType
     }
     
-    var captionType: captionType {
-        let isCrossTip = checkListItem.crossTip.keys.contains(where: {
-            selectedCategory.contains($0)
-        })
-        
-        if checkListItem.remark != nil {
-            return .remark
-        } else if isCrossTip {
-            return .crossTip
-        } else {
-            return .none
-        }
+    var answerOptions: [String] {
+        checkListItem.question.answerOptions
     }
     
-    var captionText: String {
-        switch captionType {
-        case .remark:
-            return checkListItem.remark ?? ""
-        case .crossTip:
-            var textData: [String?] = []
-            selectedCategory.forEach {
-                textData.append(checkListItem.crossTip[$0])
-            }
-            return textData.compactMap { $0 }.joined(separator: "\n")
-        case .none:
-            return ""
-        }
+    var columns: [GridItem] {
+        Array(repeating: GridItem(.flexible(), spacing: 10),
+              count: (answerType == .twoChoices) ? 2 : 3)
     }
     
     // MARK: - Action
     
-    func applyAnswerResult(index: Int) {
-        switch checkListItem.question.answerType {
+    func applyAnswerResult(index: Int, isSelected: Bool) {
+        switch answerType {
         case .multiSelect(let basicScore):
-            answers[checkListItem.id, default: Set<Int>([index])].insert(index)
-            scores[checkListItem.id] = Float(answers[checkListItem.id]?.count ?? 0) * -0.5 + basicScore
+            if isSelected {
+                answers[checkListItem.id, default: Set<Int>([index])].remove(index)
+                scores[checkListItem.id] = Float(answers[checkListItem.id]?.count ?? 0) * -0.5 + basicScore
+            } else {
+                answers[checkListItem.id, default: Set<Int>([index])].insert(index)
+                scores[checkListItem.id] = Float(answers[checkListItem.id]?.count ?? 0) * -0.5 + basicScore
+            }
         case .multiChoices:
-            answers[checkListItem.id] = Set([index])
-            scores[checkListItem.id] = Float(index-1)
+            if isSelected {
+                answers[checkListItem.id] = nil
+                scores[checkListItem.id] = Float(0)
+            } else {
+                answers[checkListItem.id] = Set([index])
+                scores[checkListItem.id] = Float(index-1)
+            }
         case .twoChoices:
-            answers[checkListItem.id] = Set([index])
-            scores[checkListItem.id] = Float(index == 1 ? 1 : -1)
+            if isSelected {
+                answers[checkListItem.id] = nil
+                scores[checkListItem.id] =  Float(0)
+            } else {
+                answers[checkListItem.id] = Set([index])
+                scores[checkListItem.id] = Float(index == 1 ? 1 : -1)
+            }
         }
     }
 }

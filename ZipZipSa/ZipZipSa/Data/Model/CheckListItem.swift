@@ -136,7 +136,7 @@ struct Question {
     let answerOptions: [String]
 }
 
-enum AnswerType {
+enum AnswerType: Equatable {
     case twoChoices
     case multiChoices
     case multiSelect(basicScore: Float)
