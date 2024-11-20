@@ -33,7 +33,7 @@ struct RoomScanView: View {
     var body: some View {
         VStack {
             if doneScanning {
-                Text("\(ZipLiteral.RoomScanView.doneSacnText)")
+                Text(ZipLiteral.RoomScan.doneSacnText)
                     .bold()
                     .multilineTextAlignment(.center)
                     .padding(.top)
@@ -141,7 +141,7 @@ struct RoomScanView: View {
         }
         .sheet(isPresented: $showResultSheet) {
             if let room {
-                ResultCardView()
+                ResultCardView(room: room, hasRoomModel: $hasRoomModel)
                     .presentationDragIndicator(.visible)
             } else {
                 Text("3D 모델 데이터 로드 실패")
