@@ -20,6 +20,9 @@ struct CheckListRowView: View {
             if captionType != .none {
                 Caption
             }
+            CheckListRowAnswerSectionView(answers: $answers,
+                                          scores: $scores,
+                                          checkListItem: checkListItem)
         }
     }
 }
@@ -42,7 +45,7 @@ private extension CheckListRowView {
             .padding(.vertical, 4)
             .padding(.horizontal, 8)
             .background {
-                RoundedRectangle(cornerRadius: 10)
+                UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 10, bottomTrailing: 10, topTrailing: 10))
                     .fill(color)
             }
     }
