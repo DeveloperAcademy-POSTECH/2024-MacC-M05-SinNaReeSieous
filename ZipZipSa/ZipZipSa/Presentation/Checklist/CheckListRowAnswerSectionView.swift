@@ -80,6 +80,7 @@ private extension CheckListRowAnswerSectionView {
             switch answerDisposition {
             case .negative: return Color.red
             case .neutral: return Color.green
+            case .positive: return Color.blue
             }
         }
     }
@@ -100,18 +101,18 @@ private extension CheckListRowAnswerSectionView {
         case .multiChoices:
             if isSelected {
                 answers[checkListItem.id] = nil
-                scores[checkListItem.id] = Float(0)
+                scores[checkListItem.id] = Float(1)
             } else {
                 answers[checkListItem.id] = Set([index])
-                scores[checkListItem.id] = Float(index-1)
+                scores[checkListItem.id] = Float(index)
             }
         case .twoChoices:
             if isSelected {
                 answers[checkListItem.id] = nil
-                scores[checkListItem.id] =  Float(0)
+                scores[checkListItem.id] =  Float(1)
             } else {
                 answers[checkListItem.id] = Set([index])
-                scores[checkListItem.id] = Float(index == 1 ? 1 : -1)
+                scores[checkListItem.id] = Float(index == 1 ? 2 : 0)
             }
         }
     }

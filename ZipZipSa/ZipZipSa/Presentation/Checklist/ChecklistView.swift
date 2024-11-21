@@ -39,9 +39,11 @@ private extension ChecklistView {
                 }
             }
         }
-        .onChange(of: categoryScores, { oldValue, newValue in
-            print(newValue.sorted(by: { $0.0.rawValue > $1.0.rawValue }))
-        })
+//        .onChange(of: scores, { oldValue, newValue in
+//            print(calculateCategoryScores().sorted(by: { $0.key.rawValue > $1.key.rawValue }))
+//            print("================== DIVIDER ==================")
+//            print(calculateMaxCategoryScores().sorted(by: { $0.key.rawValue > $1.key.rawValue }))
+//        })
         .scrollIndicators(.never)
         .contentMargins([.top, .bottom], 26, for: .scrollContent)
     }
@@ -63,17 +65,50 @@ private extension ChecklistView {
         }
     }
     
-    var categoryScores: [CheckListCategory: Float] {
+    func calculateCategoryScores() -> [CheckListCategory: Float] {
         var categoryScores: [CheckListCategory: Float] = [:]
         
         filteredCheckListItems.forEach { checkListItem in
-            if checkListItem.basicCategory.isSelectable {
-                categoryScores[checkListItem.basicCategory, default: 0.0] += scores[checkListItem.id] ?? 0
-            }
+            let categories = [checkListItem.basicCategory] + checkListItem.crossTip.keys
             
-            for category in checkListItem.crossTip.keys {
-                if selectedCategory.contains(category) {
-                    categoryScores[category, default: 0.0] += scores[checkListItem.id] ?? 0
+            for category in categories {
+                let isSelectableBasicCategory = checkListItem.basicCategory == category && category.isSelectable
+                if selectedCategory.contains(category) || isSelectableBasicCategory {
+                    var basicValue: Float = 0.0
+                    switch checkListItem.question.answerType {
+                    case .multiSelect(let basicScore, _):
+                        basicValue = basicScore
+                    default:
+                        basicValue = 1.0
+                    }
+                    categoryScores[category, default: 0.0] += scores[checkListItem.id] ?? basicValue
+                }
+            }
+        }
+        
+        return categoryScores
+    }
+    
+    func calculateMaxCategoryScores() -> [CheckListCategory: Float] {
+        var categoryScores: [CheckListCategory: Float] = [:]
+        
+        filteredCheckListItems.forEach { checkListItem in
+            let categories = [checkListItem.basicCategory] + checkListItem.crossTip.keys
+            
+            for category in categories {
+                let isSelectableBasicCategory = checkListItem.basicCategory == category && category.isSelectable
+                if selectedCategory.contains(category) || isSelectableBasicCategory {
+                    switch checkListItem.question.answerType {
+                    case .multiSelect(let basicScore, let answerDisposition):
+                        if answerDisposition == .negative {
+                            categoryScores[category, default: 0.0] += basicScore
+                        } else if answerDisposition == .positive {
+                            let maxScore: Float = Float(checkListItem.question.answerOptions.count) * 0.5
+                            categoryScores[category, default: 0.0] += maxScore
+                        }
+                    default:
+                        categoryScores[category, default: 0.0] += 2.0
+                    }
                 }
             }
         }

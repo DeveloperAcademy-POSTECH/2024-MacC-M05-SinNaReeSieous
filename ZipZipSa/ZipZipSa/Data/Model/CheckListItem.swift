@@ -68,7 +68,7 @@ extension CheckListItem {
             checkListType: .basic,
             basicCategory: .soundproof,
             question: Question(question: "주변에 소음이 발생할 수 있는 시설이 있나요?",
-                               answerType: .multiSelect(basicScore: 1.0, answerDisposition: .negative),
+                               answerType: .multiSelect(basicScore: 2.0, answerDisposition: .negative),
                                answerOptions: ["유흥가", "학교", "공원", "상가"]),
             crossTip: [.security: "유흥가가 집 근처에 있으면 주취자를 마추질 가능성이 높아져요."],
             remark: nil,
@@ -157,6 +157,7 @@ enum AnswerType: Equatable {
 enum AnswerDisposition: Equatable {
     case negative
     case neutral
+    case positive
 }
 
 enum CheckListType {
