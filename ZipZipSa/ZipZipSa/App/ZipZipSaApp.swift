@@ -10,13 +10,14 @@ import GoogleMaps
 
 @main
 struct ZipZipSaApp: App {
+    @State private var hasRoomModel: Bool = false
     init() {
         GMSServices.provideAPIKey(Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? "API KEY를 가져오는데 실패했습니다.")
     }
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RoomScanView(hasRoomModel: $hasRoomModel)
         }
     }
 }
