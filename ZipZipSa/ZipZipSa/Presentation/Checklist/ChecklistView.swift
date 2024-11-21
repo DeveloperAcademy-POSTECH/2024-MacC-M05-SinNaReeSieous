@@ -76,7 +76,6 @@ private extension ChecklistView {
                     categoryScores[category, default: 0.0] += scores[checkListItem.id] ?? 0
                 }
             }
-            
         }
         
         return categoryScores

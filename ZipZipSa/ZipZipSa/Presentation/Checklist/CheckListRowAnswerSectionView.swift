@@ -21,9 +21,6 @@ struct CheckListRowAnswerSectionView: View {
                 AnswerButton(index: index)
             }
         }
-//        .onChange(of: scores) { oldValue, newValue in
-//            print(newValue)
-//        }
     }
 }
 
