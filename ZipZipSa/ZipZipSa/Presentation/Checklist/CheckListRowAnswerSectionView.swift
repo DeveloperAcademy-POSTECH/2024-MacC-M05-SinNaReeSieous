@@ -12,11 +12,11 @@ struct CheckListRowAnswerSectionView: View {
     @Binding var scores: [UUID: Float]
     let checkListItem: CheckListItem
     
-    private let horizontalSpacing: CGFloat = 8
+    private let horizontalSpacing: CGFloat = 10
     private let verticalSpacing: CGFloat = 8
     
     var body: some View {
-        LazyVGrid(columns: columns, spacing: 8) {
+        LazyVGrid(columns: columns, spacing: verticalSpacing) {
             ForEach(answerOptions.indices, id: \.self) { index in
                 AnswerButton(index: index)
             }
@@ -61,7 +61,7 @@ private extension CheckListRowAnswerSectionView {
     }
     
     var columns: [GridItem] {
-        Array(repeating: GridItem(.flexible(), spacing: 10),
+        Array(repeating: GridItem(.flexible(), spacing: horizontalSpacing),
               count: (answerType == .twoChoices) ? 2 : 3)
     }
     
