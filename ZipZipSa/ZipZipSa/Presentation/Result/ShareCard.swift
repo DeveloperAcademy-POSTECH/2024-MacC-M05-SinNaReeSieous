@@ -11,7 +11,6 @@ import CoreLocation
 struct ShareCard: View {
     
     @State private var availableFacilities: [String] = []
-    @State private var showFacilities = false
     @Binding var hasRoomModel: Bool
     
     var room: SampleRoom
