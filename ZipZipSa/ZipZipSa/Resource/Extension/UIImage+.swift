@@ -1,5 +1,5 @@
 //
-//  UIImage++.swift
+//  UIImage+.swift
 //  ZipZipSa
 //
 //  Created by 조우현 on 11/20/24.

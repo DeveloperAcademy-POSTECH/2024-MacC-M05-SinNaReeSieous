@@ -284,7 +284,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ZipZipSa/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_NSCameraUsageDescription = "앱에서 공간을 스캔하기 위해 카메라에 접근합니다. 카메라는 사용자가 공간을 스캔할 때만 사용됩니다.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "앱에서 공간을 스캔하고 집 사진을 찍기 위해 카메라에 접근합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "앱에서 집의 주소를 저장하고, 통근거리 및 주변시설정보를 가져오기 위해 위치정보를 사용합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -323,7 +323,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ZipZipSa/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_NSCameraUsageDescription = "앱에서 공간을 스캔하기 위해 카메라에 접근합니다. 카메라는 사용자가 공간을 스캔할 때만 사용됩니다.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "앱에서 공간을 스캔하고 집 사진을 찍기 위해 카메라에 접근합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "앱에서 집의 주소를 저장하고, 통근거리 및 주변시설정보를 가져오기 위해 위치정보를 사용합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
