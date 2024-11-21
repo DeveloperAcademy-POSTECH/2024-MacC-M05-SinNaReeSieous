@@ -11,13 +11,13 @@ struct ChecklistView: View {
     @State var answers: [UUID: Set<Int>] = [:]
     @State var scores: [UUID: Float] = [:]
     
-    @State var selectedCategory: [CheckListCategory] = [.security, .insectproof, .ventilation]
+    @State var selectedCategory: [ChecklistCategory] = [.security, .insectproof, .ventilation]
     @State var selectedSpaceType: SpaceType = .exterior
     
     var body: some View {
         VStack {
             ChecklistTabView(selectedSpaceType: $selectedSpaceType)
-            CheckListList
+            ChecklistList
         }
         .padding(16)
         .ignoresSafeArea(.container, edges: [.bottom])
@@ -26,11 +26,11 @@ struct ChecklistView: View {
 }
 
 private extension ChecklistView {
-    var CheckListList: some View {
+    var ChecklistList: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 40) {
-                ForEach(spaceCheckListItems) { checkListItem in
-                    CheckListRowView(
+                ForEach(spaceChecklistItems) { checkListItem in
+                    ChecklistRowView(
                         selectedCategory: $selectedCategory,
                         answers: $answers,
                         scores: $scores,
@@ -50,8 +50,8 @@ private extension ChecklistView {
     
     // MARK: - Computed Values
     
-    var filteredCheckListItems: [CheckListItem] {
-        CheckListItem.checkListItems.filter {
+    var filteredChecklistItems: [ChecklistItem] {
+        ChecklistItem.checklistItems.filter {
             let isBasicCheckListItem = $0.checkListType == .basic
             let isSelectedCategoryCheckListItem = $0.checkListType == .advanced
                                                 && selectedCategory.contains($0.basicCategory)
@@ -59,29 +59,29 @@ private extension ChecklistView {
         }
     }
     
-    var spaceCheckListItems: [CheckListItem] {
-        filteredCheckListItems.filter {
+    var spaceChecklistItems: [ChecklistItem] {
+        filteredChecklistItems.filter {
             $0.space.type == selectedSpaceType
         }
     }
     
-    func calculateCategoryScores() -> [CheckListCategory: Float] {
-        var categoryScores: [CheckListCategory: Float] = [:]
+    func calculateCategoryScores() -> [ChecklistCategory: Float] {
+        var categoryScores: [ChecklistCategory: Float] = [:]
         
-        filteredCheckListItems.forEach { checkListItem in
-            let categories = [checkListItem.basicCategory] + checkListItem.crossTip.keys
+        filteredChecklistItems.forEach { checklistItem in
+            let categories = [checklistItem.basicCategory] + checklistItem.crossTip.keys
             
             for category in categories {
-                let isSelectableBasicCategory = checkListItem.basicCategory == category && category.isSelectable
+                let isSelectableBasicCategory = checklistItem.basicCategory == category && category.isSelectable
                 if selectedCategory.contains(category) || isSelectableBasicCategory {
                     var basicValue: Float = 0.0
-                    switch checkListItem.question.answerType {
+                    switch checklistItem.question.answerType {
                     case .multiSelect(let basicScore, _):
                         basicValue = basicScore
                     default:
                         basicValue = 1.0
                     }
-                    categoryScores[category, default: 0.0] += scores[checkListItem.id] ?? basicValue
+                    categoryScores[category, default: 0.0] += scores[checklistItem.id] ?? basicValue
                 }
             }
         }
@@ -89,21 +89,21 @@ private extension ChecklistView {
         return categoryScores
     }
     
-    func calculateMaxCategoryScores() -> [CheckListCategory: Float] {
-        var categoryScores: [CheckListCategory: Float] = [:]
+    func calculateMaxCategoryScores() -> [ChecklistCategory: Float] {
+        var categoryScores: [ChecklistCategory: Float] = [:]
         
-        filteredCheckListItems.forEach { checkListItem in
-            let categories = [checkListItem.basicCategory] + checkListItem.crossTip.keys
+        filteredChecklistItems.forEach { checklistItem in
+            let categories = [checklistItem.basicCategory] + checklistItem.crossTip.keys
             
             for category in categories {
-                let isSelectableBasicCategory = checkListItem.basicCategory == category && category.isSelectable
+                let isSelectableBasicCategory = checklistItem.basicCategory == category && category.isSelectable
                 if selectedCategory.contains(category) || isSelectableBasicCategory {
-                    switch checkListItem.question.answerType {
+                    switch checklistItem.question.answerType {
                     case .multiSelect(let basicScore, let answerDisposition):
                         if answerDisposition == .negative {
                             categoryScores[category, default: 0.0] += basicScore
                         } else if answerDisposition == .positive {
-                            let maxScore: Float = Float(checkListItem.question.answerOptions.count) * 0.5
+                            let maxScore: Float = Float(checklistItem.question.answerOptions.count) * 0.5
                             categoryScores[category, default: 0.0] += maxScore
                         }
                     default:

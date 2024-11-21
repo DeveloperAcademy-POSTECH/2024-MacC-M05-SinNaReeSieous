@@ -1,5 +1,5 @@
 //
-//  CheckListRowAnswerSectionView.swift
+//  ChecklistRowAnswerSectionView.swift
 //  ZipZipSa
 //
 //  Created by YunhakLee on 11/20/24.
@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct CheckListRowAnswerSectionView: View {
+struct ChecklistRowAnswerSectionView: View {
     @Binding var answers: [UUID: Set<Int>]
     @Binding var scores: [UUID: Float]
-    let checkListItem: CheckListItem
+    let checkListItem: ChecklistItem
     
     private let horizontalSpacing: CGFloat = 10
     private let verticalSpacing: CGFloat = 8
@@ -24,7 +24,7 @@ struct CheckListRowAnswerSectionView: View {
     }
 }
 
-private extension CheckListRowAnswerSectionView {
+private extension ChecklistRowAnswerSectionView {
     
     // MARK: - View
     
@@ -119,5 +119,5 @@ private extension CheckListRowAnswerSectionView {
 }
 
 #Preview {
-    CheckListRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checkListItem: CheckListItem.checkListItems[0])
+    ChecklistRowAnswerSectionView(answers: .constant([:]), scores: .constant([:]), checkListItem: ChecklistItem.checklistItems[0])
 }

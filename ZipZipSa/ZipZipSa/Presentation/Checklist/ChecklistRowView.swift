@@ -1,5 +1,5 @@
 //
-//  CheckListRowView.swift
+//  ChecklistRowView.swift
 //  ZipZipSa
 //
 //  Created by YunhakLee on 11/20/24.
@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct CheckListRowView: View {
-    @Binding var selectedCategory: [CheckListCategory]
+struct ChecklistRowView: View {
+    @Binding var selectedCategory: [ChecklistCategory]
     @Binding var answers: [UUID: Set<Int>]
     @Binding var scores: [UUID: Float]
-    let checkListItem: CheckListItem
+    let checkListItem: ChecklistItem
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -20,14 +20,14 @@ struct CheckListRowView: View {
             if captionType != .none {
                 Caption
             }
-            CheckListRowAnswerSectionView(answers: $answers,
+            ChecklistRowAnswerSectionView(answers: $answers,
                                           scores: $scores,
                                           checkListItem: checkListItem)
         }
     }
 }
 
-private extension CheckListRowView {
+private extension ChecklistRowView {
     
     // MARK: - View
     
@@ -87,7 +87,7 @@ private extension CheckListRowView {
         return result
     }
     
-    var captionType: captionType {
+    var captionType: CaptionType {
         let isCrossTip = checkListItem.crossTip.keys.contains(where: {
             selectedCategory.contains($0)
         })
@@ -120,6 +120,13 @@ private extension CheckListRowView {
     
 }
 
+enum CaptionType {
+    case remark
+    case crossTip
+    case none
+}
+
+
 #Preview {
-    CheckListRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checkListItem: CheckListItem.checkListItems[0])
+    ChecklistRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checkListItem: ChecklistItem.checklistItems[0])
 }
