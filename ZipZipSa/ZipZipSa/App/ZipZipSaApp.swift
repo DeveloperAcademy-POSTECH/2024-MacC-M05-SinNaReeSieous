@@ -12,7 +12,7 @@ import GoogleMaps
 struct ZipZipSaApp: App {
     @State private var hasRoomModel: Bool = false
     init() {
-        GMSServices.provideAPIKey(Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? "API KEY를 가져오는데 실패했습니다.")
+        GMSServices.provideAPIKey(Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? "")
     }
     
     var body: some Scene {

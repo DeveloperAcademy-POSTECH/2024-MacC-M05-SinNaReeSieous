@@ -148,7 +148,7 @@ struct RoomScanView: View {
         }
         .sheet(isPresented: $showResultSheet) {
             if let room {
-                ResultCardView(room: room, hasRoomModel: $hasRoomModel)
+                ResultCardView(hasRoomModel: $hasRoomModel, room: room)
                     .presentationDragIndicator(.visible)
             }
         }

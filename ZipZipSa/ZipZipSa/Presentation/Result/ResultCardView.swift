@@ -10,10 +10,10 @@ import Vision
 
 struct ResultCardView: View {
     
-    var room: SampleRoom
-    
     @State private var card: UIImage = UIImage()
     @Binding var hasRoomModel: Bool
+    
+    var room: SampleRoom
     
     var body: some View {
         NavigationStack {

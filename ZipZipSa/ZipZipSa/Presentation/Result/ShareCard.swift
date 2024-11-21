@@ -6,10 +6,26 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct ShareCard: View {
+    
+    @State private var availableFacilities: [String] = []
+    @State private var showFacilities = false
     @Binding var hasRoomModel: Bool
+    
     var room: SampleRoom
+    let facilityChecker = FacilityChecker(apiKey: Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? "")
+    let keywords = ["빨래방", "편의점", "마트", "병원", "약국", "공원", "다이소"]
+    let facilityIcons: [String: String] = [
+        "빨래방": "icn_laundry",
+        "편의점": "icn_cvs",
+        "마트": "icn_mart",
+        "병원": "icn_hospital",
+        "약국": "icn_pharmacy",
+        "공원": "icn_park",
+        "다이소": "icn_daiso"
+    ]
     
     var body: some View {
         VStack {
@@ -110,13 +126,26 @@ struct ShareCard: View {
             
             // 주변시설 뷰
             HStack {
-                Circle().frame(width: 30, height: 30)
-                Circle().frame(width: 30, height: 30)
-                Circle().frame(width: 30, height: 30)
+                ForEach(availableFacilities, id: \.self) { facility in
+                    if let iconName = facilityIcons[facility] {
+                        Image(iconName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 30, height: 30)
+                    }
+                }
                 
                 Spacer()
             }
             .padding()
+        }
+        .onAppear {
+            let location = CLLocationCoordinate2D(latitude: room.latitude, longitude: room.longitude)
+            facilityChecker.checkFacilities(at: location, for: keywords) { result in
+                availableFacilities = result
+                    .filter { $0.value == true }
+                    .map { $0.key }
+            }
         }
         .background(
             RoundedRectangle(cornerRadius: 20)
