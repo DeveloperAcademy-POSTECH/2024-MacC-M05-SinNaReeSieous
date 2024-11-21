@@ -21,9 +21,9 @@ struct CheckListRowAnswerSectionView: View {
                 AnswerButton(index: index)
             }
         }
-        .onChange(of: scores) { oldValue, newValue in
-            print(newValue)
-        }
+//        .onChange(of: scores) { oldValue, newValue in
+//            print(newValue)
+//        }
     }
 }
 
@@ -32,15 +32,23 @@ private extension CheckListRowAnswerSectionView {
     // MARK: - View
     
     func AnswerButton(index: Int) -> some View {
-        Button {
-            applyAnswerResult(index: index, isSelected: answers[checkListItem.id]?.contains(index) ?? false)
+        let color = accentColor(index: index)
+        let isSelected = answers[checkListItem.id]?.contains(index) ?? false
+        return Button {
+            applyAnswerResult(index: index, isSelected: isSelected)
         } label: {
             RoundedRectangle(cornerRadius: 10)
-                .fill(answers[checkListItem.id]?.contains(index) ?? false ? .blue : .white)
+                .fill(isSelected ? color.opacity(0.2) : .white)
                 .frame(height: 43)
                 .overlay {
                     Text(checkListItem.question.answerOptions[index])
                         .foregroundStyle(.black)
+                }
+                .overlay {
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(isSelected ? color : .white,
+                                lineWidth: isSelected ? 1 : 0)
+                        .padding(1)
                 }
         }
     }
@@ -60,17 +68,37 @@ private extension CheckListRowAnswerSectionView {
               count: (answerType == .twoChoices) ? 2 : 3)
     }
     
+    func accentColor(index: Int) -> Color {
+        switch answerType {
+        case .twoChoices:
+            return index == 1 ? Color.blue : Color.red
+        case .multiChoices:
+            switch index {
+            case 0: return Color.red
+            case 1: return Color.green
+            case 2: return Color.blue
+            default: return Color.green
+            }
+        case .multiSelect(_, let answerDisposition):
+            switch answerDisposition {
+            case .negative: return Color.red
+            case .neutral: return Color.green
+            }
+        }
+    }
+    
     // MARK: - Action
     
     func applyAnswerResult(index: Int, isSelected: Bool) {
         switch answerType {
-        case .multiSelect(let basicScore):
+        case .multiSelect(let basicScore, let answerDisposition):
+            let value: Float = answerDisposition == .negative ? -0.5 : 0.5
             if isSelected {
                 answers[checkListItem.id, default: Set<Int>([index])].remove(index)
-                scores[checkListItem.id] = Float(answers[checkListItem.id]?.count ?? 0) * -0.5 + basicScore
+                scores[checkListItem.id] = Float(answers[checkListItem.id]?.count ?? 0) * value + basicScore
             } else {
                 answers[checkListItem.id, default: Set<Int>([index])].insert(index)
-                scores[checkListItem.id] = Float(answers[checkListItem.id]?.count ?? 0) * -0.5 + basicScore
+                scores[checkListItem.id] = Float(answers[checkListItem.id]?.count ?? 0) * value + basicScore
             }
         case .multiChoices:
             if isSelected {
@@ -93,5 +121,5 @@ private extension CheckListRowAnswerSectionView {
 }
 
 #Preview {
-    CheckListRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checkListItem: CheckListItem.CheckListItems[0])
+    CheckListRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checkListItem: CheckListItem.checkListItems[0])
 }

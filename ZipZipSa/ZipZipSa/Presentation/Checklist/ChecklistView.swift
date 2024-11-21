@@ -39,6 +39,9 @@ private extension ChecklistView {
                 }
             }
         }
+        .onChange(of: categoryScores, { oldValue, newValue in
+            print(newValue.sorted(by: { $0.0.rawValue > $1.0.rawValue }))
+        })
         .scrollIndicators(.never)
         .contentMargins([.top, .bottom], 26, for: .scrollContent)
     }
@@ -46,7 +49,7 @@ private extension ChecklistView {
     // MARK: - Computed Values
     
     var filteredCheckListItems: [CheckListItem] {
-        CheckListItem.CheckListItems.filter {
+        CheckListItem.checkListItems.filter {
             let isBasicCheckListItem = $0.checkListType == .basic
             let isSelectedCategoryCheckListItem = $0.checkListType == .advanced
                                                 && selectedCategory.contains($0.basicCategory)
@@ -58,6 +61,25 @@ private extension ChecklistView {
         filteredCheckListItems.filter {
             $0.space.type == selectedSpaceType
         }
+    }
+    
+    var categoryScores: [CheckListCategory: Float] {
+        var categoryScores: [CheckListCategory: Float] = [:]
+        
+        filteredCheckListItems.forEach { checkListItem in
+            if checkListItem.basicCategory.isSelectable {
+                categoryScores[checkListItem.basicCategory, default: 0.0] += scores[checkListItem.id] ?? 0
+            }
+            
+            for category in checkListItem.crossTip.keys {
+                if selectedCategory.contains(category) {
+                    categoryScores[category, default: 0.0] += scores[checkListItem.id] ?? 0
+                }
+            }
+            
+        }
+        
+        return categoryScores
     }
 }
 

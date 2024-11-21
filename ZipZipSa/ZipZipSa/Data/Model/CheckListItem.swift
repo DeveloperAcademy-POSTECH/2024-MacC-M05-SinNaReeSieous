@@ -25,7 +25,7 @@ struct CheckListItem: Identifiable {
 }
 
 extension CheckListItem {
-    static let CheckListItems = [
+    static let checkListItems = [
         CheckListItem(
             space: Space(type: .exterior,
                          questionNumber: 1),
@@ -68,7 +68,7 @@ extension CheckListItem {
             checkListType: .basic,
             basicCategory: .soundproof,
             question: Question(question: "주변에 소음이 발생할 수 있는 시설이 있나요?",
-                               answerType: .multiSelect(basicScore: 1.0),
+                               answerType: .multiSelect(basicScore: 1.0, answerDisposition: .negative),
                                answerOptions: ["유흥가", "학교", "공원", "상가"]),
             crossTip: [.security: "유흥가가 집 근처에 있으면 주취자를 마추질 가능성이 높아져요."],
             remark: nil,
@@ -83,6 +83,18 @@ extension CheckListItem {
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
             crossTip: [.ventilation: "매연 때문에 환기하기 어려울 수 있어요."],
+            remark: nil,
+            hazard: nil
+        ),
+        CheckListItem(
+            space: Space(type: .exterior,
+                         questionNumber: 6),
+            checkListType: .advanced,
+            basicCategory: .insectproof,
+            question: Question(question: "쓰레기 처리장이 청결하게 관리되고있나요?",
+                               answerType: .multiChoices,
+                               answerOptions: ["더러워요", "보통이에요", "깨끗해요"]),
+            crossTip: [:],
             remark: nil,
             hazard: nil
         ),
@@ -139,7 +151,12 @@ struct Question {
 enum AnswerType: Equatable {
     case twoChoices
     case multiChoices
-    case multiSelect(basicScore: Float)
+    case multiSelect(basicScore: Float, answerDisposition: AnswerDisposition = .neutral)
+}
+
+enum AnswerDisposition: Equatable {
+    case negative
+    case neutral
 }
 
 enum CheckListType {
@@ -154,7 +171,7 @@ enum CheckListType {
     }
 }
 
-enum CheckListCategory: Hashable {
+enum CheckListCategory: String, CaseIterable, Hashable {
     case insectproof
     case cleanliness
     case security

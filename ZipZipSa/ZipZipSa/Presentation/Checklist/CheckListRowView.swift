@@ -69,19 +69,6 @@ private extension CheckListRowView {
         }
     }
     
-    func AnswerButton(index: Int) -> some View {
-        Button {
-            applyAnswerResult(index: index)
-        } label: {
-            Text(checkListItem.question.answerOptions[index])
-                .background {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(answers[checkListItem.id]?.contains(index) ?? false ? .blue : .white)
-                }
-        }
-    }
-    
-    
     // MARK: - Computede Values
     
     var chipData: [(text: String, clolr: Color)] {
@@ -131,21 +118,8 @@ private extension CheckListRowView {
     
     // MARK: - Action
     
-    func applyAnswerResult(index: Int) {
-        switch checkListItem.question.answerType {
-        case .multiSelect(let basicScore):
-            answers[checkListItem.id, default: Set<Int>([index])].insert(index)
-            scores[checkListItem.id] = Float(answers[checkListItem.id]?.count ?? 0) * -0.5 + basicScore
-        case .multiChoices:
-            answers[checkListItem.id] = Set([index])
-            scores[checkListItem.id] = Float(index-1)
-        case .twoChoices:
-            answers[checkListItem.id] = Set([index])
-            scores[checkListItem.id] = Float(index == 1 ? 1 : -1)
-        }
-    }
 }
 
 #Preview {
-    CheckListRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checkListItem: CheckListItem.CheckListItems[0])
+    CheckListRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checkListItem: CheckListItem.checkListItems[0])
 }
