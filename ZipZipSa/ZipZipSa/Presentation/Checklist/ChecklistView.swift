@@ -10,7 +10,6 @@ import SwiftUI
 struct ChecklistView: View {
     @State var answers: [UUID: Set<Int>] = [:]
     @State var scores: [UUID: Float] = [:]
-    
     @State var selectedCategory: [ChecklistCategory] = [.security, .insectproof, .ventilation]
     @State var selectedSpaceType: SpaceType = .exterior
     
@@ -39,11 +38,12 @@ private extension ChecklistView {
                 }
             }
         }
-//        .onChange(of: scores, { oldValue, newValue in
-//            print(calculateCategoryScores().sorted(by: { $0.key.rawValue > $1.key.rawValue }))
-//            print("================== DIVIDER ==================")
-//            print(calculateMaxCategoryScores().sorted(by: { $0.key.rawValue > $1.key.rawValue }))
-//        })
+        .onChange(of: scores, { oldValue, newValue in
+            print(calculateCategoryScores().sorted(by: { $0.key.rawValue > $1.key.rawValue }))
+            print("================== DIVIDER ==================")
+            print(calculateMaxCategoryScores().sorted(by: { $0.key.rawValue > $1.key.rawValue }))
+            print(getHazardResult())
+        })
         .scrollIndicators(.never)
         .contentMargins([.top, .bottom], 26, for: .scrollContent)
     }
@@ -114,6 +114,24 @@ private extension ChecklistView {
         }
         
         return categoryScores
+    }
+    
+    func getHazardResult() -> [Hazard] {
+        var hazards: [Hazard] = []
+        
+        filteredChecklistItems.forEach { checklistItem in
+            guard let hazard = checklistItem.hazard else {
+                return
+            }
+            let hasHazard = answers[checklistItem.id] == [0]
+            if hasHazard {
+                hazards.append(hazard)
+            }
+        }
+        
+        hazards.sort { $0.text < $1.text }
+        
+        return hazards
     }
 }
 

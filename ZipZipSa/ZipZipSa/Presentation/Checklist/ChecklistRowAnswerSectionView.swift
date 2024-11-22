@@ -32,7 +32,7 @@ private extension ChecklistRowAnswerSectionView {
         let color = accentColor(index: index)
         let isSelected = answers[checkListItem.id]?.contains(index) ?? false
         return Button {
-            applyAnswerResult(index: index, isSelected: isSelected)
+            applyScore(index: index, isSelected: isSelected)
         } label: {
             RoundedRectangle(cornerRadius: 10)
                 .fill(isSelected ? color.opacity(0.2) : .white)
@@ -87,7 +87,7 @@ private extension ChecklistRowAnswerSectionView {
     
     // MARK: - Action
     
-    func applyAnswerResult(index: Int, isSelected: Bool) {
+    func applyScore(index: Int, isSelected: Bool) {
         switch answerType {
         case .multiSelect(let basicScore, let answerDisposition):
             let value: Float = answerDisposition == .negative ? -0.5 : 0.5
