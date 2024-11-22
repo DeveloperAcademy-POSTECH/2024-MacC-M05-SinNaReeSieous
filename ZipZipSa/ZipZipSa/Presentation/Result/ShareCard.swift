@@ -10,21 +10,12 @@ import CoreLocation
 
 struct ShareCard: View {
     
-    @State private var availableFacilities: [String] = []
+    @State private var availableFacilities: [Facility] = []
     @Binding var hasRoomModel: Bool
     
     var room: SampleRoom
     let facilityChecker = FacilityChecker(apiKey: Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? "")
-    let keywords = ["빨래방", "편의점", "마트", "병원", "약국", "공원", "다이소"]
-    let facilityIcons: [String: String] = [
-        "빨래방": "icn_laundry",
-        "편의점": "icn_cvs",
-        "마트": "icn_mart",
-        "병원": "icn_hospital",
-        "약국": "icn_pharmacy",
-        "공원": "icn_park",
-        "다이소": "icn_daiso"
-    ]
+    let facilities: [Facility] = [.lundry, .convenienceStore, .mart, .hospital, .pharmacy, .park, .daiso]
     
     var body: some View {
         VStack {
@@ -68,7 +59,6 @@ struct ShareCard: View {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(.gray)
                             .frame(width: 50, height: 35)
-//                            .padding()
                             .overlay(Text("태그"))
                     }
                     .padding(.horizontal, 5)
@@ -126,12 +116,10 @@ struct ShareCard: View {
             // 주변시설 뷰
             HStack {
                 ForEach(availableFacilities, id: \.self) { facility in
-                    if let iconName = facilityIcons[facility] {
-                        Image(iconName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 30, height: 30)
-                    }
+                    Image(systemName: facility.icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 30, height: 30)
                 }
                 
                 Spacer()
@@ -140,10 +128,10 @@ struct ShareCard: View {
         }
         .onAppear {
             let location = CLLocationCoordinate2D(latitude: room.latitude, longitude: room.longitude)
-            facilityChecker.checkFacilities(at: location, for: keywords) { result in
-                availableFacilities = result
-                    .filter { $0.value == true }
-                    .map { $0.key }
+            facilityChecker.checkFacilities(at: location, for: facilities.map { $0.keyword }) { result in
+                availableFacilities = facilities.filter { facility in
+                    result[facility.keyword] == true
+                }
             }
         }
         .background(
