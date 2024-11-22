@@ -8,9 +8,15 @@
 import Foundation
 import CoreLocation
 
-struct FacilityChecker {
-    let apiKey: String
-    let radius: Int = 350
+class FacilityChecker {
+    static let shared = FacilityChecker()
+    
+    private let apiKey: String
+    private let radius: Int = 350
+    
+    private init() {
+        apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? ""
+    }
     
     func checkFacilities(at location: CLLocationCoordinate2D, for keywords: [String], completion: @escaping ([String: Bool]) -> Void) {
         var results: [String: Bool] = [:]
@@ -29,7 +35,9 @@ struct FacilityChecker {
                 continue
             }
             
-            URLSession.shared.dataTask(with: url) { data, response, error in
+            URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+                guard let self = self else { return }
+                
                 defer { group.leave() }
                 
                 if let error = error {
@@ -51,7 +59,7 @@ struct FacilityChecker {
                 do {
                     let decoded = try JSONDecoder().decode(PlacesResponse.self, from: data)
                     let filteredResults = decoded.results.filter {
-                        isWithinRadius(center: location, location: $0.geometry.location, radius: radius)
+                        self.isWithinRadius(center: location, location: $0.geometry.location, radius: self.radius)
                     }
                     queue.sync { results[keyword] = !filteredResults.isEmpty }
                 } catch {
@@ -65,6 +73,12 @@ struct FacilityChecker {
         group.notify(queue: .main) {
             completion(results)
         }
+    }
+    
+    func isWithinRadius(center: CLLocationCoordinate2D, location: Location, radius: Int) -> Bool {
+        let centerLocation = CLLocation(latitude: center.latitude, longitude: center.longitude)
+        let targetLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
+        return centerLocation.distance(from: targetLocation) <= Double(radius)
     }
 }
 
@@ -82,12 +96,6 @@ struct Geometry: Codable {
 }
 
 struct Location: Codable {
-    let lat: Double
-    let lng: Double
-}
-
-func isWithinRadius(center: CLLocationCoordinate2D, location: Location, radius: Int) -> Bool {
-    let centerLocation = CLLocation(latitude: center.latitude, longitude: center.longitude)
-    let targetLocation = CLLocation(latitude: location.lat, longitude: location.lng)
-    return centerLocation.distance(from: targetLocation) <= Double(radius)
+    let latitude: Double
+    let longitude: Double
 }

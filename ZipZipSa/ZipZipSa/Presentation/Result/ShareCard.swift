@@ -14,7 +14,7 @@ struct ShareCard: View {
     @Binding var hasRoomModel: Bool
     
     var room: SampleRoom
-    let facilityChecker = FacilityChecker(apiKey: Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? "")
+    let facilityChecker = FacilityChecker.shared
     let facilities: [Facility] = [.lundry, .convenienceStore, .mart, .hospital, .pharmacy, .park, .daiso]
     
     var body: some View {
@@ -129,8 +129,10 @@ struct ShareCard: View {
         .onAppear {
             let location = CLLocationCoordinate2D(latitude: room.latitude, longitude: room.longitude)
             facilityChecker.checkFacilities(at: location, for: facilities.map { $0.keyword }) { result in
-                availableFacilities = facilities.filter { facility in
-                    result[facility.keyword] == true
+                DispatchQueue.main.async {
+                    availableFacilities = facilities.filter { facility in
+                        result[facility.keyword] == true
+                    }
                 }
             }
         }
