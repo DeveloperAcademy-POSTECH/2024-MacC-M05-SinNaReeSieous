@@ -38,12 +38,6 @@ private extension ChecklistView {
                 }
             }
         }
-        .onChange(of: scores, { oldValue, newValue in
-            print(calculateCategoryScores().sorted(by: { $0.key.rawValue > $1.key.rawValue }))
-            print("================== DIVIDER ==================")
-            print(calculateMaxCategoryScores().sorted(by: { $0.key.rawValue > $1.key.rawValue }))
-            print(getHazardResult())
-        })
         .scrollIndicators(.never)
         .contentMargins([.top, .bottom], 26, for: .scrollContent)
     }

@@ -29,6 +29,7 @@ private extension ChecklistTabView {
             changeSpaceType(to: type)
         } label: {
             Text(type.text)
+                .fixedSize()
                 .foregroundStyle(.black)
                 .padding(12)
                 .background {
