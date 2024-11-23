@@ -8,11 +8,51 @@
 import SwiftUI
 
 struct ChecklistTabView: View {
+    @Binding var selectedSpaceType: SpaceType
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            ForEach(SpaceType.allCases.indices, id: \.self) { index in
+                let type = SpaceType.allCases[index]
+                TopSpaceButton(type: type)
+            }
+        }
     }
 }
 
+private extension ChecklistTabView {
+    
+    // MARK: - View
+    
+    func TopSpaceButton(type: SpaceType) -> some View {
+        Button {
+            changeSpaceType(to: type)
+        } label: {
+            Text(type.text)
+                .fixedSize()
+                .foregroundStyle(.black)
+                .padding(12)
+                .background {
+                    UnevenRoundedRectangle(
+                        cornerRadii: RectangleCornerRadii(
+                            bottomLeading: 15,
+                            bottomTrailing: 15,
+                            topTrailing: 15))
+                    .fill(type == selectedSpaceType ? Color.blue
+                          : Color.white)
+                }
+        }
+    }
+    
+    // MARK: - Action
+    
+    func changeSpaceType(to selectedSpaceType: SpaceType) {
+        self.selectedSpaceType = selectedSpaceType
+    }
+}
+
+
+
 #Preview {
-    ChecklistTabView()
+    ChecklistTabView(selectedSpaceType: .constant(.exterior))
 }
