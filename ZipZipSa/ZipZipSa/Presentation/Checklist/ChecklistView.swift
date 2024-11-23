@@ -14,32 +14,56 @@ struct ChecklistView: View {
     @State var selectedSpaceType: SpaceType = .exterior
     
     var body: some View {
-        VStack {
-            ChecklistTabView(selectedSpaceType: $selectedSpaceType)
-            ChecklistList
+        ScrollView {
+            NavigationBarTitle
+            LazyVStack(pinnedViews: [.sectionHeaders]) {
+                Section {
+                    ChecklistList
+                } header: {
+                    ChecklistTabView(selectedSpaceType: $selectedSpaceType)
+                        .background(Color.brown)
+                }
+            }
         }
-        .padding(16)
+        .clipped()
+        .scrollIndicators(.never)
+        .contentMargins(.bottom, 26, for: .scrollContent)
         .ignoresSafeArea(.container, edges: [.bottom])
-        .background(Color.brown.opacity(0.2))
+        .background(Color.brown)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("")
     }
 }
 
 private extension ChecklistView {
+    
+    // MARK: - View
+    
     var ChecklistList: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 40) {
-                ForEach(spaceChecklistItems) { checkListItem in
-                    ChecklistRowView(
-                        selectedCategory: $selectedCategory,
-                        answers: $answers,
-                        scores: $scores,
-                        checkListItem: checkListItem
-                    )
-                }
+        VStack(alignment: .leading, spacing: 40) {
+            ForEach(spaceChecklistItems) { checkListItem in
+                ChecklistRowView(
+                    selectedCategory: $selectedCategory,
+                    answers: $answers,
+                    scores: $scores,
+                    checkListItem: checkListItem
+                )
             }
         }
-        .scrollIndicators(.never)
-        .contentMargins([.top, .bottom], 26, for: .scrollContent)
+        .padding(.horizontal, 16)
+    }
+    
+    var NavigationBarTitle: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text("주인님을 위한")
+                Text("맞춤 체크리스트예요")
+            }
+            .font(.title)
+            .bold()
+            Spacer()
+        }
+        .padding(.horizontal, 16)
     }
     
     // MARK: - Computed Values
@@ -48,7 +72,7 @@ private extension ChecklistView {
         ChecklistItem.checklistItems.filter {
             let isBasicCheckListItem = $0.checkListType == .basic
             let isSelectedCategoryCheckListItem = $0.checkListType == .advanced
-                                                && selectedCategory.contains($0.basicCategory)
+            && selectedCategory.contains($0.basicCategory)
             return isBasicCheckListItem || isSelectedCategoryCheckListItem
         }
     }
@@ -131,5 +155,7 @@ private extension ChecklistView {
 }
 
 #Preview {
-    ChecklistView()
+    NavigationView {
+        ChecklistView()
+    }
 }
