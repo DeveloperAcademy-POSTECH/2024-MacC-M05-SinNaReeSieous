@@ -38,7 +38,7 @@ class FacilityChecker {
     }
     
     private func fetchFacility(for keyword: String, at location: CLLocationCoordinate2D, completion: @escaping (Bool) -> Void) {
-        let urlString = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=\(location.latitude),\(location.longitude)&radius=\(radius)&keyword=\(keyword)&key=\(apiKey)"
+        let urlString = ZipLiteral.APIEndpoints.nearbySearch(latitude: location.latitude, longitude: location.longitude, radius: radius, keyword: keyword, apiKey: apiKey).url
         
         guard let url = URL(string: urlString) else {
             print("Invalid URL for keyword: \(keyword)")
