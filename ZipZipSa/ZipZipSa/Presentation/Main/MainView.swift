@@ -8,20 +8,17 @@
 import SwiftUI
 
 struct MainView: View {
+    @State private var currentTip = ZipZipSaTip.getRandomText()
     var body: some View {
-        
         NavigationStack {
             VStack(alignment: .leading, spacing: 0){
-                
                 TopBar
-                
-                ZipZipSaTip
-                
+                ZipZipSaTips
                 MainButtons
                 
                 Spacer()
                 
-                RecentlyViewedHose
+                RecentlyViewedHome
             }
             .padding(.horizontal, 16)
             .accentColor(.black)
@@ -53,37 +50,44 @@ private extension MainView {
         }
     }
     
-    var ZipZipSaTip : some View {
-        Text("아파트나 오피스텔 등에서 입주 전 사전 점검 날짜가 있다면 꼭 참여하세요. 문, 창문, 전기, 수도 등 문제가 있을 경우 입주 전에 해결할 수 있습니다.")
-            .font(Font.system (size: 12, weight: .medium))
-            .padding(.leading, 60)
-            .padding(.vertical, 8)
-            .padding(.trailing, 8)
-            .overlay(content: {
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(.black, lineWidth:1)
-                HStack {
+    var ZipZipSaTips : some View {
+        RoundedRectangle(cornerRadius: 12)
+            .stroke(.black, lineWidth:1)
+            .frame(height: 61)
+            .overlay(alignment: .leading, content: {
+                HStack(spacing: 12) {
                     Image(systemName: "checkmark.circle.fill")
-                        .font(.largeTitle)
+                        .resizable()
+                        .frame(width: 36, height: 34)
                         .foregroundColor(.green)
-                        .padding(.leading, 12)
-                    
-                    Spacer()
+                    Text(currentTip)
+                        .font(Font.system (size: 12, weight: .medium))
+                        .lineLimit(3)
+                        .transition(.slide)
+                        .animation(.easeInOut, value: currentTip)
                 }
+                .padding(.leading, 12)
+                .padding(.trailing, 8)
             })
+            .onAppear {
+                Timer.scheduledTimer(withTimeInterval: 8.0, repeats: true) { _ in
+                    withAnimation {
+                        currentTip = ZipZipSaTip.getRandomText()
+                    }
+                }
+            }
     }
     
     var MainButtons: some View {
         HStack(spacing: 11) {
             
-            HouseHuntButton
-            ViewedHouseButton
+            HomeHuntButton
+            ViewedHomeButton
         }
         .padding(.top, 20)
     }
     
-    var HouseHuntButton: some View {
-        
+    var HomeHuntButton: some View {
         NavigationLink(destination: SettingView()) {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.yellow)
@@ -108,7 +112,7 @@ private extension MainView {
         }
     }
     
-    var ViewedHouseButton: some View {
+    var ViewedHomeButton: some View {
         NavigationLink(destination: HomeListView()) {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.cyan)
@@ -130,7 +134,7 @@ private extension MainView {
         }
     }
     
-    var RecentlyViewedHose: some View {
+    var RecentlyViewedHome: some View {
         VStack (alignment: .leading){
             Text("최근 본 집")
                 .font(Font.system (size: 24, weight: .bold))
