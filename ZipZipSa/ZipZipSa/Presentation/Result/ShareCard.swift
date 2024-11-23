@@ -14,7 +14,6 @@ struct ShareCard: View {
     
     var room: SampleRoom
     let facilityChecker = FacilityChecker.shared
-    let facilities: [Facility] = [.lundry, .convenienceStore, .mart, .hospital, .pharmacy, .park, .daiso]
     
     var body: some View {
         VStack {
@@ -127,9 +126,9 @@ struct ShareCard: View {
         }
         .onAppear {
             let location = CLLocationCoordinate2D(latitude: room.latitude, longitude: room.longitude)
-            facilityChecker.checkFacilities(at: location, for: facilities.map { $0.keyword }) { result in
+            facilityChecker.checkFacilities(at: location, for: Facility.allCases.map { $0.keyword }) { result in
                 DispatchQueue.main.async {
-                    availableFacilities = facilities.filter { facility in
+                    availableFacilities = Facility.allCases.filter { facility in
                         result[facility.keyword] == true
                     }
                 }

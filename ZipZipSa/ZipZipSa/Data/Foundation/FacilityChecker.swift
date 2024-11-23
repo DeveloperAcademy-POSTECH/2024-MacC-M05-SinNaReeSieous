@@ -26,48 +26,10 @@ class FacilityChecker {
         for keyword in keywords {
             group.enter()
             
-            let urlString = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=\(location.latitude),\(location.longitude)&radius=\(radius)&keyword=\(keyword)&key=\(apiKey)"
-            
-            guard let url = URL(string: urlString) else {
-                print("Invalid URL for keyword: \(keyword)")
-                results[keyword] = false
+            fetchFacility(for: keyword, at: location) { isFound in
+                queue.sync { results[keyword] = isFound }
                 group.leave()
-                continue
             }
-            
-            URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-                guard let self = self else { return }
-                
-                defer { group.leave() }
-                
-                if let error = error {
-                    print("Error fetching data for \(keyword): \(error.localizedDescription)")
-                    queue.sync { results[keyword] = false }
-                    return
-                }
-                
-                guard let data = data else {
-                    print("No data for keyword: \(keyword)")
-                    queue.sync { results[keyword] = false }
-                    return
-                }
-                
-                if let jsonString = String(data: data, encoding: .utf8) {
-                    print("Response JSON for \(keyword): \(jsonString)")
-                }
-                
-                do {
-                    let decoded = try JSONDecoder().decode(PlacesResponse.self, from: data)
-                    let filteredResults = decoded.results.filter {
-                        self.isWithinRadius(center: location, location: $0.geometry.location, radius: self.radius)
-                    }
-                    queue.sync { results[keyword] = !filteredResults.isEmpty }
-                } catch {
-                    print("Decoding error for \(keyword): \(error.localizedDescription)")
-                    queue.sync { results[keyword] = false }
-                }
-            }.resume()
-            
         }
         
         group.notify(queue: .main) {
@@ -75,27 +37,50 @@ class FacilityChecker {
         }
     }
     
-    func isWithinRadius(center: CLLocationCoordinate2D, location: Location, radius: Int) -> Bool {
+    private func fetchFacility(for keyword: String, at location: CLLocationCoordinate2D, completion: @escaping (Bool) -> Void) {
+        let urlString = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=\(location.latitude),\(location.longitude)&radius=\(radius)&keyword=\(keyword)&key=\(apiKey)"
+        
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL for keyword: \(keyword)")
+            completion(false)
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error fetching data for \(keyword): \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+            
+            guard let data = data else {
+                print("No data for keyword: \(keyword)")
+                completion(false)
+                return
+            }
+            
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("Response JSON for \(keyword): \(jsonString)")
+            }
+            
+            do {
+                let decoded = try JSONDecoder().decode(PlacesResponse.self, from: data)
+                let filteredResults = decoded.results.filter {
+                    self.isWithinRadius(center: location, location: $0.geometry.location, radius: self.radius)
+                }
+                completion(!filteredResults.isEmpty)
+            } catch {
+                print("Decoding error for \(keyword): \(error.localizedDescription)")
+                completion(false)
+            }
+        }.resume()
+    }
+    
+    private func isWithinRadius(center: CLLocationCoordinate2D, location: Location, radius: Int) -> Bool {
         let centerLocation = CLLocation(latitude: center.latitude, longitude: center.longitude)
         let targetLocation = CLLocation(latitude: location.lat, longitude: location.lng)
         return centerLocation.distance(from: targetLocation) <= Double(radius)
     }
-}
-
-struct PlacesResponse: Codable {
-    let results: [Place]
-}
-
-struct Place: Codable {
-    let name: String
-    let geometry: Geometry
-}
-
-struct Geometry: Codable {
-    let location: Location
-}
-
-struct Location: Codable {
-    let lat: Double
-    let lng: Double
 }

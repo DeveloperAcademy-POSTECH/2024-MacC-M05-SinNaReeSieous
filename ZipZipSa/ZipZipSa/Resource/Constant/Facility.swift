@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Facility: Hashable {
+enum Facility: Hashable, CaseIterable {
     case lundry
     case convenienceStore
     case mart
