@@ -77,7 +77,7 @@ class FacilityChecker {
     
     func isWithinRadius(center: CLLocationCoordinate2D, location: Location, radius: Int) -> Bool {
         let centerLocation = CLLocation(latitude: center.latitude, longitude: center.longitude)
-        let targetLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
+        let targetLocation = CLLocation(latitude: location.lat, longitude: location.lng)
         return centerLocation.distance(from: targetLocation) <= Double(radius)
     }
 }
@@ -96,6 +96,6 @@ struct Geometry: Codable {
 }
 
 struct Location: Codable {
-    let latitude: Double
-    let longitude: Double
+    let lat: Double
+    let lng: Double
 }

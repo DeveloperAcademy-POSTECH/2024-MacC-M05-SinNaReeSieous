@@ -27,7 +27,6 @@ struct RoomScanView: View {
     @State private var isProcessing: Bool = false
     @State private var latitude: Double = 0.0
     @State private var longitude: Double = 0.0
-    @Binding var hasRoomModel: Bool
     
     let roomController = RoomPlanManager.shared
     
@@ -128,7 +127,6 @@ struct RoomScanView: View {
                                 if newModel != nil {
                                     if let newSpace = addSpace() {
                                         room = newSpace
-                                        hasRoomModel = true
                                         showResultSheet = true
                                     }
                                     isProcessing = false
@@ -148,7 +146,7 @@ struct RoomScanView: View {
         }
         .sheet(isPresented: $showResultSheet) {
             if let room {
-                ResultCardView(hasRoomModel: $hasRoomModel, room: room)
+                ResultCardView(room: room)
                     .presentationDragIndicator(.visible)
             }
         }

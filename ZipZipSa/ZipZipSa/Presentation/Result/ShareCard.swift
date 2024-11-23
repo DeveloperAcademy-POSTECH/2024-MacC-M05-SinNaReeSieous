@@ -11,7 +11,6 @@ import CoreLocation
 struct ShareCard: View {
     
     @State private var availableFacilities: [Facility] = []
-    @Binding var hasRoomModel: Bool
     
     var room: SampleRoom
     let facilityChecker = FacilityChecker.shared
@@ -100,7 +99,7 @@ struct ShareCard: View {
                 .padding()
             
             // 집 구조 뷰
-            if hasRoomModel, let modelData = room.model, let uiImage = UIImage(data: modelData) {
+            if let modelData = room.model, let uiImage = UIImage(data: modelData) {
                 Image(uiImage: uiImage)
                     .resizable()
                     .frame(width: 150, height: 150)
