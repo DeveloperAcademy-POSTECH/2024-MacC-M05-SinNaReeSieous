@@ -21,4 +21,10 @@ extension View {
             view?.drawHierarchy(in: view!.bounds, afterScreenUpdates: true)
         }
     }
+    
+    func dismissKeyboard() -> some View {
+        self.onTapGesture {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
+    }
 }
