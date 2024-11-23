@@ -14,24 +14,36 @@ struct ChecklistView: View {
     @State var selectedSpaceType: SpaceType = .exterior
     
     var body: some View {
-        ScrollView {
-            NavigationBarTitle
-            LazyVStack(pinnedViews: [.sectionHeaders]) {
-                Section {
-                    ChecklistList
-                } header: {
-                    ChecklistTabView(selectedSpaceType: $selectedSpaceType)
-                        .background(Color.brown)
+        VStack {
+            ScrollView {
+                NavigationBarTitle
+                LazyVStack(pinnedViews: [.sectionHeaders]) {
+                    Section {
+                        ChecklistList
+                            .padding(.top, 18)
+                    } header: {
+                        ChecklistTabView(selectedSpaceType: $selectedSpaceType)
+                            .background(Color.brown)
+                    }
                 }
             }
+            .clipped()
+            .scrollIndicators(.never)
+            .contentMargins(.bottom, 26, for: .scrollContent)
+            
+            ZZSMainButton(
+                action: { print("Tapped") },
+                text: "집 구조 스캔하기"
+            )
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            .background(Color.brown)
         }
-        .clipped()
-        .scrollIndicators(.never)
-        .contentMargins(.bottom, 26, for: .scrollContent)
-        .ignoresSafeArea(.container, edges: [.bottom])
+        //.ignoresSafeArea(.container, edges: [.bottom])
         .background(Color.brown)
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")
+        .toolbarBackground(.hidden, for: .navigationBar)
     }
 }
 
