@@ -57,6 +57,7 @@ private extension ChecklistView {
         filteredChecklistItems.filter {
             $0.space.type == selectedSpaceType
         }
+        .sorted { $0.space.questionNumber < $1.space.questionNumber }
     }
     
     func calculateCategoryScores() -> [ChecklistCategory: Float] {
