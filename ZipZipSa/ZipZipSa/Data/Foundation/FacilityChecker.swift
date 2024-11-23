@@ -18,66 +18,48 @@ class FacilityChecker {
         apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? ""
     }
     
-    func checkFacilities(at location: CLLocationCoordinate2D, for keywords: [String], completion: @escaping ([String: Bool]) -> Void) {
+    func checkFacilities(at location: CLLocationCoordinate2D, for keywords: [String]) async throws -> [String: Bool] {
         var results: [String: Bool] = [:]
-        let group = DispatchGroup()
-        let queue = DispatchQueue(label: "com.facilitychecker.queue")
         
-        for keyword in keywords {
-            group.enter()
+        // TaskGroup을 사용하여 병렬로 여러 키워드를 처리
+        try await withThrowingTaskGroup(of: (String, Bool).self) { group in
+            for keyword in keywords {
+                group.addTask {
+                    let isFound = try await self.fetchFacility(for: keyword, at: location)
+                    return (keyword, isFound)
+                }
+            }
             
-            fetchFacility(for: keyword, at: location) { isFound in
-                queue.sync { results[keyword] = isFound }
-                group.leave()
+            // TaskGroup에서 결과를 받아서 dictionary에 저장
+            for try await (keyword, isFound) in group {
+                results[keyword] = isFound
             }
         }
         
-        group.notify(queue: .main) {
-            completion(results)
-        }
+        return results
     }
-    
-    private func fetchFacility(for keyword: String, at location: CLLocationCoordinate2D, completion: @escaping (Bool) -> Void) {
+
+
+    private func fetchFacility(for keyword: String, at location: CLLocationCoordinate2D) async throws -> Bool {
         let urlString = ZipLiteral.APIEndpoints.nearbySearch(latitude: location.latitude, longitude: location.longitude, radius: radius, keyword: keyword, apiKey: apiKey).url
         
         guard let url = URL(string: urlString) else {
-            print("Invalid URL for keyword: \(keyword)")
-            completion(false)
-            return
+            throw NetworkError.invalidURL(keyword: keyword)
         }
         
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard let self = self else { return }
-            
-            if let error = error {
-                print("Error fetching data for \(keyword): \(error.localizedDescription)")
-                completion(false)
-                return
+        let (data, _) = try await URLSession.shared.data(from: url)
+        
+        do {
+            let decoded = try JSONDecoder().decode(PlacesResponse.self, from: data)
+            let filteredResults = decoded.results.filter {
+                self.isWithinRadius(center: location, location: $0.geometry.location, radius: self.radius)
             }
-            
-            guard let data = data else {
-                print("No data for keyword: \(keyword)")
-                completion(false)
-                return
-            }
-            
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("Response JSON for \(keyword): \(jsonString)")
-            }
-            
-            do {
-                let decoded = try JSONDecoder().decode(PlacesResponse.self, from: data)
-                let filteredResults = decoded.results.filter {
-                    self.isWithinRadius(center: location, location: $0.geometry.location, radius: self.radius)
-                }
-                completion(!filteredResults.isEmpty)
-            } catch {
-                print("Decoding error for \(keyword): \(error.localizedDescription)")
-                completion(false)
-            }
-        }.resume()
+            return !filteredResults.isEmpty
+        } catch {
+            throw NetworkError.decodingError(keyword: keyword, description: error.localizedDescription)
+        }
     }
-    
+
     private func isWithinRadius(center: CLLocationCoordinate2D, location: Location, radius: Int) -> Bool {
         let centerLocation = CLLocation(latitude: center.latitude, longitude: center.longitude)
         let targetLocation = CLLocation(latitude: location.lat, longitude: location.lng)

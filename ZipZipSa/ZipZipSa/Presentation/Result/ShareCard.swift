@@ -125,12 +125,20 @@ struct ShareCard: View {
             .padding()
         }
         .onAppear {
-            let location = CLLocationCoordinate2D(latitude: room.latitude, longitude: room.longitude)
-            facilityChecker.checkFacilities(at: location, for: Facility.allCases.map { $0.keyword }) { result in
-                DispatchQueue.main.async {
-                    availableFacilities = Facility.allCases.filter { facility in
-                        result[facility.keyword] == true
+            Task {
+                do {
+                    let location = CLLocationCoordinate2D(latitude: room.latitude, longitude: room.longitude)
+                    let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.keyword })
+                    
+                    DispatchQueue.main.async {
+                        availableFacilities = Facility.allCases.filter { facility in
+                            results[facility.keyword] == true
+                        }
                     }
+                } catch let networkError as NetworkError {
+                    networkError.logError()
+                } catch {
+                    print("Unexpected error: \(error)")
                 }
             }
         }
