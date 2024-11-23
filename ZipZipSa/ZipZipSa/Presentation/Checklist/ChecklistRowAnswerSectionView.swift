@@ -34,7 +34,7 @@ private extension ChecklistRowAnswerSectionView {
         return Button {
             applyScore(index: index, isSelected: isSelected)
         } label: {
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: 16)
                 .fill(isSelected ? color.opacity(0.2) : .white)
                 .frame(height: 43)
                 .overlay {
@@ -42,7 +42,7 @@ private extension ChecklistRowAnswerSectionView {
                         .foregroundStyle(.black)
                 }
                 .overlay {
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: 16)
                         .stroke(isSelected ? color : .white,
                                 lineWidth: isSelected ? 1 : 0)
                         .padding(1)

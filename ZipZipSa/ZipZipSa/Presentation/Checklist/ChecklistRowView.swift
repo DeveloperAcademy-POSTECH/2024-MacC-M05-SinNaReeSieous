@@ -14,7 +14,7 @@ struct ChecklistRowView: View {
     let checkListItem: ChecklistItem
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 8) {
             CategoryChipStack
             Question
             if captionType != .none {
@@ -23,6 +23,7 @@ struct ChecklistRowView: View {
             ChecklistRowAnswerSectionView(answers: $answers,
                                           scores: $scores,
                                           checkListItem: checkListItem)
+            .padding(.top, 8)
         }
     }
 }
@@ -32,7 +33,7 @@ private extension ChecklistRowView {
     // MARK: - View
     
     var CategoryChipStack: some View {
-        HStack {
+        HStack(spacing: 8) {
             ForEach(chipData.indices, id:\.self) { index in
                 let chip = chipData[index]
                 CategoryChip(text: chip.text, color: chip.clolr)
@@ -42,10 +43,11 @@ private extension ChecklistRowView {
     
     func CategoryChip(text: String, color: Color) -> some View {
         Text(text)
+            .bold()
             .padding(.vertical, 4)
-            .padding(.horizontal, 8)
+            .padding(.horizontal, 12)
             .background {
-                UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 10, bottomTrailing: 10, topTrailing: 10))
+                RoundedRectangle(cornerRadius: 8)
                     .fill(color)
             }
     }
