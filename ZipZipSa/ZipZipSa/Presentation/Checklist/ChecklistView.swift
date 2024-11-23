@@ -12,35 +12,32 @@ struct ChecklistView: View {
     @State var scores: [UUID: Float] = [:]
     @State var selectedCategory: [ChecklistCategory] = [.security, .insectproof, .ventilation]
     @State var selectedSpaceType: SpaceType = .exterior
+    @State var memoText: String = ""
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ScrollView {
-                NavigationBarTitle
-                LazyVStack(pinnedViews: [.sectionHeaders]) {
-                    Section {
-                        ChecklistList
-                            .padding(.top, 18)
-                    } header: {
-                        ChecklistTabView(selectedSpaceType: $selectedSpaceType)
-                            .background(Color.brown)
-                    }
+                VStack(spacing: 0) {
+                    NavigationBarTitle
+                    ChecklistList
                 }
             }
             .clipped()
             .scrollIndicators(.never)
-            .contentMargins(.bottom, 26, for: .scrollContent)
-            
+            .contentMargins(.bottom, 120, for: .scrollContent)
+        }
+        .overlay(alignment: .bottom) {
             ZZSMainButton(
                 action: { print("Tapped") },
                 text: "집 구조 스캔하기"
             )
-            .padding(.horizontal, 16)
-            .padding(.top, 16)
+            .padding([.horizontal, .top], 16)
+            .padding(.bottom, 12)
             .background(Color.brown)
         }
         //.ignoresSafeArea(.container, edges: [.bottom])
         .background(Color.brown)
+        .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")
         .toolbarBackground(.hidden, for: .navigationBar)
@@ -52,17 +49,26 @@ private extension ChecklistView {
     // MARK: - View
     
     var ChecklistList: some View {
-        VStack(alignment: .leading, spacing: 40) {
-            ForEach(spaceChecklistItems) { checkListItem in
-                ChecklistRowView(
-                    selectedCategory: $selectedCategory,
-                    answers: $answers,
-                    scores: $scores,
-                    checkListItem: checkListItem
-                )
+        LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+            Section {
+                Spacer().frame(height: 18)
+                ForEach(spaceChecklistItems) { checkListItem in
+                    ChecklistRowView(
+                        selectedCategory: $selectedCategory,
+                        answers: $answers,
+                        scores: $scores,
+                        checkListItem: checkListItem
+                    )
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 40)
+                }
+                Memo
+                    
+            } header: {
+                ChecklistTabView(selectedSpaceType: $selectedSpaceType)
+                    .background(Color.brown)
             }
         }
-        .padding(.horizontal, 16)
     }
     
     var NavigationBarTitle: some View {
@@ -74,6 +80,32 @@ private extension ChecklistView {
             .font(.title)
             .bold()
             Spacer()
+        }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 24)
+    }
+    
+    var Memo: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("메모")
+                .bold()
+                .font(.title3)
+            TextEditor(text: $memoText)
+                .tint(.brown)
+                .overlay(alignment: .topLeading) {
+                    if memoText.isEmpty {
+                        Text("메모를 입력해 주세요")
+                            .foregroundStyle(.gray)
+                            .offset(x: 6, y: 8)
+                            .allowsHitTesting(false)
+                    }
+                }
+                .padding(12)
+                .frame(height: 150)
+                .background(Color.white)
+                .clipShape (
+                    RoundedRectangle(cornerRadius: 12)
+                )
         }
         .padding(.horizontal, 16)
     }

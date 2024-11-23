@@ -17,7 +17,7 @@ struct ChecklistTabView: View {
                 TopSpaceButton(type: type)
             }
         }
-        .padding(16)
+        .padding([.horizontal, .bottom], 16)
         .background(Color.brown)
     }
 }
