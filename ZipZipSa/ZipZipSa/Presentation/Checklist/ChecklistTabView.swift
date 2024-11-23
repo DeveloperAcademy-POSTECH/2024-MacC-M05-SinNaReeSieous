@@ -11,12 +11,14 @@ struct ChecklistTabView: View {
     @Binding var selectedSpaceType: SpaceType
     
     var body: some View {
-        HStack {
+        HStack(spacing: 8) {
             ForEach(SpaceType.allCases.indices, id: \.self) { index in
                 let type = SpaceType.allCases[index]
                 TopSpaceButton(type: type)
             }
         }
+        .padding(16)
+        .background(Color.brown)
     }
 }
 
@@ -28,19 +30,24 @@ private extension ChecklistTabView {
         Button {
             changeSpaceType(to: type)
         } label: {
-            Text(type.text)
-                .fixedSize()
-                .foregroundStyle(.black)
-                .padding(12)
-                .background {
-                    UnevenRoundedRectangle(
-                        cornerRadii: RectangleCornerRadii(
-                            bottomLeading: 15,
-                            bottomTrailing: 15,
-                            topTrailing: 15))
-                    .fill(type == selectedSpaceType ? Color.blue
-                          : Color.white)
-                }
+            HStack(spacing: 0) {
+                Spacer()
+                Text(type.text)
+                    .fixedSize()
+                    .foregroundStyle(.black)
+                Spacer()
+            }
+            .padding(.vertical, 12)
+            .background {
+                UnevenRoundedRectangle(
+                    cornerRadii: RectangleCornerRadii(
+                        bottomLeading: 16,
+                        bottomTrailing: 16,
+                        topTrailing: 16)
+                )
+                .fill(type == selectedSpaceType ? Color.gray
+                      : Color.white)
+            }
         }
     }
     
