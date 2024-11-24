@@ -16,7 +16,7 @@ struct ZipZipSaApp: App {
     
     var body: some Scene {
         WindowGroup {
-            RoomScanView()
+            ContentView()
         }
     }
 }
