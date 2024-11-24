@@ -16,12 +16,12 @@ struct ZZSMainButton: View {
             action()
         } label: {
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color.mint)
+                .fill(Color.Button.primaryBlue)
                 .frame(height: 53)
                 .overlay {
                     Text(text)
-                        .bold()
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyBold)
                 }
         }
     }

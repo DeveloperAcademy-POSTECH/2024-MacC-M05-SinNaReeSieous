@@ -18,7 +18,7 @@ struct ChecklistTabView: View {
             }
         }
         .padding([.horizontal, .bottom], 16)
-        .background(Color.brown)
+        .background(Color.Background.primary)
     }
 }
 
@@ -33,11 +33,13 @@ private extension ChecklistTabView {
             HStack(spacing: 0) {
                 Spacer()
                 Text(type.text)
+                    .foregroundStyle(type == selectedSpaceType ? Color.Text.onColorPrimary
+                                                               : Color.Text.primary)
+                    .applyZZSFont(zzsFontSet: .subheadlineRegular)
                     .fixedSize()
-                    .foregroundStyle(.black)
                 Spacer()
             }
-            .padding(.vertical, 12)
+            .padding(.vertical, 10)
             .background {
                 UnevenRoundedRectangle(
                     cornerRadii: RectangleCornerRadii(
@@ -45,8 +47,8 @@ private extension ChecklistTabView {
                         bottomTrailing: 16,
                         topTrailing: 16)
                 )
-                .fill(type == selectedSpaceType ? Color.gray
-                      : Color.white)
+                .fill(type == selectedSpaceType ? Color.Button.tertiary
+                                                : Color.Button.enable)
             }
         }
     }

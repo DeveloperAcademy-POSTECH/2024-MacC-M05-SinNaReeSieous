@@ -33,10 +33,10 @@ struct ChecklistView: View {
             )
             .padding([.horizontal, .top], 16)
             .padding(.bottom, 12)
-            .background(Color.brown)
+            .background(Color.Background.primary)
         }
         //.ignoresSafeArea(.container, edges: [.bottom])
-        .background(Color.brown)
+        .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")
@@ -66,7 +66,6 @@ private extension ChecklistView {
                     
             } header: {
                 ChecklistTabView(selectedSpaceType: $selectedSpaceType)
-                    .background(Color.brown)
             }
         }
     }
@@ -77,8 +76,8 @@ private extension ChecklistView {
                 Text("주인님을 위한")
                 Text("맞춤 체크리스트예요")
             }
-            .font(.title)
-            .bold()
+            .foregroundStyle(Color.Text.primary)
+            .applyZZSFont(zzsFontSet: .largeTitle)
             Spacer()
         }
         .padding(.horizontal, 16)
@@ -88,21 +87,25 @@ private extension ChecklistView {
     var Memo: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("메모")
-                .bold()
-                .font(.title3)
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .headline)
             TextEditor(text: $memoText)
-                .tint(.brown)
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .bodyRegular)
+                .tint(Color.Text.placeholder)
                 .overlay(alignment: .topLeading) {
                     if memoText.isEmpty {
                         Text("메모를 입력해 주세요")
-                            .foregroundStyle(.gray)
-                            .offset(x: 6, y: 8)
+                            .foregroundStyle(Color.Text.placeholder)
+                            .applyZZSFont(zzsFontSet: .bodyRegular)
+                            .offset(x: 6, y: 10)
                             .allowsHitTesting(false)
                     }
                 }
-                .padding(12)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
                 .frame(height: 150)
-                .background(Color.white)
+                .background(Color.Button.enable)
                 .clipShape (
                     RoundedRectangle(cornerRadius: 12)
                 )

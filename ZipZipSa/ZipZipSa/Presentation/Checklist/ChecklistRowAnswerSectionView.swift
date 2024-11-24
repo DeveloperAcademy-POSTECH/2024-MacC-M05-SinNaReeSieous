@@ -11,6 +11,7 @@ struct ChecklistRowAnswerSectionView: View {
     @Binding var answers: [UUID: Set<Int>]
     @Binding var scores: [UUID: Float]
     let checkListItem: ChecklistItem
+    @State var refresh: Bool = false
     
     private let horizontalSpacing: CGFloat = 10
     private let verticalSpacing: CGFloat = 8
@@ -21,6 +22,9 @@ struct ChecklistRowAnswerSectionView: View {
                 AnswerButton(index: index)
             }
         }
+        .onChange(of: answers) { oldValue, newValue in
+            print(newValue)
+        }
     }
 }
 
@@ -30,22 +34,16 @@ private extension ChecklistRowAnswerSectionView {
     
     func AnswerButton(index: Int) -> some View {
         let color = accentColor(index: index)
-        let isSelected = answers[checkListItem.id]?.contains(index) ?? false
         return Button {
-            applyScore(index: index, isSelected: isSelected)
+            applyScore(index: index, isSelected: answers[checkListItem.id]?.contains(index) ?? false)
         } label: {
             RoundedRectangle(cornerRadius: 16)
-                .fill(isSelected ? color.opacity(0.2) : .white)
+                .fill(answers[checkListItem.id]?.contains(index) ?? false ? color : Color.Button.enable)
                 .frame(height: 43)
                 .overlay {
                     Text(checkListItem.question.answerOptions[index])
-                        .foregroundStyle(.black)
-                }
-                .overlay {
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(isSelected ? color : .white,
-                                lineWidth: isSelected ? 1 : 0)
-                        .padding(1)
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyRegular)
                 }
         }
     }
@@ -68,19 +66,19 @@ private extension ChecklistRowAnswerSectionView {
     func accentColor(index: Int) -> Color {
         switch answerType {
         case .twoChoices:
-            return index == 1 ? Color.blue : Color.red
+            return index == 1 ? Color.Button.positive : Color.Button.negative
         case .multiChoices:
             switch index {
-            case 0: return Color.red
-            case 1: return Color.green
-            case 2: return Color.blue
+            case 0: return Color.Button.negative
+            case 1: return Color.Button.neutral
+            case 2: return Color.Button.positive
             default: return Color.green
             }
         case .multiSelect(_, let answerDisposition):
             switch answerDisposition {
-            case .negative: return Color.red
-            case .neutral: return Color.green
-            case .positive: return Color.blue
+            case .negative: return Color.Button.negative
+            case .neutral: return Color.Button.neutral
+            case .positive: return Color.Button.positive
             }
         }
     }
@@ -92,10 +90,10 @@ private extension ChecklistRowAnswerSectionView {
         case .multiSelect(let basicScore, let answerDisposition):
             let value: Float = answerDisposition == .negative ? -0.5 : 0.5
             if isSelected {
-                answers[checkListItem.id, default: Set<Int>([index])].remove(index)
+                answers[checkListItem.id]?.remove(index)
                 scores[checkListItem.id] = Float(answers[checkListItem.id]?.count ?? 0) * value + basicScore
             } else {
-                answers[checkListItem.id, default: Set<Int>([index])].insert(index)
+                answers[checkListItem.id, default: Set()].insert(index)
                 scores[checkListItem.id] = Float(answers[checkListItem.id]?.count ?? 0) * value + basicScore
             }
         case .multiChoices:
@@ -109,12 +107,13 @@ private extension ChecklistRowAnswerSectionView {
         case .twoChoices:
             if isSelected {
                 answers[checkListItem.id] = nil
-                scores[checkListItem.id] =  Float(1)
+                scores[checkListItem.id] = Float(1)
             } else {
                 answers[checkListItem.id] = Set([index])
                 scores[checkListItem.id] = Float(index == 1 ? 2 : 0)
             }
         }
+        refresh.toggle()
     }
 }
 

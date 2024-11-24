@@ -20,10 +20,13 @@ struct ChecklistRowView: View {
             if captionType != .none {
                 Caption
             }
-            ChecklistRowAnswerSectionView(answers: $answers,
-                                          scores: $scores,
-                                          checkListItem: checkListItem)
+            ChecklistRowAnswerSectionView(
+                answers: $answers,
+                scores: $scores,
+                checkListItem: checkListItem
+            )
             .padding(.top, 8)
+            
         }
     }
 }
@@ -43,7 +46,8 @@ private extension ChecklistRowView {
     
     func CategoryChip(text: String, color: Color) -> some View {
         Text(text)
-            .bold()
+            .foregroundStyle(Color.ChecklistTag.colorGray)
+            .applyZZSFont(zzsFontSet: .caption1Regular)
             .padding(.vertical, 4)
             .padding(.horizontal, 12)
             .background {
@@ -54,8 +58,8 @@ private extension ChecklistRowView {
     
     var Question: some View {
         Text(checkListItem.question.question)
-            .bold()
-            .font(.title3)
+            .foregroundStyle(Color.Text.primary)
+            .applyZZSFont(zzsFontSet: .headline)
     }
     
     var Caption: some View {
@@ -65,8 +69,9 @@ private extension ChecklistRowView {
                 .scaledToFit()
                 .frame(width: 22, height: 20)
             Text(captionText)
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .caption1Regular)
                 .lineLimit(nil)
-                .font(.caption)
                 .padding(.top, 4)
         }
     }
@@ -76,13 +81,15 @@ private extension ChecklistRowView {
     var chipData: [(text: String, clolr: Color)] {
         var result: [(String, Color)]  = []
         if checkListItem.checkListType == .advanced {
-            result.append((checkListItem.checkListType.text, .gray))
+            result.append((checkListItem.checkListType.text, Color.ChecklistTag.backgroundGray))
         }
         if checkListItem.basicCategory.isSelectable {
-            result.append((checkListItem.basicCategory.text, .green))
+            result.append((checkListItem.basicCategory.text, Color.ChecklistTag.backgroundYellow))
         }
-       
-        let crossChip = checkListItem.crossTip.keys.filter { selectedCategory.contains($0) }.map { ($0.text, Color.green) }
+        
+        let crossChip = checkListItem.crossTip.keys
+            .filter { selectedCategory.contains($0) }
+            .map { ($0.text, Color.ChecklistTag.backgroundYellow) }
         
         result += crossChip
         
