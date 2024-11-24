@@ -44,20 +44,28 @@ struct CategorySelectView: View {
                         }
                     }
                 
+                CategoryView()
+                
                 NavigationLink(destination: CategorySelectView()) {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(Color.mint)
                         .frame(width:UIScreen.screenSize.width - 32, height: 44)
                         .overlay {
-                                Text("약 10분")
+                                Text("완료")
                                     .font(Font.system (size: 16, weight: .semibold))
                         }
                 }
                 
             }
+            .accentColor(.black)
         }
     }
 }
+
+
+private extension CategorySelectView {
+            
+        }
 
 #Preview {
     CategorySelectView()
