@@ -18,7 +18,7 @@ enum ZipLiteral {
     }
     
     enum APIEndpoints {
-        static let baseURL: String = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+        static let baseURL: String = "https://maps.googleapis.com/maps/api"
 
         case nearbySearch(latitude: Double, longitude: Double, radius: Int, keyword: String, apiKey: String)
 
@@ -26,7 +26,7 @@ enum ZipLiteral {
             switch self {
             case let .nearbySearch(latitude, longitude, radius, keyword, apiKey):
                 return """
-                \(APIEndpoints.baseURL)?location=\(latitude),\(longitude)&radius=\(radius)&keyword=\(keyword)&key=\(apiKey)
+                \(APIEndpoints.baseURL)/place/nearbysearch/json?location=\(latitude),\(longitude)&radius=\(radius)&keyword=\(keyword)&key=\(apiKey)
                 """
             }
         }
