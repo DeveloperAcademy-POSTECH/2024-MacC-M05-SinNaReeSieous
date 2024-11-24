@@ -22,6 +22,10 @@ extension View {
         }
     }
     
+    func applyZZSFont(zzsFontSet: ZZSFontSet) -> some View {
+        self.modifier(zzsFigmaFontModifier(zzsFontSet: zzsFontSet))
+    }
+    
     func dismissKeyboard() -> some View {
         self.onTapGesture {
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
