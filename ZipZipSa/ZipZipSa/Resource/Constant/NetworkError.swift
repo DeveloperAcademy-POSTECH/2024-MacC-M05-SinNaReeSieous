@@ -25,4 +25,9 @@ enum NetworkError: Error {
             print("Decoding error for \(keyword): \(description)")
         }
     }
+    
+    enum AddressSearchError: Error {
+        case invalidURL
+        case networkError(description: String)
+    }
 }

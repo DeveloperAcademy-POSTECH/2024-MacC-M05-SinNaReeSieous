@@ -21,12 +21,23 @@ enum ZipLiteral {
         static let baseURL: String = "https://maps.googleapis.com/maps/api"
 
         case nearbySearch(latitude: Double, longitude: Double, radius: Int, keyword: String, apiKey: String)
+        case autoComplete(query: String, apiKey: String)
+        case placeDetails(placeID: String, apiKey: String)
+        
 
         var url: String {
             switch self {
             case let .nearbySearch(latitude, longitude, radius, keyword, apiKey):
                 return """
                 \(APIEndpoints.baseURL)/place/nearbysearch/json?location=\(latitude),\(longitude)&radius=\(radius)&keyword=\(keyword)&key=\(apiKey)
+                """
+            case .autoComplete(query: let query, apiKey: let apiKey):
+                return """
+                \(APIEndpoints.baseURL)/place/autocomplete/json?input=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")&key=\(apiKey)
+                """
+            case .placeDetails(placeID: let placeID, apiKey: let apiKey):
+                return """
+                \(APIEndpoints.baseURL)/place/details/json?place_id=\(placeID)&key=\(apiKey)
                 """
             }
         }

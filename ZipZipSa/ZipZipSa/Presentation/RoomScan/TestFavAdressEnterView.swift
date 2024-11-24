@@ -16,6 +16,7 @@ struct TestFavAdressEnterView: View {
                 .padding()
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
+            // TODO: 여기에 검색 결과들이 뜰 예정
             Spacer()
             
             Button {
