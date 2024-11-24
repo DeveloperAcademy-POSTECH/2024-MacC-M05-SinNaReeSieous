@@ -21,4 +21,8 @@ extension View {
             view?.drawHierarchy(in: view!.bounds, afterScreenUpdates: true)
         }
     }
+    
+    func applyZZSFont(zzsFontSet: ZZSFontSet) -> some View {
+        self.modifier(zzsFigmaFontModifier(zzsFontSet: zzsFontSet))
+    }
 }
