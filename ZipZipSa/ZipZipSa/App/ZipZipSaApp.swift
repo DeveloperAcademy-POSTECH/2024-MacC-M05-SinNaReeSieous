@@ -6,9 +6,14 @@
 //
 
 import SwiftUI
+import GoogleMaps
 
 @main
 struct ZipZipSaApp: App {
+    init() {
+        GMSServices.provideAPIKey(Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? "")
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()

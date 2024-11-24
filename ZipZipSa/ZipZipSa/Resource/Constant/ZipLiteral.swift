@@ -16,4 +16,19 @@ enum ZipLiteral {
         static let save: String = "저장하기"
         static let processing: String = "저장 중..."
     }
+    
+    enum APIEndpoints {
+        static let baseURL: String = "https://maps.googleapis.com/maps/api"
+
+        case nearbySearch(latitude: Double, longitude: Double, radius: Int, keyword: String, apiKey: String)
+
+        var url: String {
+            switch self {
+            case let .nearbySearch(latitude, longitude, radius, keyword, apiKey):
+                return """
+                \(APIEndpoints.baseURL)/place/nearbysearch/json?location=\(latitude),\(longitude)&radius=\(radius)&keyword=\(keyword)&key=\(apiKey)
+                """
+            }
+        }
+    }
 }

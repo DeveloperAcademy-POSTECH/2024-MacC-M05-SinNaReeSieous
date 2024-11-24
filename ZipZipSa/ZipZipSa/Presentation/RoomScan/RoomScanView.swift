@@ -16,6 +16,7 @@ struct RoomScanView: View {
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
+    @StateObject private var locationManager = LocationManager()
     
     @State private var room: SampleRoom?
     @State private var doneScanning: Bool = false
@@ -26,7 +27,6 @@ struct RoomScanView: View {
     @State private var isProcessing: Bool = false
     @State private var latitude: Double = 0.0
     @State private var longitude: Double = 0.0
-    @Binding var hasRoomModel: Bool
     
     let roomController = RoomPlanManager.shared
     
@@ -127,7 +127,6 @@ struct RoomScanView: View {
                                 if newModel != nil {
                                     if let newSpace = addSpace() {
                                         room = newSpace
-                                        hasRoomModel = true
                                         showResultSheet = true
                                     }
                                     isProcessing = false
@@ -139,9 +138,15 @@ struct RoomScanView: View {
                 }
             }
         }
+        .onAppear {
+            locationManager.requestLocationAuthorization()
+            if let location = locationManager.userLocation {
+                print("현재위치: \(location.latitude), \(location.longitude)")
+            }
+        }
         .sheet(isPresented: $showResultSheet) {
             if let room {
-                ResultCardView(room: room, hasRoomModel: $hasRoomModel)
+                ResultCardView(room: room)
                     .presentationDragIndicator(.visible)
             }
         }
@@ -225,18 +230,19 @@ struct RoomScanView: View {
     //SwiftData에 공간 정보를 저장하는 함수
     func addSpace() -> SampleRoom? {
         do {
-            if let model {
+            if let model, let location = locationManager.userLocation {
                 let newSpace = SampleRoom(
                     id: UUID(),
                     mainPicture: mainPicture ?? UIImage(resource: .mainPicSample),
                     model: model.pngData()!,
-                    latitude: latitude,
-                    longitude: longitude
+                    latitude: location.latitude,
+                    longitude: location.longitude
                 )
                 
                 modelContext.insert(newSpace)
+                room = newSpace
                 try modelContext.save()
-                return newSpace
+                return room
             }
         } catch {
             print("Failed to save data")
