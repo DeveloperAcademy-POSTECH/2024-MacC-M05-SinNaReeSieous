@@ -16,13 +16,11 @@ extension Color {
         static let disabled = Color(.zzsWhite.opacity(0.05))
     }
     
-    // 피그마에는 01, 02인데, 숫자로 시작하는 네이밍이 불가해서 그냥 아래와 같이 바꿈
     enum Layer {
         static let first = Color(.zzsBlack.opacity(0.8))
         static let second = Color(.zzsWarmGray20)
     }
     
-    // error 컬러는 이름이 없어서 임의로 red50이라 지음
     enum Text {
         static let primary = Color(.zzsBlack)
         static let secondary = Color(.zzsBlue50)
@@ -44,7 +42,6 @@ extension Color {
         static let disabled = Color(.zzsWarmGray40)
     }
     
-    // red 컬러는 임의로 red20이라 지음
     enum Button {
         static let primaryBlue = Color(.zzsBlue20)
         static let secondaryYellow = Color(.zzsYellow20)
