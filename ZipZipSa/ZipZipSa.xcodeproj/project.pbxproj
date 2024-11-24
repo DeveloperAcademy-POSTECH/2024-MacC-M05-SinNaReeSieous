@@ -10,9 +10,22 @@
 		393FD8D32CE2045D00B1CEE7 /* ZipZipSa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZipZipSa.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		39E4F46D2CF32CDE0078FA4C /* Exceptions for "ZipZipSa" folder in "ZipZipSa" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 393FD8D22CE2045D00B1CEE7 /* ZipZipSa */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		393FD8D52CE2045D00B1CEE7 /* ZipZipSa */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				39E4F46D2CF32CDE0078FA4C /* Exceptions for "ZipZipSa" folder in "ZipZipSa" target */,
+			);
 			path = ZipZipSa;
 			sourceTree = "<group>";
 		};
@@ -255,6 +268,7 @@
 				DEVELOPMENT_TEAM = MXGCKXDXUM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ZipZipSa/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "앱에서 공간을 스캔하고 집 사진을 찍기 위해 카메라에 접근합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "앱에서 집의 주소를 저장하고, 통근거리 및 주변시설정보를 가져오기 위해 위치정보를 사용합니다.";
@@ -292,6 +306,7 @@
 				DEVELOPMENT_TEAM = MXGCKXDXUM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ZipZipSa/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "앱에서 공간을 스캔하고 집 사진을 찍기 위해 카메라에 접근합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "앱에서 집의 주소를 저장하고, 통근거리 및 주변시설정보를 가져오기 위해 위치정보를 사용합니다.";
