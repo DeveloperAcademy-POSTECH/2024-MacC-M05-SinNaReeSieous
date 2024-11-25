@@ -17,7 +17,7 @@ final class SampleRoom: Identifiable {
     var latitude: Double
     var longitude: Double
     
-    init(id: UUID, mainPicture: UIImage?, model: Data, latitude: Double, longitude: Double) {
+    init(id: UUID, mainPicture: UIImage? = nil, model: Data? = nil, latitude: Double, longitude: Double) {
         self.id = id
         self.mainPictureData = mainPicture?.pngData()
         self.model = model
