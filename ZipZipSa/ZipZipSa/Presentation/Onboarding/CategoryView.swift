@@ -7,7 +7,6 @@
 
 import SwiftUI
 struct CategoryView: View {
-    
     private let categories: [Category] = [
         Category(onImage: "InsectProofColor", offImage: "InsectProofSepia", requiredTime: 3, categoryMessage: "해충 흔적과 방충 시설 상태를 더 꼼꼼히 볼 수 있도록 질문을 추가해둘게요."),
         Category(onImage: "CleanlinessColor", offImage: "CleanlinessSepia", requiredTime: 3, categoryMessage: "집 안에서 놓치기 쉬운 곳까지 구석구석 살펴볼 수 있도록 질문을 추가해둘게요."),
@@ -16,7 +15,6 @@ struct CategoryView: View {
         Category(onImage: "SoundproofColor", offImage: "SoundproofSepia", requiredTime: 3, categoryMessage: "이 집이 소음, 방음 측면에서 어떤지 더 꼼꼼히 알 수 있도록 질문을 추가해둘게요."),
         Category(onImage: "LightedColor", offImage: "LightedSepia", requiredTime: 3, categoryMessage: "집 안에 빛이 잘 들어오는지 좀 더 꼼꼼히 체크할 수 있도록 할게요.")
     ]
-    
     @Binding var totalTime: Int
     @Binding var currentMessage: String
     @State private var selectedCategories: Set<String> = []
@@ -40,13 +38,13 @@ struct CategoryView: View {
 private extension CategoryView {
     
     func CategoryButton(for category: Category) -> some View {
-        let isSelected = selectedCategories.contains(category.offImage)
+        let isSelected = selectedCategories.contains(category.onImage)
         
         return Button(action: {
             toggleCategory(category)
         }) {
             VStack {
-                Image(isSelected ? category.offImage : category.onImage)
+                Image(isSelected ? category.onImage : category.offImage)
                     .resizable()
                     .scaledToFit()
             }
@@ -54,9 +52,9 @@ private extension CategoryView {
     }
     
     func toggleCategory(_ category: Category) {
-            if selectedCategories.contains(category.offImage) {
+            if selectedCategories.contains(category.onImage) {
                 // 카테고리 선택 해제
-                selectedCategories.remove(category.offImage)
+                selectedCategories.remove(category.onImage)
                 totalTime -= category.requiredTime
                 selectionOrder.removeAll(where: { $0 == category.offImage })
                 
@@ -72,7 +70,7 @@ private extension CategoryView {
                 }
             } else {
                 // 새로운 카테고리 선택
-                selectedCategories.insert(category.offImage)
+                selectedCategories.insert(category.onImage)
                 totalTime += category.requiredTime
                 selectionOrder.append(category.offImage)
                 currentMessage = category.categoryMessage
@@ -85,4 +83,9 @@ struct Category {
     let offImage: String
     let requiredTime: Int
     let categoryMessage: String
+}
+
+#Preview {
+    CategoryView(totalTime: .constant(10),
+                 currentMessage: .constant(""))
 }
