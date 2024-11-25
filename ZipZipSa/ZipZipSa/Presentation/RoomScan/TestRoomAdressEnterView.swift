@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct TestRoomAdressEnterView: View {
+    @Environment(\.modelContext) private var modelContext
     @State private var roomAddress: String = ""
     
     var body: some View {
@@ -38,6 +40,18 @@ struct TestRoomAdressEnterView: View {
                             Text("스캔하기")
                                 .foregroundStyle(Color.white)
                         )
+                }
+            }
+            .onAppear {
+                do {
+                    // Fetch request를 통해 데이터 가져오기
+                    let favoriteAddresses = try modelContext.fetch(FetchDescriptor<FavoriteAddress>())
+                    print("저장된 FavoriteAddress 데이터:")
+                    favoriteAddresses.forEach { address in
+                        print("위도: \(address.latitude), 경도: \(address.longitude)")
+                    }
+                } catch {
+                    print("데이터를 가져오는 데 실패했습니다: \(error.localizedDescription)")
                 }
             }
         }
