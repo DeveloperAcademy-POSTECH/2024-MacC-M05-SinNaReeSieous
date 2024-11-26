@@ -6,154 +6,146 @@
 //
 
 import SwiftUI
-import SwiftData
 import RoomPlan
 import Vision
-import CoreLocation
 import CoreImage.CIFilterBuiltins
 
 struct RoomScanView: View {
-    
     @Environment(\.dismiss) var dismiss
-    @Environment(\.modelContext) var modelContext
-    @StateObject private var locationManager = LocationManager()
-    
-    @State private var room: SampleRoom?
     @State private var doneScanning: Bool = false
     @State private var capturedView: UIImage?
     @State private var model: UIImage?
-    @State private var mainPicture: UIImage?
     @State private var showResultSheet: Bool = false
     @State private var isProcessing: Bool = false
-    @State private var latitude: Double = 0.0
-    @State private var longitude: Double = 0.0
-    
     let roomController = RoomPlanManager.shared
     
     var body: some View {
-        VStack {
-            if doneScanning {
-                Text(ZipLiteral.RoomScan.doneSacnText)
-                    .bold()
-                    .multilineTextAlignment(.center)
-                    .padding(.top)
-            }
-            
-            ZStack {
-                RoomCaptureViewRepresentable()
-                    .onAppear {
-                        roomController.startSession()
-                    }
-                    .onDisappear {
-                        roomController.stopSession()
-                    }
-                    .ignoresSafeArea()
-                
-                VStack {
+        ZStack {
+            roomCapture
+            VStack {
+                if doneScanning {
+                    doneScanText
                     Spacer()
-                    
-                    if doneScanning == false {
-                        // scanningButtonsView
-                        HStack {
-                            Button {
-                                // TODO: 이전 뷰(RoomScanInfoView)로 돌아가기
-                                dismiss()
-                            } label: {
-                                RoundedRectangle(cornerRadius: 15)
-                                    .foregroundStyle(.gray)
-                                    .frame(width: 165, height: 50)
-                                    .overlay(
-                                        Text(ZipLiteral.RoomScan.cancle)
-                                            .foregroundStyle(Color.white)
-                                    )
-                            }
-                            
-                            Spacer()
-                                .frame(width: 20)
-                            
-                            Button {
-                                roomController.stopSession()
-                                doneScanning = true
-                            } label: {
-                                RoundedRectangle(cornerRadius: 15)
-                                    .foregroundStyle(.primary)
-                                    .frame(width: 165, height: 50)
-                                    .overlay(
-                                        Text(ZipLiteral.RoomScan.done)
-                                            .foregroundStyle(Color.white)
-                                    )
-                            }
-                        }
-                    } else {
-                        // doneScanningButtonsView
-                        HStack {
-                            Button {
-                                doneScanning = false
-                                roomController.startSession()
-                            } label: {
-                                RoundedRectangle(cornerRadius: 15)
-                                    .foregroundStyle(Color.gray)
-                                    .frame(width: 160, height: 50)
-                                    .overlay(
-                                        Text(ZipLiteral.RoomScan.reScasn)
-                                            .foregroundStyle(Color.white)
-                                    )
-                            }
-                            
-                            Spacer()
-                                .frame(width: 20)
-                            
-                            Button {
-                                isProcessing = true
-                                
-                                // 3D 모델 화면캡쳐 및 배경제거
-                                captureScreen()
-                                if let modelImage = capturedView {
-                                    createSticker(image: modelImage)
-                                }
-                                
-                                // 저장하기에서 오류가 날 경우 다시 찍도록 처리
-                            } label: {
-                                RoundedRectangle(cornerRadius: 15)
-                                    .foregroundStyle(.primary)
-                                    .frame(width: 165, height: 50)
-                                    .overlay(
-                                        Text(isProcessing ? ZipLiteral.RoomScan.processing : ZipLiteral.RoomScan.save)
-                                            .foregroundStyle(Color.white)
-                                    )
-                            }
-                            .disabled(isProcessing)
-                            .onChange(of: model) { _, newModel in
-                                if newModel != nil {
-                                    if let newSpace = addSpace() {
-                                        room = newSpace
-                                        showResultSheet = true
-                                    }
-                                    isProcessing = false
-                                    // dismiss()
-                                }
-                            }
-                        }
-                    }
+                    doneScanningButton
+                } else {
+                    Spacer()
+                    scanningButton
                 }
             }
         }
-        .onAppear {
-            locationManager.requestLocationAuthorization()
-            if let location = locationManager.userLocation {
-                print("현재위치: \(location.latitude), \(location.longitude)")
+        .sheet(isPresented: $showResultSheet) {
+            // TODO: ResultCardView로 교체
+            if let modelData = model {
+                Image(uiImage: modelData)
+                    .resizable()
+                    .frame(width: 150, height: 150)
+                    .scaledToFit()
             }
         }
-        .sheet(isPresented: $showResultSheet) {
-            if let room {
-                ResultCardView(room: room)
-                    .presentationDragIndicator(.visible)
+    }
+}
+
+private extension RoomScanView {
+    // MARK: - View
+    
+    var roomCapture: some View {
+        RoomCaptureViewRepresentable()
+            .onAppear {
+                roomController.startSession()
+            }
+            .onDisappear {
+                roomController.stopSession()
+            }
+            .ignoresSafeArea()
+    }
+    
+    var doneScanText: some View {
+        Text(ZipLiteral.RoomScan.doneSacnText)
+            .bold()
+            .multilineTextAlignment(.center)
+            .padding(.top)
+    }
+    
+    var scanningButton: some View {
+        HStack {
+            Button {
+                // TODO: 이전 뷰(RoomScanInfoView)로 돌아가기
+                dismiss()
+            } label: {
+                RoundedRectangle(cornerRadius: 15)
+                    .foregroundStyle(.gray)
+                    .frame(width: 165, height: 50)
+                    .overlay(
+                        Text(ZipLiteral.RoomScan.cancle)
+                            .foregroundStyle(Color.white)
+                    )
+            }
+            
+            Spacer()
+                .frame(width: 20)
+            
+            Button {
+                roomController.stopSession()
+                doneScanning = true
+            } label: {
+                RoundedRectangle(cornerRadius: 15)
+                    .foregroundStyle(.primary)
+                    .frame(width: 165, height: 50)
+                    .overlay(
+                        Text(ZipLiteral.RoomScan.done)
+                            .foregroundStyle(Color.white)
+                    )
             }
         }
     }
     
+    var doneScanningButton: some View {
+        HStack {
+            Button {
+                doneScanning = false
+                roomController.startSession()
+            } label: {
+                RoundedRectangle(cornerRadius: 15)
+                    .foregroundStyle(Color.gray)
+                    .frame(width: 160, height: 50)
+                    .overlay(
+                        Text(ZipLiteral.RoomScan.reScasn)
+                            .foregroundStyle(Color.white)
+                    )
+            }
+            
+            Spacer()
+                .frame(width: 20)
+            
+            Button {
+                isProcessing = true
+                captureScreen()
+                if let modelImage = capturedView {
+                    createSticker(image: modelImage)
+                }
+                
+            } label: {
+                RoundedRectangle(cornerRadius: 15)
+                    .foregroundStyle(.primary)
+                    .frame(width: 165, height: 50)
+                    .overlay(
+                        Text(isProcessing ? ZipLiteral.RoomScan.processing : ZipLiteral.RoomScan.save)
+                            .foregroundStyle(Color.white)
+                    )
+            }
+            .disabled(isProcessing)
+            .onChange(of: model) { _, newModel in
+                if newModel != nil {
+                    showResultSheet = true
+                    isProcessing = false
+                }
+            }
+        }
+    }
+    
+    // MARK: - Action
+    
     //캡쳐된 모델이 보이는 뷰를 이미지로 캡쳐하기 위한 함수
-    //3D모델이 존재하는 부분만 캡쳐되도록 영역을 조정해서 이미지로 만듦
     func captureScreen() {
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
             if let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
@@ -191,7 +183,7 @@ struct RoomScanView: View {
         }
     }
     
-    //이미지의 배경을 제거하기 위한 Mask를 만들어주는 함수
+    // 이미지의 배경을 제거하기 위한 Mask를 만들어주는 함수
     func subjectMaskImage(from inputImage: CIImage) -> CIImage? {
         let handler = VNImageRequestHandler(ciImage: inputImage, options: [:])
         let request = VNGenerateForegroundInstanceMaskRequest()
@@ -210,7 +202,7 @@ struct RoomScanView: View {
         }
     }
     
-    //이미지에 Mask를 적용하는 함수
+    // 이미지에 Mask를 적용하는 함수
     func apply(mask: CIImage, to image: CIImage) -> CIImage {
         let filter = CIFilter.blendWithMask()
         filter.inputImage = image
@@ -219,38 +211,15 @@ struct RoomScanView: View {
         return filter.outputImage!
     }
     
-    //이미지에 적용된 Mask에 따라 배경을 제거한 이미지를 리턴하는 함수
+    // 적용된 Mask에 따라 배경을 제거한 이미지를 리턴하는 함수
     func render(ciImage: CIImage) -> UIImage {
         guard let cgImage = CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent) else {
             fatalError("Failed to render CGImage")
         }
         return UIImage(cgImage: cgImage)
     }
-    
-    //SwiftData에 공간 정보를 저장하는 함수
-    func addSpace() -> SampleRoom? {
-        do {
-            if let model, let location = locationManager.userLocation {
-                let newSpace = SampleRoom(
-                    id: UUID(),
-                    mainPicture: mainPicture ?? UIImage(resource: .mainPicSample),
-                    model: model.pngData()!,
-                    latitude: location.latitude,
-                    longitude: location.longitude
-                )
-                
-                modelContext.insert(newSpace)
-                room = newSpace
-                try modelContext.save()
-                return room
-            }
-        } catch {
-            print("Failed to save data")
-        }
-        return nil
-    }
 }
 
-//#Preview {
-//    RoomScanView()
-//}
+#Preview {
+    RoomScanView()
+}
