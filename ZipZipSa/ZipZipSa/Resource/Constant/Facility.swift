@@ -7,26 +7,14 @@
 
 import Foundation
 
-enum Facility: Hashable, CaseIterable {
-    case lundry
-    case convenienceStore
-    case mart
-    case hospital
-    case pharmacy
-    case park
-    case daiso
-    
-    var keyword: String {
-        switch self {
-        case .lundry: return "빨래방"
-        case .convenienceStore: return "편의점"
-        case .mart: return "마트"
-        case .hospital: return "병원"
-        case .pharmacy: return "약국"
-        case .park: return "공원"
-        case .daiso: return "다이소"
-        }
-    }
+enum Facility: String, Hashable, CaseIterable {
+    case lundry = "빨래방"
+    case convenienceStore = "편의점"
+    case mart = "마트"
+    case hospital = "병원"
+    case pharmacy = "약국"
+    case park = "공원"
+    case daiso = "다이소"
     
     var icon: String {
         switch self {

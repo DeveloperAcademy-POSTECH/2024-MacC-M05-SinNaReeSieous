@@ -225,7 +225,6 @@ struct RoomScanView: View {
         do {
             if let model {
                 let newSpace = SampleRoom(
-                    id: UUID(),
                     mainPicture: mainPicture ?? UIImage(resource: .mainPicSample),
                     model: model.pngData()!,
                     latitude: latitude,

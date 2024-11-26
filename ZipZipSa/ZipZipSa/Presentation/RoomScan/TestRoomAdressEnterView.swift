@@ -20,6 +20,7 @@ struct TestRoomAdressEnterView: View {
     @State private var isNextButtonActive = false
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var showRoomScanView: Bool = false
     
     var body: some View {
         VStack {
@@ -75,21 +76,27 @@ struct TestRoomAdressEnterView: View {
             
             Spacer()
             
-            if let selectedCoordinates {
-                NavigationLink(
-                    destination: RoomScanView(
-                        latitude: selectedCoordinates.latitude,
-                        longitude: selectedCoordinates.longitude
-                    )
-                ) {
-                    RoundedRectangle(cornerRadius: 15)
-                        .foregroundStyle(.primary)
-                        .frame(width: 300, height: 50)
-                        .overlay(
-                            Text("스캔하기")
-                                .foregroundStyle(Color.white)
-                        )
+            Button {
+                Task {
+                    await saveRoomAddress()
                 }
+                showRoomScanView.toggle()
+            } label: {
+                RoundedRectangle(cornerRadius: 15)
+                    .foregroundStyle(.primary)
+                    .frame(width: 300, height: 50)
+                    .overlay(
+                        Text("스캔하기")
+                            .foregroundStyle(Color.white)
+                    )
+            }
+        }
+        .navigationDestination(isPresented: $showRoomScanView) {
+            if let selectedCoordinates {
+                RoomScanView(
+                    latitude: selectedCoordinates.latitude,
+                    longitude: selectedCoordinates.longitude
+                )
             }
         }
         .padding()
@@ -146,23 +153,32 @@ struct TestRoomAdressEnterView: View {
     }
     
     //SwiftData에 공간 정보를 저장하는 함수
-    func saveRoomAddress() {
+    private func saveRoomAddress() async {
+        guard let coordinates = selectedCoordinates else {
+            errorMessage = "좌표가 선택되지 않았습니다."
+            return
+        }
         do {
-            if let coordinate = selectedCoordinates {
-                let newRoom = SampleRoom(
-                    id: UUID(),
-                    latitude: coordinate.latitude,
-                    longitude: coordinate.longitude
-                )
-                
-                modelContext.insert(newRoom)
-                try modelContext.save()
-                print("좌표가 성공적으로 저장되었습니다: \(coordinate.latitude), \(coordinate.longitude)")
-            } else {
-                print("좌표가 선택되지 않았습니다.")
-            }
+            let facilities = try await FacilityChecker.shared.checkFacilities(
+                at: coordinates,
+                for: Facility.allCases.map { $0.rawValue }
+            )
+            print("checkFacilities의 결과: \(facilities)")
+            
+            let availableFacilities = Facility.allCases.filter { facilities[$0.rawValue] == true }
+            print("availableFacilities: \(availableFacilities)")
+            
+            let newRoom = SampleRoom(
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude,
+                availableFacilities: availableFacilities
+            )
+            
+            modelContext.insert(newRoom)
+            try modelContext.save()
+            print("주소가 성공적으로 저장되었습니다: \(coordinates.latitude), \(coordinates.longitude)")
         } catch {
-            print("데이터 저장 실패: \(error)")
+            print("저장 실패: \(error)")
         }
     }
 }

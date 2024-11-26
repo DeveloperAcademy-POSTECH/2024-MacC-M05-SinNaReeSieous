@@ -18,7 +18,7 @@ struct ZipZipSaApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                TestFavAdressEnterView()
+                TestRoomAdressEnterView()
             }
             .modelContainer(for: [FavoriteAddress.self, SampleRoom.self])
         }
