@@ -19,7 +19,7 @@ struct RoomScanView: View {
     
     var body: some View {
         if !isSessionStarted {
-            roomScanInfo
+            checkDeciveView()
         } else {
             roomCaptureView
                 .onChange(of: model) { _, newModel in
@@ -38,10 +38,6 @@ struct RoomScanView: View {
 
 private extension RoomScanView {
     // MARK: - View
-    
-    var roomScanInfo: some View {
-        RoomScanInfoView(isSessionStarted: $isSessionStarted)
-    }
     
     var roomCaptureView: some View {
         ZStack {
@@ -84,6 +80,17 @@ private extension RoomScanView {
             }
         }
         .padding()
+    }
+    
+    // MARK: - Computed Values
+    
+    @ViewBuilder
+    func checkDeciveView() -> some View {
+        if RoomCaptureSession.isSupported {
+            RoomScanInfoView(isSessionStarted: $isSessionStarted)
+        } else {
+            UnsupportedDeviceView()
+        }
     }
 }
 
