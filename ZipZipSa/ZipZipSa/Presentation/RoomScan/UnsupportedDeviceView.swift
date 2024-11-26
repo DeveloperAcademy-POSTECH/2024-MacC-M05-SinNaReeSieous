@@ -14,10 +14,10 @@ struct UnsupportedDeviceView: View {
             VStack {
                 Spacer()
                 characterImage
-                InfoTitle
-                InfoDescription
+                UnsupportedTitle
+                UnsupportedDescription
                 Spacer()
-                bottomButtons
+                bottomButton
             }
         }
     }
@@ -37,43 +37,43 @@ private extension UnsupportedDeviceView {
     }
     
     var characterImage: some View {
-        Image(.charRoomScanInfo)
+        Image(.charUnsupportedDevice)
             .resizable()
             .scaledToFit()
             .frame(width: 95, height: 86)
-            .padding(.bottom, 48)
+            .padding(.bottom, 20)
     }
     
-    var InfoTitle: some View {
-        Text(ZipLiteral.RoomScanInfo.title)
-            .foregroundStyle(Color.Text.onColorPrimary)
-            .font(.title.bold())
-            .padding(.bottom, 36)
+    var UnsupportedTitle: some View {
+        Group {
+            Text(ZipLiteral.UnsupportedDevice.title1)
+            Text(ZipLiteral.UnsupportedDevice.title2)
+                .padding(.bottom, 27)
+        }
+        .foregroundStyle(Color.Text.onColorPrimary)
+        .font(.title.bold())
         // .applyZZSFont(zzsFontSet: .title1)
     }
     
-    var InfoDescription: some View {
+    var UnsupportedDescription: some View {
         VStack {
             Group {
-                Text(ZipLiteral.RoomScanInfo.description1)
-                Text(ZipLiteral.RoomScanInfo.description2)
+                Text(ZipLiteral.UnsupportedDevice.description1)
+                Text(ZipLiteral.UnsupportedDevice.description2)
                     .padding(.bottom)
             }
             .foregroundStyle(Color.Text.onColorPrimary)
             .font(.body.bold())
             // .applyZZSFont(zzsFontSet: .bodyRegular)
             
-            Group {
-                Text(ZipLiteral.RoomScanInfo.description3)
-                Text(ZipLiteral.RoomScanInfo.description4)
-            }
-            .foregroundStyle(Color.Text.onColorPrimary)
-            .font(.body.bold())
-            // .applyZZSFont(zzsFontSet: .bodyRegular)
+            Text(ZipLiteral.UnsupportedDevice.description3)
+                .foregroundStyle(Color.Text.onColorPrimary)
+                .font(.body.bold())
+                // .applyZZSFont(zzsFontSet: .bodyRegular)
         }
     }
     
-    var bottomButtons: some View {
+    var bottomButton: some View {
         VStack {
             Button {
                 // TODO: 모델 이미지가 없는 상태로 결과지 시트 띄우기
@@ -82,7 +82,7 @@ private extension UnsupportedDeviceView {
                     .foregroundStyle(Color.Button.primaryBlue)
                     .frame(height: 53)
                     .overlay(
-                        Text(ZipLiteral.RoomScanInfo.start)
+                        Text(ZipLiteral.UnsupportedDevice.showResult)
                             .foregroundStyle(Color.Text.primary)
                             // .applyZZSFont(zzsFontSet: .bodyBold)
                     )
