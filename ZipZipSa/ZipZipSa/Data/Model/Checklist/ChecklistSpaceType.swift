@@ -25,7 +25,7 @@ enum SpaceType: CaseIterable {
     }
 }
 
-struct Space {
+struct Space: Hashable {
     let type: SpaceType
     let questionNumber: Int
 }

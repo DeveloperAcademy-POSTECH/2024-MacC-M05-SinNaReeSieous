@@ -9,9 +9,9 @@ import SwiftUI
 
 struct ChecklistRowView: View {
     @Binding var selectedCategory: [ChecklistCategory]
-    @Binding var answers: [UUID: Set<Int>]
-    @Binding var scores: [UUID: Float]
-    let checkListItem: ChecklistItem
+    @Binding var answers: [ChecklistItem: Set<Int>]
+    @Binding var scores: [ChecklistItem: Float]
+    @Binding var checklistItem: ChecklistItem
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -23,7 +23,7 @@ struct ChecklistRowView: View {
             ChecklistRowAnswerSectionView(
                 answers: $answers,
                 scores: $scores,
-                checkListItem: checkListItem
+                checklistItem: $checklistItem
             )
             .padding(.top, 8)
             
@@ -57,7 +57,7 @@ private extension ChecklistRowView {
     }
     
     var Question: some View {
-        Text(checkListItem.question.question)
+        Text(checklistItem.question.question)
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .headline)
     }
@@ -80,14 +80,14 @@ private extension ChecklistRowView {
     
     var chipData: [(text: String, clolr: Color)] {
         var result: [(String, Color)]  = []
-        if checkListItem.checkListType == .advanced {
-            result.append((checkListItem.checkListType.text, Color.ChecklistTag.backgroundGray))
+        if checklistItem.checkListType == .advanced {
+            result.append((checklistItem.checkListType.text, Color.ChecklistTag.backgroundGray))
         }
-        if checkListItem.basicCategory.isSelectable {
-            result.append((checkListItem.basicCategory.text, Color.ChecklistTag.backgroundYellow))
+        if checklistItem.basicCategory.isSelectable {
+            result.append((checklistItem.basicCategory.text, Color.ChecklistTag.backgroundYellow))
         }
         
-        let crossChip = checkListItem.crossTip.keys
+        let crossChip = checklistItem.crossTip.keys
             .filter { selectedCategory.contains($0) }
             .map { ($0.text, Color.ChecklistTag.backgroundYellow) }
         
@@ -97,11 +97,11 @@ private extension ChecklistRowView {
     }
     
     var captionType: CaptionType {
-        let isCrossTip = checkListItem.crossTip.keys.contains(where: {
+        let isCrossTip = checklistItem.crossTip.keys.contains(where: {
             selectedCategory.contains($0)
         })
         
-        if checkListItem.remark != nil {
+        if checklistItem.remark != nil {
             return .remark
         } else if isCrossTip {
             return .crossTip
@@ -113,11 +113,11 @@ private extension ChecklistRowView {
     var captionText: String {
         switch captionType {
         case .remark:
-            return checkListItem.remark ?? ""
+            return checklistItem.remark ?? ""
         case .crossTip:
             var textData: [String?] = []
             selectedCategory.forEach {
-                textData.append(checkListItem.crossTip[$0])
+                textData.append(checklistItem.crossTip[$0])
             }
             return textData.compactMap { $0 }.joined(separator: "\n")
         case .none:
@@ -137,5 +137,5 @@ enum CaptionType {
 
 
 #Preview {
-    ChecklistRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checkListItem: ChecklistItem.checklistItems[0])
+    ChecklistRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checklistItem: .constant(ChecklistItem.checklistItems[0]))
 }

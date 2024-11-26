@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct ChecklistView: View {
-    @State var answers: [UUID: Set<Int>] = [:]
-    @State var scores: [UUID: Float] = [:]
+    @State var answers: [ChecklistItem: Set<Int>] = [:]
+    @State var scores: [ChecklistItem: Float] = [:]
     @State var selectedCategory: [ChecklistCategory] = [.security, .insectproof, .ventilation]
     @State var selectedSpaceType: SpaceType = .exterior
     @State var memoText: String = ""
+    @State var spaceChecklistItems: [ChecklistItem] = []
     
     var body: some View {
         VStack(spacing: 0) {
@@ -35,7 +36,8 @@ struct ChecklistView: View {
             .padding(.bottom, 12)
             .background(Color.Background.primary)
         }
-        //.ignoresSafeArea(.container, edges: [.bottom])
+        .onAppear { updateSpaceChecklistItems() }
+        .onChange(of: selectedSpaceType) { updateSpaceChecklistItems() }
         .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
@@ -52,12 +54,12 @@ private extension ChecklistView {
         LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
             Section {
                 Spacer().frame(height: 18)
-                ForEach(spaceChecklistItems) { checkListItem in
+                ForEach($spaceChecklistItems) { $checklistItem in
                     ChecklistRowView(
                         selectedCategory: $selectedCategory,
                         answers: $answers,
                         scores: $scores,
-                        checkListItem: checkListItem
+                        checklistItem: $checklistItem
                     )
                     .padding(.horizontal, 16)
                     .padding(.bottom, 40)
@@ -65,7 +67,7 @@ private extension ChecklistView {
                 Memo
                     
             } header: {
-                ChecklistTabView(selectedSpaceType: $selectedSpaceType)
+                ChecklistSpaceButtonStackView(selectedSpaceType: $selectedSpaceType)
             }
         }
     }
@@ -124,8 +126,8 @@ private extension ChecklistView {
         }
     }
     
-    var spaceChecklistItems: [ChecklistItem] {
-        filteredChecklistItems.filter {
+    func updateSpaceChecklistItems() {
+        spaceChecklistItems = filteredChecklistItems.filter {
             $0.space.type == selectedSpaceType
         }
         .sorted { $0.space.questionNumber < $1.space.questionNumber }
@@ -147,7 +149,7 @@ private extension ChecklistView {
                     default:
                         basicValue = 1.0
                     }
-                    categoryScores[category, default: 0.0] += scores[checklistItem.id] ?? basicValue
+                    categoryScores[category, default: 0.0] += scores[checklistItem] ?? basicValue
                 }
             }
         }
@@ -189,7 +191,7 @@ private extension ChecklistView {
             guard let hazard = checklistItem.hazard else {
                 return
             }
-            let hasHazard = answers[checklistItem.id] == [0]
+            let hasHazard = answers[checklistItem] == [0]
             if hasHazard {
                 hazards.append(hazard)
             }

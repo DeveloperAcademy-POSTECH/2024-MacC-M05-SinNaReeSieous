@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct ChecklistTabView: View {
+struct ChecklistSpaceButtonStackView: View {
     @Binding var selectedSpaceType: SpaceType
     
     var body: some View {
         HStack(spacing: 8) {
             ForEach(SpaceType.allCases.indices, id: \.self) { index in
                 let type = SpaceType.allCases[index]
-                TopSpaceButton(type: type)
+                SpaceButton(type: type)
             }
         }
         .padding([.horizontal, .bottom], 16)
@@ -22,11 +22,11 @@ struct ChecklistTabView: View {
     }
 }
 
-private extension ChecklistTabView {
+private extension ChecklistSpaceButtonStackView {
     
     // MARK: - View
     
-    func TopSpaceButton(type: SpaceType) -> some View {
+    func SpaceButton(type: SpaceType) -> some View {
         Button {
             changeSpaceType(to: type)
         } label: {
@@ -63,5 +63,5 @@ private extension ChecklistTabView {
 
 
 #Preview {
-    ChecklistTabView(selectedSpaceType: .constant(.exterior))
+    ChecklistSpaceButtonStackView(selectedSpaceType: .constant(.exterior))
 }

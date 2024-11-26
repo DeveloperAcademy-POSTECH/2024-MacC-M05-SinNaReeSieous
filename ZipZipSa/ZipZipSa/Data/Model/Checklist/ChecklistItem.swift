@@ -7,7 +7,11 @@
 
 import Foundation
 
-struct ChecklistItem: Identifiable {
+struct ChecklistItem: Identifiable, Hashable {
+    static func == (lhs: ChecklistItem, rhs: ChecklistItem) -> Bool {
+        lhs.id == rhs.id
+    }
+
     let id: UUID
     let space: Space
     let checkListType: ChecklistType
@@ -73,9 +77,7 @@ extension ChecklistItem {
             question: Question(question: "집 주변에 산이나 숲이 있나요?",
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
-            crossTip: [:],
-            remark: "지네, 모기, 돈벌레 등이 나올 확률이 높아요.",
-            hazard: nil
+            remark: "지네, 모기, 돈벌레 등이 나올 확률이 높아요."
         ),
         ChecklistItem(
             space: Space(type: .exterior,
@@ -85,9 +87,7 @@ extension ChecklistItem {
             question: Question(question: "주변에 소음이 발생할 수 있는 시설이 있나요?",
                                answerType: .multiSelect(basicScore: 2.0, answerDisposition: .negative),
                                answerOptions: ["유흥가", "학교", "공원", "상가"]),
-            crossTip: [.security: "유흥가가 집 근처에 있으면 주취자를 마추질 가능성이 높아져요."],
-            remark: nil,
-            hazard: nil
+            crossTip: [.security: "유흥가가 집 근처에 있으면 주취자를 마추질 가능성이 높아져요."]
         ),
         ChecklistItem(
             space: Space(type: .exterior,
@@ -97,9 +97,7 @@ extension ChecklistItem {
             question: Question(question: "집 앞에 큰 도로가 있나요?",
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
-            crossTip: [.ventilation: "매연 때문에 환기하기 어려울 수 있어요."],
-            remark: nil,
-            hazard: nil
+            crossTip: [.ventilation: "매연 때문에 환기하기 어려울 수 있어요."]
         ),
         ChecklistItem(
             space: Space(type: .exterior,
@@ -108,10 +106,7 @@ extension ChecklistItem {
             basicCategory: .insectproof,
             question: Question(question: "쓰레기 처리장이 청결하게 관리되고있나요?",
                                answerType: .multiChoices,
-                               answerOptions: ["더러워요", "보통이에요", "깨끗해요"]),
-            crossTip: [:],
-            remark: nil,
-            hazard: nil
+                               answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
         ),
         ChecklistItem(
             space: Space(type: .exterior,
