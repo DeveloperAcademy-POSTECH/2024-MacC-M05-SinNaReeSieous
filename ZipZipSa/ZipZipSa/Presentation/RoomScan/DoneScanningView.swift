@@ -37,22 +37,20 @@ private extension DoneScanningView {
     }
     
     var doneScanningButton: some View {
-        HStack {
+        HStack(spacing: 8) {
             Button {
                 doneScanning = false
                 roomController.startSession()
             } label: {
-                RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(Color.gray)
-                    .frame(width: 160, height: 50)
+                RoundedRectangle(cornerRadius: 16)
+                    .foregroundStyle(Color.Button.secondaryBlue)
+                    .frame(height: 53)
                     .overlay(
                         Text(ZipLiteral.RoomScan.reScasn)
-                            .foregroundStyle(Color.white)
+                            .foregroundStyle(Color.Text.secondary)
+                            // .applyZZSFont(zzsFontSet: .bodyBold)
                     )
             }
-            
-            Spacer()
-                .frame(width: 20)
             
             Button {
                 isProcessing = true
@@ -61,16 +59,18 @@ private extension DoneScanningView {
                     createSticker(image: modelImage)
                 }
             } label: {
-                RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(.primary)
-                    .frame(width: 165, height: 50)
+                RoundedRectangle(cornerRadius: 16)
+                    .foregroundStyle(Color.Button.primaryBlue)
+                    .frame(height: 53)
                     .overlay(
                         Text(isProcessing ? ZipLiteral.RoomScan.processing : ZipLiteral.RoomScan.save)
-                            .foregroundStyle(Color.white)
+                            .foregroundStyle(Color.Text.primary)
+                            // .applyZZSFont(zzsFontSet: .bodyBold)
                     )
             }
             .disabled(isProcessing)
         }
+        .padding(.horizontal, 16)
     }
     
     // MARK: - Action

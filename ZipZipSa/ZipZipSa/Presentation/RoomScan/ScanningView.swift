@@ -24,35 +24,34 @@ private extension ScanningView {
     // MARK: - View
     
     var scanningButton: some View {
-        HStack {
+        HStack(spacing: 8) {
             Button {
-                // TODO: 이전 뷰(RoomScanInfoView)로 돌아가기
                 dismiss()
             } label: {
-                RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(.gray)
-                    .frame(width: 165, height: 50)
+                RoundedRectangle(cornerRadius: 16)
+                    .foregroundStyle(Color.Button.secondaryBlue)
+                    .frame(height: 53)
                     .overlay(
                         Text(ZipLiteral.RoomScan.cancle)
-                            .foregroundStyle(Color.white)
+                            .foregroundStyle(Color.Text.secondary)
+                            // .applyZZSFont(zzsFontSet: .bodyBold)
                     )
             }
-            
-            Spacer()
-                .frame(width: 20)
             
             Button {
                 roomController.stopSession()
                 doneScanning = true
             } label: {
-                RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(.primary)
-                    .frame(width: 165, height: 50)
+                RoundedRectangle(cornerRadius: 16)
+                    .foregroundStyle(Color.Button.primaryBlue)
+                    .frame(height: 53)
                     .overlay(
                         Text(ZipLiteral.RoomScan.done)
-                            .foregroundStyle(Color.white)
+                            .foregroundStyle(Color.Text.primary)
+                            // .applyZZSFont(zzsFontSet: .bodyBold)
                     )
             }
         }
+        .padding(.horizontal, 16)
     }
 }
