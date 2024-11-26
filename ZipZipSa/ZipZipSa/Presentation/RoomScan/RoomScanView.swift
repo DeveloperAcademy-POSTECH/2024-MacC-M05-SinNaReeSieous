@@ -14,26 +14,24 @@ struct RoomScanView: View {
     @State private var model: UIImage?
     @State private var showResultSheet: Bool = false
     @State private var isProcessing: Bool = false
+    @State private var isSessionStarted: Bool = false
     let roomController = RoomPlanManager.shared
     
     var body: some View {
-        ZStack {
+        if !isSessionStarted {
+            roomScanInfo
+        } else {
             roomCaptureView
-            if doneScanning {
-                doneScanningView
-            } else {
-                scanningView
-            }
-        }
-        .onChange(of: model) { _, newModel in
-            if newModel != nil {
-                showResultSheet = true
-                isProcessing = false
-            }
-        }
-        .sheet(isPresented: $showResultSheet) {
-            // TODO: ResultCardView로 교체
-            modelPreview
+                .onChange(of: model) { _, newModel in
+                    if newModel != nil {
+                        showResultSheet = true
+                        isProcessing = false
+                    }
+                }
+                .sheet(isPresented: $showResultSheet) {
+                    // TODO: ResultCardView로 교체
+                    modelPreview
+                }
         }
     }
 }
@@ -41,15 +39,27 @@ struct RoomScanView: View {
 private extension RoomScanView {
     // MARK: - View
     
+    var roomScanInfo: some View {
+        RoomScanInfoView(isSessionStarted: $isSessionStarted)
+    }
+    
     var roomCaptureView: some View {
-        RoomCaptureViewRepresentable()
-            .onAppear {
-                roomController.startSession()
+        ZStack {
+            RoomCaptureViewRepresentable()
+                .onAppear {
+                    roomController.startSession()
+                }
+                .onDisappear {
+                    roomController.stopSession()
+                }
+                .ignoresSafeArea()
+            
+            if doneScanning {
+                doneScanningView
+            } else {
+                scanningView
             }
-            .onDisappear {
-                roomController.stopSession()
-            }
-            .ignoresSafeArea()
+        }
     }
     
     var doneScanningView: some View {
