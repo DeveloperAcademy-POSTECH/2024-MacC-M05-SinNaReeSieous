@@ -33,12 +33,7 @@ struct RoomScanView: View {
         }
         .sheet(isPresented: $showResultSheet) {
             // TODO: ResultCardView로 교체
-            if let modelData = model {
-                Image(uiImage: modelData)
-                    .resizable()
-                    .frame(width: 150, height: 150)
-                    .scaledToFit()
-            }
+            modelPreview
         }
     }
 }
@@ -63,6 +58,22 @@ private extension RoomScanView {
     
     var scanningView: some View {
         ScanningView(doneScanning: $doneScanning)
+    }
+    
+    var modelPreview: some View {
+        VStack {
+            if let modelData = model {
+                Image(uiImage: modelData)
+                    .resizable()
+                    .frame(width: 150, height: 150)
+                    .scaledToFit()
+            } else {
+                Text("모델이 없습니다.")
+                    .font(.headline)
+                    .foregroundColor(.red)
+            }
+        }
+        .padding()
     }
 }
 

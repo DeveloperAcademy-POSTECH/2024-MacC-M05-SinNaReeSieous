@@ -60,7 +60,6 @@ private extension DoneScanningView {
                 if let modelImage = capturedView {
                     createSticker(image: modelImage)
                 }
-                
             } label: {
                 RoundedRectangle(cornerRadius: 15)
                     .foregroundStyle(.primary)
