@@ -23,14 +23,14 @@ struct RoomScanInfoView: View {
                 bottomButtons
             }
         }
-        .alert("집 구조 기록 건너뛰기", isPresented: $showAlert) {
-            Button("취소") { }
+        .alert(ZipLiteral.RoomScanInfo.alertTitle, isPresented: $showAlert) {
+            Button(ZipLiteral.RoomScanInfo.cancel, role: .cancel) { }
             
-            Button("확인") {
+            Button(ZipLiteral.RoomScanInfo.confirm, role: .destructive) {
                 // TODO: 모델 이미지가 없는 상태로 결과지 시트 띄우기
             }
         } message: {
-            Text("구조 기록을 하지않고\n 바로 결과지 화면으로 넘어갑니다.")
+            Text(ZipLiteral.RoomScanInfo.alertMessage)
         }
     }
 }
@@ -57,7 +57,7 @@ private extension RoomScanInfoView {
     }
     
     var InfoTitle: some View {
-        Text("집 구조만 기록해요")
+        Text(ZipLiteral.RoomScanInfo.infoTitle)
             .foregroundStyle(Color.Text.onColorPrimary)
             .font(.title.bold())
             .padding(.bottom, 36)
@@ -67,8 +67,8 @@ private extension RoomScanInfoView {
     var InfoDescription: some View {
         VStack {
             Group {
-                Text("아이폰 내장 기술인 RoomPlan을 사용해")
-                Text("집의 구조를 기록할 거예요.")
+                Text(ZipLiteral.RoomScanInfo.infoDescription1)
+                Text(ZipLiteral.RoomScanInfo.infoDescription2)
                     .padding(.bottom)
             }
             .foregroundStyle(Color.Text.onColorPrimary)
@@ -76,8 +76,8 @@ private extension RoomScanInfoView {
             // .applyZZSFont(zzsFontSet: .bodyRegular)
             
             Group {
-                Text("3d 모델 형태로 집 구조가 제공되며,")
-                Text("이 과정에서 사진 정보는 기록되지 않아요.")
+                Text(ZipLiteral.RoomScanInfo.infoDescription3)
+                Text(ZipLiteral.RoomScanInfo.infoDescription4)
             }
             .foregroundStyle(Color.Text.onColorPrimary)
             .font(.body.bold())
@@ -96,7 +96,7 @@ private extension RoomScanInfoView {
                     .foregroundStyle(Color.Button.primaryBlue)
                     .frame(height: 53)
                     .overlay(
-                        Text("시작하기")
+                        Text(ZipLiteral.RoomScanInfo.start)
                             .foregroundStyle(Color.Text.primary)
                             // .applyZZSFont(zzsFontSet: .bodyBold)
                     )
@@ -107,7 +107,7 @@ private extension RoomScanInfoView {
             Button {
                 showAlert = true
             } label: {
-                Text("건너뛰기")
+                Text(ZipLiteral.RoomScanInfo.skip)
                     .foregroundStyle(Color.Text.onColorSecondary)
                     .font(.body.bold())
                 // .applyZZSFont(zzsFontSet: .bodyBold)
