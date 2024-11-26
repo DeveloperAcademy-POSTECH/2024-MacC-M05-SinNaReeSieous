@@ -35,7 +35,8 @@ struct CategorySelectView: View {
                             }
                             .padding(.horizontal, 16)
                             .padding(.vertical, 12)
-                            .font(Font.system (size: 14, weight: .semibold))
+
+
                         }
                 }
                 .padding(.leading, 24)
@@ -56,19 +57,19 @@ struct CategorySelectView: View {
                 
                 CategoryView(totalTime: $totalTime, currentMessage: $currentMessage)
                 
-                NavigationLink(destination: CategorySelectView()) {
+                NavigationLink(destination: FavoriteAddressEnterView()) {
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.mint)
+                        .fill(Color.Button.primaryBlue)
                         .frame(width:UIScreen.screenSize.width - 32, height: 44)
                         .overlay {
                             Text("완료")
-                                .font(Font.system (size: 16, weight: .semibold))
+                                .applyZZSFont(zzsFontSet:.bodyBold)
+                                .foregroundStyle(Color.Text.primary)
                         }
                 }
-                
             }
-            .accentColor(.black)
         }
+        .accentColor(.black)
     }
 }
 
