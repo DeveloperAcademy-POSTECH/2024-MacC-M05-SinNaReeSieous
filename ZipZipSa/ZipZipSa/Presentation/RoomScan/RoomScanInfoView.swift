@@ -57,7 +57,7 @@ private extension RoomScanInfoView {
     }
     
     var InfoTitle: some View {
-        Text(ZipLiteral.RoomScanInfo.infoTitle)
+        Text(ZipLiteral.RoomScanInfo.title)
             .foregroundStyle(Color.Text.onColorPrimary)
             .font(.title.bold())
             .padding(.bottom, 36)
@@ -67,8 +67,8 @@ private extension RoomScanInfoView {
     var InfoDescription: some View {
         VStack {
             Group {
-                Text(ZipLiteral.RoomScanInfo.infoDescription1)
-                Text(ZipLiteral.RoomScanInfo.infoDescription2)
+                Text(ZipLiteral.RoomScanInfo.description1)
+                Text(ZipLiteral.RoomScanInfo.description2)
                     .padding(.bottom)
             }
             .foregroundStyle(Color.Text.onColorPrimary)
@@ -76,8 +76,8 @@ private extension RoomScanInfoView {
             // .applyZZSFont(zzsFontSet: .bodyRegular)
             
             Group {
-                Text(ZipLiteral.RoomScanInfo.infoDescription3)
-                Text(ZipLiteral.RoomScanInfo.infoDescription4)
+                Text(ZipLiteral.RoomScanInfo.description3)
+                Text(ZipLiteral.RoomScanInfo.description4)
             }
             .foregroundStyle(Color.Text.onColorPrimary)
             .font(.body.bold())
