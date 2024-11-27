@@ -16,4 +16,11 @@ enum ZipLiteral {
         static let save: String = "저장하기"
         static let processing: String = "저장 중..."
     }
+    
+    enum Checklist {
+        static let bottomButton = "집 구조 스캔하기"
+        static let navigationTitle = "주인님을 위한\n맞춤 체크리스트예요"
+        static let memoSectionTitle = "메모"
+        static let memoPlaceHolder = "메모를 입력해 주세요"
+    }
 }

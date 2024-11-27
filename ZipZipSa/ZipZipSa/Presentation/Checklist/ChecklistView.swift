@@ -29,13 +29,14 @@ struct ChecklistView: View {
         .overlay(alignment: .bottom) {
             ZZSMainButton(
                 action: { print("Tapped") },
-                text: "집 구조 스캔하기"
+                text: ZipLiteral.Checklist.bottomButton
             )
             .padding([.horizontal, .top], 16)
             .padding(.bottom, 12)
             .background(Color.Background.primary)
         }
         .onAppear {
+            // 오류 해결을 위한 임시방편 코드
             selectedSpaceType = .exterior
         }
         .background(Color.Background.primary)
@@ -80,7 +81,7 @@ private extension ChecklistView {
     
     var NavigationBarTitle: some View {
         HStack {
-            Text("주인님을 위한\n맞춤 체크리스트예요")
+            Text(ZipLiteral.Checklist.navigationTitle)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .largeTitle)
             Spacer()
@@ -91,7 +92,7 @@ private extension ChecklistView {
     
     var Memo: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("메모")
+            Text(ZipLiteral.Checklist.memoSectionTitle)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .headline)
             TextEditor(text: $memoText)
@@ -100,7 +101,7 @@ private extension ChecklistView {
                 .tint(Color.Text.placeholder)
                 .overlay(alignment: .topLeading) {
                     if memoText.isEmpty {
-                        Text("메모를 입력해 주세요")
+                        Text(ZipLiteral.Checklist.memoPlaceHolder)
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
                             .offset(x: 6, y: 10)
