@@ -31,9 +31,10 @@ private extension DoneScanningView {
     
     var doneScanText: some View {
         Text(ZipLiteral.RoomScan.doneSacnText)
-            .bold()
             .multilineTextAlignment(.center)
-            .padding(.top)
+            .foregroundStyle(Color.Text.primary)
+            .applyZZSFont(zzsFontSet: .title2)
+            .padding(.top, 17)
     }
     
     var doneScanningButton: some View {
@@ -48,7 +49,7 @@ private extension DoneScanningView {
                     .overlay(
                         Text(ZipLiteral.RoomScan.reScasn)
                             .foregroundStyle(Color.Text.secondary)
-                            // .applyZZSFont(zzsFontSet: .bodyBold)
+                            .applyZZSFont(zzsFontSet: .bodyBold)
                     )
             }
             
@@ -65,7 +66,7 @@ private extension DoneScanningView {
                     .overlay(
                         Text(isProcessing ? ZipLiteral.RoomScan.processing : ZipLiteral.RoomScan.save)
                             .foregroundStyle(Color.Text.primary)
-                            // .applyZZSFont(zzsFontSet: .bodyBold)
+                            .applyZZSFont(zzsFontSet: .bodyBold)
                     )
             }
             .disabled(isProcessing)

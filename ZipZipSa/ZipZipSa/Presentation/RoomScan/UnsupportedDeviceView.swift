@@ -45,32 +45,18 @@ private extension UnsupportedDeviceView {
     }
     
     var UnsupportedTitle: some View {
-        Group {
-            Text(ZipLiteral.UnsupportedDevice.title1)
-            Text(ZipLiteral.UnsupportedDevice.title2)
-                .padding(.bottom, 27)
-        }
-        .foregroundStyle(Color.Text.onColorPrimary)
-        .font(.title.bold())
-        // .applyZZSFont(zzsFontSet: .title1)
+        Text(ZipLiteral.UnsupportedDevice.title)
+            .multilineTextAlignment(.center)
+            .foregroundStyle(Color.Text.onColorPrimary)
+            .applyZZSFont(zzsFontSet: .title1)
+            .padding(.bottom, 27)
     }
     
     var UnsupportedDescription: some View {
-        VStack {
-            Group {
-                Text(ZipLiteral.UnsupportedDevice.description1)
-                Text(ZipLiteral.UnsupportedDevice.description2)
-                    .padding(.bottom)
-            }
+        Text(ZipLiteral.UnsupportedDevice.description)
+            .multilineTextAlignment(.center)
             .foregroundStyle(Color.Text.onColorPrimary)
-            .font(.body.bold())
-            // .applyZZSFont(zzsFontSet: .bodyRegular)
-            
-            Text(ZipLiteral.UnsupportedDevice.description3)
-                .foregroundStyle(Color.Text.onColorPrimary)
-                .font(.body.bold())
-                // .applyZZSFont(zzsFontSet: .bodyRegular)
-        }
+            .applyZZSFont(zzsFontSet: .bodyRegular)
     }
     
     var bottomButton: some View {
@@ -84,7 +70,7 @@ private extension UnsupportedDeviceView {
                     .overlay(
                         Text(ZipLiteral.UnsupportedDevice.showResult)
                             .foregroundStyle(Color.Text.primary)
-                            // .applyZZSFont(zzsFontSet: .bodyBold)
+                            .applyZZSFont(zzsFontSet: .bodyBold)
                     )
             }
             .padding(.horizontal, 16)

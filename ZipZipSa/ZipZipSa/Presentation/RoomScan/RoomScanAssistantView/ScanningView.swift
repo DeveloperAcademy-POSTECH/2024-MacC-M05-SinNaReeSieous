@@ -34,7 +34,7 @@ private extension ScanningView {
                     .overlay(
                         Text(ZipLiteral.RoomScan.cancle)
                             .foregroundStyle(Color.Text.secondary)
-                            // .applyZZSFont(zzsFontSet: .bodyBold)
+                            .applyZZSFont(zzsFontSet: .bodyBold)
                     )
             }
             
@@ -48,7 +48,7 @@ private extension ScanningView {
                     .overlay(
                         Text(ZipLiteral.RoomScan.done)
                             .foregroundStyle(Color.Text.primary)
-                            // .applyZZSFont(zzsFontSet: .bodyBold)
+                            .applyZZSFont(zzsFontSet: .bodyBold)
                     )
             }
         }

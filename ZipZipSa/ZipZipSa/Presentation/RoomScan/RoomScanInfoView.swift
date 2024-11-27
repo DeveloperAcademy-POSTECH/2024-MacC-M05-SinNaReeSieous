@@ -17,8 +17,8 @@ struct RoomScanInfoView: View {
             VStack {
                 Spacer()
                 characterImage
-                InfoTitle
-                InfoDescription
+                infoTitle
+                infoDescription
                 Spacer()
                 bottomButtons
             }
@@ -26,11 +26,12 @@ struct RoomScanInfoView: View {
         .alert(ZipLiteral.RoomScanInfo.alertTitle, isPresented: $showAlert) {
             Button(ZipLiteral.RoomScanInfo.cancel, role: .cancel) { }
             
-            Button(ZipLiteral.RoomScanInfo.confirm, role: .destructive) {
+            Button(ZipLiteral.RoomScanInfo.skip, role: .destructive) {
                 // TODO: 모델 이미지가 없는 상태로 결과지 시트 띄우기
             }
         } message: {
             Text(ZipLiteral.RoomScanInfo.alertMessage)
+                .multilineTextAlignment(.center)
         }
     }
 }
@@ -56,33 +57,18 @@ private extension RoomScanInfoView {
             .padding(.bottom, 48)
     }
     
-    var InfoTitle: some View {
+    var infoTitle: some View {
         Text(ZipLiteral.RoomScanInfo.title)
             .foregroundStyle(Color.Text.onColorPrimary)
-            .font(.title.bold())
+            .applyZZSFont(zzsFontSet: .title1)
             .padding(.bottom, 36)
-        // .applyZZSFont(zzsFontSet: .title1)
     }
     
-    var InfoDescription: some View {
-        VStack {
-            Group {
-                Text(ZipLiteral.RoomScanInfo.description1)
-                Text(ZipLiteral.RoomScanInfo.description2)
-                    .padding(.bottom)
-            }
+    var infoDescription: some View {
+        Text(ZipLiteral.RoomScanInfo.description)
+            .multilineTextAlignment(.center)
             .foregroundStyle(Color.Text.onColorPrimary)
-            .font(.body.bold())
-            // .applyZZSFont(zzsFontSet: .bodyRegular)
-            
-            Group {
-                Text(ZipLiteral.RoomScanInfo.description3)
-                Text(ZipLiteral.RoomScanInfo.description4)
-            }
-            .foregroundStyle(Color.Text.onColorPrimary)
-            .font(.body.bold())
-            // .applyZZSFont(zzsFontSet: .bodyRegular)
-        }
+            .applyZZSFont(zzsFontSet: .bodyRegular)
     }
     
     var bottomButtons: some View {
@@ -98,7 +84,7 @@ private extension RoomScanInfoView {
                     .overlay(
                         Text(ZipLiteral.RoomScanInfo.start)
                             .foregroundStyle(Color.Text.primary)
-                            // .applyZZSFont(zzsFontSet: .bodyBold)
+                            .applyZZSFont(zzsFontSet: .bodyBold)
                     )
             }
             .padding(.horizontal, 16)
@@ -109,8 +95,7 @@ private extension RoomScanInfoView {
             } label: {
                 Text(ZipLiteral.RoomScanInfo.skip)
                     .foregroundStyle(Color.Text.onColorSecondary)
-                    .font(.body.bold())
-                // .applyZZSFont(zzsFontSet: .bodyBold)
+                    .applyZZSFont(zzsFontSet: .bodyBold)
             }
             .padding(.bottom, 35)
         }
