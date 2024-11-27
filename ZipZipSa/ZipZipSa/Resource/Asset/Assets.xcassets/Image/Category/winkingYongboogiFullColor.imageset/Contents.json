@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Boogi4.png",
+      "filename" : "charOnboarding4.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Boogi4@2x.png",
+      "filename" : "charOnboarding4@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Boogi4@3x.png",
+      "filename" : "charOnboarding4@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

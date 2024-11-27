@@ -9,21 +9,15 @@ import SwiftUI
 
 struct OnboardingView: View {
     @State private var currentPage = 0
-    let onboardingGreetings = [
-        "안녕하세요.\n저는 용궁에서 올라온 거북이, 용북이에요!",
-        "저와 함께라면 빠르고 꼼꼼하게 \n집을 살펴볼 수 있어요.",
-        "주인님이 집을 볼 때, 어디를 더 신경써서 \n보고싶은지 알려주세요. 주인님의 선호에 \n맞게 체크리스트를 준비할게요!",
-        "그럼 바로 시작할까요?"
-    ]
     let onboardingImages = ["helloYongboogiFullColor", "smileYongboogiFullColor", "writingYongboogiFullColor", "winkingYongboogiFullColor"]
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 0){
-                OnboardingMessageBubble
-                OnboardingImage
+                MessageBubble
+                GreetingYongboogiImage
                 Spacer()
-                OnboardingButton
+                ContinueAndStartButton
             }
         }
         .accentColor(Color.Button.tertiary)
@@ -32,12 +26,13 @@ struct OnboardingView: View {
 
 private extension OnboardingView {
     
-    var OnboardingMessageBubble: some View {
+    var MessageBubble: some View {
         GeometryReader { geometry in
-            Text(onboardingGreetings[currentPage])
+            Text(ZipLiteral.Onboarding.onboardingGreetings[currentPage])
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
-                .applyZZSFont(zzsFontSet: .bodyBold)
                 .background(Color.white)
                 .overlay {
                     UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 10, bottomTrailing: 10, topTrailing: 10))
@@ -51,24 +46,23 @@ private extension OnboardingView {
         .padding(.top, 140)
     }
     
-    var OnboardingImage: some View {
+    var GreetingYongboogiImage: some View {
         Image(onboardingImages[currentPage])
-            .border(.black, width: 1)
-        
+            .padding(.top, 28)
     }
     
-    var OnboardingButton: some View {
+    var ContinueAndStartButton: some View {
         NavigationStack {
             VStack {
-                if currentPage == onboardingGreetings.count - 1 {
+                if currentPage == ZipLiteral.Onboarding.onboardingGreetings.count - 1 {
                     NavigationLink(destination: CategorySelectView()) {
                         RoundedRectangle(cornerRadius: 12)
                             .fill(Color.Button.primaryBlue)
                             .frame(width: UIScreen.screenSize.width - 32, height: 53)
                             .overlay {
-                                Text("시작하기")
+                                Text(ZipLiteral.Onboarding.startButtonText)
+                                    .foregroundStyle(Color.Text.primary)
                                     .applyZZSFont(zzsFontSet: .bodyBold)
-                                    .foregroundColor(.black)
                             }
                     }
                 } else {
@@ -81,9 +75,9 @@ private extension OnboardingView {
                             .fill(Color.Button.primaryBlue)
                             .frame(width: UIScreen.screenSize.width - 32, height: 53)
                             .overlay {
-                                Text("계속하기")
+                                Text(ZipLiteral.Onboarding.continueButtonText)
+                                    .foregroundStyle(Color.Text.primary)
                                     .applyZZSFont(zzsFontSet: .bodyBold)
-                                    .foregroundColor(.black)
                             }
                     }
                 }
