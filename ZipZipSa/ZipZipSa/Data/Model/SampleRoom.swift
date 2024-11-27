@@ -8,8 +8,8 @@
 import SwiftUI
 import SwiftData
 
-// TODO: Room model 구조 확정된 이후 수정예정
-@Model final class SampleRoom {
+@Model
+final class SampleRoom {
     var id: UUID
     @Attribute(.externalStorage) var mainPictureData: Data?
     @Attribute(.externalStorage) var model: Data?
