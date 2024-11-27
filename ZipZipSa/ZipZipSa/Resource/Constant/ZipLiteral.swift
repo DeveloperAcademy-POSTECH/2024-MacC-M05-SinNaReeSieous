@@ -38,13 +38,13 @@ enum ZipLiteral {
     enum UnsupportedDevice {
         static let title: String =
         """
-        집 구조 기록을 
+        집 구조 기록을
         지원하지 않는 기기예요
         """
         static let description: String =
         """
         현재 RoomPlan 기능은
-        iPhone Pro 및 Pro Max 모델에서만 지원됩니다.
+        iPhone Pro 및 Pro Max 모델에서만 지원합니다.
         
         바로 결과지를 보러 가볼까요?
         """
