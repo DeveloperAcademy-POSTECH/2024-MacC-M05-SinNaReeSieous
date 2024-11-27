@@ -1,5 +1,5 @@
 //
-//  TestFavAdressEnterView.swift
+//  TestFavAddressEnterView.swift
 //  ZipZipSa
 //
 //  Created by 조우현 on 11/25/24.
@@ -9,7 +9,7 @@ import SwiftUI
 import CoreLocation
 import SwiftData
 
-struct TestFavAdressEnterView: View {
+struct TestFavAddressEnterView: View {
     
     @Environment(\.modelContext) private var modelContext
     @State private var searchText: String = ""
@@ -79,7 +79,7 @@ struct TestFavAdressEnterView: View {
         }
         .padding()
         .navigationDestination(isPresented: $isNextButtonActive) {
-            TestRoomAdressEnterView()
+            TestRoomAddressEnterView()
         }
     }
     
