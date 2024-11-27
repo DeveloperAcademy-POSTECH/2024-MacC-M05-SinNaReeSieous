@@ -90,7 +90,7 @@ private extension MainView {
     }
     
     var homeHuntButton: some View {
-        NavigationLink(destination: SettingView()) {
+        NavigationLink(destination: EssentialInfoView()) {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.Button.secondaryYellow)
                 .frame(height: UIScreen.screenSize.height / 812 * 210)
@@ -142,7 +142,7 @@ private extension MainView {
                 .padding(.bottom, 16)
             
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color.Background.enable)
+                .fill(Color.Background.disabled)
                 .frame(height: UIScreen.screenSize.height / 812 * 203)
                 .overlay(content: {
                     Text(ZipLiteral.MainView.recentlyViewedHomeContent)
