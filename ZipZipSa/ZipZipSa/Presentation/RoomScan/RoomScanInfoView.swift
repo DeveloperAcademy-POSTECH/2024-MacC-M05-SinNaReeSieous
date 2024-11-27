@@ -23,14 +23,14 @@ struct RoomScanInfoView: View {
                 bottomButtons
             }
         }
-        .alert(ZipLiteral.RoomScanInfo.alertTitle, isPresented: $showAlert) {
-            Button(ZipLiteral.RoomScanInfo.cancel, role: .cancel) { }
+        .alert(ZipLiteral.Alert.skipAlertTitle, isPresented: $showAlert) {
+            Button(ZipLiteral.Alert.cancel, role: .cancel) { }
             
             Button(ZipLiteral.RoomScanInfo.skip, role: .destructive) {
                 // TODO: 모델 이미지가 없는 상태로 결과지 시트 띄우기
             }
         } message: {
-            Text(ZipLiteral.RoomScanInfo.alertMessage)
+            Text(ZipLiteral.Alert.skipAlertMessage)
                 .multilineTextAlignment(.center)
         }
     }

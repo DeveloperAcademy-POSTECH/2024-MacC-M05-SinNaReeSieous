@@ -10,12 +10,23 @@ import SwiftUI
 struct ScanningView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var doneScanning: Bool
+    @State var showAlert: Bool = false
     let roomController = RoomPlanManager.shared
     
     var body: some View {
         VStack {
             Spacer()
             scanningButton
+        }
+        .alert(ZipLiteral.Alert.quitAlertTitle, isPresented: $showAlert) {
+            Button(ZipLiteral.Alert.cancel, role: .cancel) { }
+            
+            Button(ZipLiteral.Alert.quit, role: .destructive) {
+                dismiss()
+            }
+        } message: {
+            Text(ZipLiteral.Alert.quitAlertMessage)
+                .multilineTextAlignment(.center)
         }
     }
 }
@@ -26,7 +37,7 @@ private extension ScanningView {
     var scanningButton: some View {
         HStack(spacing: 8) {
             Button {
-                dismiss()
+                showAlert = true
             } label: {
                 RoundedRectangle(cornerRadius: 16)
                     .foregroundStyle(Color.Button.secondaryBlue)

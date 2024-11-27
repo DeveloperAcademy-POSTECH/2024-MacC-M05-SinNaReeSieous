@@ -33,14 +33,6 @@ enum ZipLiteral {
         """
         static let start: String = "시작하기"
         static let skip: String = "건너뛰기"
-        static let alertTitle: String = "집 구조 기록 건너뛰기"
-        static let alertMessage: String =
-        """
-        구조 기록을 하지않고
-        바로 결과지 화면으로 넘어갑니다.
-        """
-        static let cancel: String = "취소"
-        static let confirm: String = "확인"
     }
     
     enum UnsupportedDevice {
@@ -57,6 +49,24 @@ enum ZipLiteral {
         바로 결과지를 보러 가볼까요?
         """
         static let showResult: String = "결과지 보기"
+    }
+    
+    enum Alert {
+        static let skipAlertTitle: String = "집 구조 기록 건너뛰기"
+        static let skipAlertMessage: String =
+        """
+        구조 기록을 하지않고
+        바로 결과지 화면으로 넘어갑니다.
+        """
+        static let quitAlertTitle: String = "집 구조 기록 그만두기"
+        static let quitAlertMessage: String =
+        """
+        지금까지 저장된
+        스캔 데이터가 삭제됩니다.
+        """
+        static let cancel: String = "취소"
+        static let skip: String = "건너뛰기"
+        static let quit: String = "그만두기"
     }
     
     enum APIEndpoints {
