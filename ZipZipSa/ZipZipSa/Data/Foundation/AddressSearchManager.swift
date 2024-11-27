@@ -29,7 +29,11 @@ class AddressSearchManager {
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             let response = try JSONDecoder().decode(AutocompleteResponse.self, from: data)
-            return response.predictions.map { ($0.description, $0.place_id) }
+            
+            return response.predictions.map { prediction in
+                let cleanedDescription = self.removeCountry(from: prediction.description)
+                return (cleanedDescription, prediction.place_id)
+            }
         } catch {
             throw NetworkError.AddressSearchError.networkError(description: error.localizedDescription)
         }
@@ -65,12 +69,18 @@ class AddressSearchManager {
                let results = json["results"] as? [[String: Any]],
                let firstResult = results.first,
                let address = firstResult["formatted_address"] as? String {
-                return address
+                return removeCountry(from: address)
             } else {
                 throw NetworkError.AddressSearchError.noResults
             }
         } catch {
             throw NetworkError.AddressSearchError.networkError(description: error.localizedDescription)
         }
+    }
+    
+    // MARK: - Private Helpers
+    
+    private func removeCountry(from address: String) -> String {
+        return address.replacingOccurrences(of: "대한민국 ", with: "")
     }
 }

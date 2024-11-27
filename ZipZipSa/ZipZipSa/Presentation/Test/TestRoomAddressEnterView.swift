@@ -103,6 +103,7 @@ extension TestRoomAddressEnterView {
                         .foregroundStyle(Color.white)
                 )
         }
+        .disabled(selectedCoordinates == nil)
     }
     
     // MARK: - Action
