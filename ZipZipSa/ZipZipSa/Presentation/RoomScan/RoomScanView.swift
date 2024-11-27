@@ -19,7 +19,7 @@ struct RoomScanView: View {
     
     var body: some View {
         if !isSessionStarted {
-            checkDeciveView()
+            checkDecive()
         } else {
             roomCaptureView
                 .onChange(of: model) { _, newModel in
@@ -85,7 +85,7 @@ private extension RoomScanView {
     // MARK: - Computed Values
     
     @ViewBuilder
-    func checkDeciveView() -> some View {
+    func checkDecive() -> some View {
         if RoomCaptureSession.isSupported {
             RoomScanInfoView(isSessionStarted: $isSessionStarted)
         } else {

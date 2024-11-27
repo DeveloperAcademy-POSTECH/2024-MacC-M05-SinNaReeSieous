@@ -41,11 +41,11 @@ private extension RoomScanInfoView {
     
     var cameraView: some View {
         CameraViewRepresentable()
+            .blur(radius: 6, opaque: true)
             .overlay {
                 Rectangle()
                     .fill(Color.black.opacity(0.4))
             }
-            .blur(radius: 6)
             .ignoresSafeArea()
     }
     
