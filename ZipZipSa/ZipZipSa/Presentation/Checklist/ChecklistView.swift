@@ -17,7 +17,7 @@ struct ChecklistView: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
-                VStack(spacing: 0) {
+                VStack(spacing: 24) {
                     NavigationBarTitle
                     ChecklistList
                 }
@@ -89,7 +89,6 @@ private extension ChecklistView {
             Spacer()
         }
         .padding(.horizontal, 16)
-        .padding(.bottom, 24)
     }
     
     var Memo: some View {
