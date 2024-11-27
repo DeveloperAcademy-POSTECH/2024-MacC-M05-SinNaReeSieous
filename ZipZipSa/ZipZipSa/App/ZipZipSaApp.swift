@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import GoogleMaps
 
 @main
@@ -16,7 +17,9 @@ struct ZipZipSaApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                ContentView()
+            }
         }
     }
 }

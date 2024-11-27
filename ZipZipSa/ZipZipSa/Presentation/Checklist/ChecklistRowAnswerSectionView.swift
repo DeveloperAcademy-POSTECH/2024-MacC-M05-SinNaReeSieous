@@ -8,17 +8,20 @@
 import SwiftUI
 
 struct ChecklistRowAnswerSectionView: View {
-    @Binding var answers: [UUID: Set<Int>]
-    @Binding var scores: [UUID: Float]
-    let checkListItem: ChecklistItem
+    @Binding var answers: [ChecklistItem: Set<Int>]
+    @Binding var scores: [ChecklistItem: Float]
+    let checklistItem: ChecklistItem
     
     private let horizontalSpacing: CGFloat = 10
     private let verticalSpacing: CGFloat = 8
     
     var body: some View {
         LazyVGrid(columns: columns, spacing: verticalSpacing) {
-            ForEach(answerOptions.indices, id: \.self) { index in
-                AnswerButton(index: index)
+            ForEach(answerOptions, id: \.self) { value in
+                //let index = checklistItem.question.answerOptions.firstIndex(of: value) ?? 0
+                if let index = checklistItem.question.answerOptions.firstIndex(of: value) {
+                    AnswerButton(index: index)
+                }
             }
         }
     }
@@ -30,22 +33,16 @@ private extension ChecklistRowAnswerSectionView {
     
     func AnswerButton(index: Int) -> some View {
         let color = accentColor(index: index)
-        let isSelected = answers[checkListItem.id]?.contains(index) ?? false
         return Button {
-            applyScore(index: index, isSelected: isSelected)
+            applyAnswersAndScores(index: index, isSelected: answers[checklistItem]?.contains(index) ?? false)
         } label: {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(isSelected ? color.opacity(0.2) : .white)
+            RoundedRectangle(cornerRadius: 16)
+                .fill(answers[checklistItem]?.contains(index) ?? false ? color : Color.Button.enable)
                 .frame(height: 43)
                 .overlay {
-                    Text(checkListItem.question.answerOptions[index])
-                        .foregroundStyle(.black)
-                }
-                .overlay {
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(isSelected ? color : .white,
-                                lineWidth: isSelected ? 1 : 0)
-                        .padding(1)
+                    Text(checklistItem.question.answerOptions[index])
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyRegular)
                 }
         }
     }
@@ -53,71 +50,71 @@ private extension ChecklistRowAnswerSectionView {
     // MARK: - Computede Values
     
     var answerType: AnswerType {
-        checkListItem.question.answerType
+        checklistItem.question.answerType
     }
     
     var answerOptions: [String] {
-        checkListItem.question.answerOptions
+        checklistItem.question.answerOptions
     }
     
     var columns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: horizontalSpacing),
-              count: (answerType == .twoChoices) ? 2 : 3)
+              count: answerOptions.count > 3 ? 3 : answerOptions.count)
     }
     
     func accentColor(index: Int) -> Color {
         switch answerType {
         case .twoChoices:
-            return index == 1 ? Color.blue : Color.red
+            return index == 1 ? Color.Button.positive : Color.Button.negative
         case .multiChoices:
             switch index {
-            case 0: return Color.red
-            case 1: return Color.green
-            case 2: return Color.blue
+            case 0: return Color.Button.negative
+            case 1: return Color.Button.neutral
+            case 2: return Color.Button.positive
             default: return Color.green
             }
         case .multiSelect(_, let answerDisposition):
             switch answerDisposition {
-            case .negative: return Color.red
-            case .neutral: return Color.green
-            case .positive: return Color.blue
+            case .negative: return Color.Button.negative
+            case .neutral: return Color.Button.neutral
+            case .positive: return Color.Button.positive
             }
         }
     }
     
     // MARK: - Action
     
-    func applyScore(index: Int, isSelected: Bool) {
+    func applyAnswersAndScores(index: Int, isSelected: Bool) {
         switch answerType {
         case .multiSelect(let basicScore, let answerDisposition):
             let value: Float = answerDisposition == .negative ? -0.5 : 0.5
             if isSelected {
-                answers[checkListItem.id, default: Set<Int>([index])].remove(index)
-                scores[checkListItem.id] = Float(answers[checkListItem.id]?.count ?? 0) * value + basicScore
+                answers[checklistItem]?.remove(index)
+                scores[checklistItem] = Float(answers[checklistItem]?.count ?? 0) * value + basicScore
             } else {
-                answers[checkListItem.id, default: Set<Int>([index])].insert(index)
-                scores[checkListItem.id] = Float(answers[checkListItem.id]?.count ?? 0) * value + basicScore
+                answers[checklistItem, default: Set()].insert(index)
+                scores[checklistItem] = Float(answers[checklistItem]?.count ?? 0) * value + basicScore
             }
         case .multiChoices:
             if isSelected {
-                answers[checkListItem.id] = nil
-                scores[checkListItem.id] = Float(1)
+                answers[checklistItem] = nil
+                scores[checklistItem] = Float(1)
             } else {
-                answers[checkListItem.id] = Set([index])
-                scores[checkListItem.id] = Float(index)
+                answers[checklistItem] = Set([index])
+                scores[checklistItem] = Float(index)
             }
         case .twoChoices:
             if isSelected {
-                answers[checkListItem.id] = nil
-                scores[checkListItem.id] =  Float(1)
+                answers[checklistItem] = nil
+                scores[checklistItem] = Float(1)
             } else {
-                answers[checkListItem.id] = Set([index])
-                scores[checkListItem.id] = Float(index == 1 ? 2 : 0)
+                answers[checklistItem] = Set([index])
+                scores[checklistItem] = Float(index == 1 ? 2 : 0)
             }
         }
     }
 }
 
 #Preview {
-    ChecklistRowAnswerSectionView(answers: .constant([:]), scores: .constant([:]), checkListItem: ChecklistItem.checklistItems[0])
+    ChecklistRowAnswerSectionView(answers: .constant([:]), scores: .constant([:]), checklistItem: ChecklistItem.checklistItems[0])
 }
