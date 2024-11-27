@@ -13,7 +13,10 @@ struct TestView: View {
     @State var imageExist: Bool = false
     @State var selectedHomeCategory: HomeCategory? = nil
     @State var selectedHomeRentalType: HomeRentalType? = nil
-    
+    @FocusState private var focusField: EssentialInfoField?
+    @State var homeAreaPyeong: String = ""
+    @State var homeAreaSquareMeter: String = ""
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
@@ -23,12 +26,15 @@ struct TestView: View {
                 HomePhotoSection
                 HomeCategorySection
                 HomeRentalTypeSection
+                HomeAreaSection
             }
             .padding(.horizontal, 16)
         }
         .background(Color.Background.primary)
+        .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")
+        .toolbarBackground(.hidden, for: .navigationBar)
     }
 }
 
@@ -194,7 +200,7 @@ private extension TestView {
         }
     }
     
-    // HomeCategorySection
+    // HomeRentalTypeSection
     
     var HomeRentalTypeSection: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -226,6 +232,79 @@ private extension TestView {
         }
     }
     
+    // HomeArea
+    
+    var HomeAreaSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            SectionTitle(text: "면적")
+            HomeAreaTextFieldStack
+        }
+        .padding(.bottom, 24)
+    }
+    
+    
+    var HomeAreaTextFieldStack: some View {
+        HStack(spacing: 8) {
+            PyeongTextField
+            Image(systemName: "arrow.left.arrow.right")
+                .foregroundStyle(Color.Icon.tertiary)
+                .applyZZSFont(zzsFontSet: .iconBody)
+            SquareMeterTextField
+        }
+    }
+    
+    var PyeongTextField: some View {
+        HStack(spacing: 6) {
+            TextField(text: $homeAreaPyeong) {
+                Text("000")
+                    .foregroundStyle(Color.Text.placeholder)
+                    .applyZZSFont(zzsFontSet: .bodyRegular)
+            }
+            .keyboardType(.decimalPad)
+            .focused($focusField, equals: .areaPyeong)
+            .multilineTextAlignment(.center)
+            .foregroundStyle(Color.Text.primary)
+            .applyZZSFont(zzsFontSet: .bodyRegular)
+            .padding(.horizontal, 20)
+            .frame(height: 40)
+            .background {
+                UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
+                                                                         bottomTrailing: 16,
+                                                                         topTrailing: 16))
+                .fill(Color.Button.enable)
+            }
+            Text("평")
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .bodyRegular)
+        }
+    }
+    
+    var SquareMeterTextField: some View {
+        HStack {
+            TextField(text: $homeAreaSquareMeter) {
+                Text("000")
+                    .foregroundStyle(Color.Text.placeholder)
+                    .applyZZSFont(zzsFontSet: .bodyRegular)
+            }
+            .keyboardType(.decimalPad)
+            .focused($focusField, equals: .areaSquareMeter)
+            .multilineTextAlignment(.center)
+            .foregroundStyle(Color.Text.primary)
+            .applyZZSFont(zzsFontSet: .bodyRegular)
+            .padding(.horizontal, 20)
+            .frame(height: 40)
+            .background {
+                UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
+                                                                         bottomTrailing: 16,
+                                                                         topTrailing: 16))
+                .fill(Color.Button.enable)
+            }
+            Text("㎡")
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .bodyRegular)
+        }
+    }
+    
     func SectionTitle(text: String) -> some View {
         Text(text)
             .foregroundStyle(Color.Text.primary)
@@ -239,6 +318,13 @@ private extension TestView {
         "1번째 집"
     }
 }
+
+enum EssentialInfoField {
+    case homeName
+    case areaPyeong
+    case areaSquareMeter
+}
+
 
 #Preview {
     TestView()
