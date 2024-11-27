@@ -18,18 +18,7 @@ struct ChecklistRowAnswerSectionView: View {
     var body: some View {
         LazyVGrid(columns: columns, spacing: verticalSpacing) {
             ForEach(answerOptions.indices, id: \.self) { index in
-                Button {
-                    applyScore(index: index, isSelected: answers[checklistItem]?.contains(index) ?? false)
-                } label: {
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(answers[checklistItem]?.contains(index) ?? false ? accentColor(index: index) : Color.Button.enable)
-                        .frame(height: 43)
-                        .overlay {
-                            Text(checklistItem.question.answerOptions[index])
-                                .foregroundStyle(Color.Text.primary)
-                                .applyZZSFont(zzsFontSet: .bodyRegular)
-                        }
-                }
+                AnswerButton(index: index)
             }
         }
     }
@@ -42,7 +31,7 @@ private extension ChecklistRowAnswerSectionView {
     func AnswerButton(index: Int) -> some View {
         let color = accentColor(index: index)
         return Button {
-            applyScore(index: index, isSelected: answers[checklistItem]?.contains(index) ?? false)
+            applyAnswersAndScores(index: index, isSelected: answers[checklistItem]?.contains(index) ?? false)
         } label: {
             RoundedRectangle(cornerRadius: 16)
                 .fill(answers[checklistItem]?.contains(index) ?? false ? color : Color.Button.enable)
@@ -92,7 +81,7 @@ private extension ChecklistRowAnswerSectionView {
     
     // MARK: - Action
     
-    func applyScore(index: Int, isSelected: Bool) {
+    func applyAnswersAndScores(index: Int, isSelected: Bool) {
         switch answerType {
         case .multiSelect(let basicScore, let answerDisposition):
             let value: Float = answerDisposition == .negative ? -0.5 : 0.5

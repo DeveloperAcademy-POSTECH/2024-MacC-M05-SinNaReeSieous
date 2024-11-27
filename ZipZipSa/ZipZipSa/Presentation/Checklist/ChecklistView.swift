@@ -65,7 +65,7 @@ private extension ChecklistView {
                     .padding(.bottom, 40)
                 }
                 Memo
-                    
+                
             } header: {
                 ChecklistSpaceButtonStackView(selectedSpaceType: $selectedSpaceType)
             }
@@ -74,12 +74,9 @@ private extension ChecklistView {
     
     var NavigationBarTitle: some View {
         HStack {
-            VStack(alignment: .leading) {
-                Text("주인님을 위한")
-                Text("맞춤 체크리스트예요")
-            }
-            .foregroundStyle(Color.Text.primary)
-            .applyZZSFont(zzsFontSet: .largeTitle)
+            Text("주인님을 위한\n맞춤 체크리스트예요")
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .largeTitle)
             Spacer()
         }
         .padding(.horizontal, 16)
