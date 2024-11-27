@@ -18,7 +18,7 @@ struct ResultCardView: View {
         NavigationStack {
             VStack {
                 ScrollView {
-                    ShareCard(room: room)
+                    ShareCard()
                         .padding(.bottom, 20)
                         .background(
                             GeometryReader { proxy in
@@ -27,7 +27,7 @@ struct ResultCardView: View {
                                         DispatchQueue.main.async {
                                             // 캡처 크기를 동적으로 설정
                                             let size = CGSize(width: proxy.size.width, height: proxy.size.height + 20)
-                                            card = ShareCard(room: room)
+                                            card = ShareCard()
                                                 .asUIImage(size: size)
                                         }
                                     }

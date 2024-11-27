@@ -16,7 +16,6 @@ struct RoomScanView: View {
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
-    @StateObject private var locationManager = LocationManager()
     
     @State private var room: SampleRoom?
     @State private var doneScanning: Bool = false
@@ -25,10 +24,10 @@ struct RoomScanView: View {
     @State private var mainPicture: UIImage?
     @State private var showResultSheet: Bool = false
     @State private var isProcessing: Bool = false
-    @State private var latitude: Double = 0.0
-    @State private var longitude: Double = 0.0
     
     let roomController = RoomPlanManager.shared
+    let latitude: Double
+    let longitude: Double
     
     var body: some View {
         VStack {
@@ -138,12 +137,6 @@ struct RoomScanView: View {
                 }
             }
         }
-        .onAppear {
-            locationManager.requestLocationAuthorization()
-            if let location = locationManager.userLocation {
-                print("현재위치: \(location.latitude), \(location.longitude)")
-            }
-        }
         .sheet(isPresented: $showResultSheet) {
             if let room {
                 ResultCardView(room: room)
@@ -230,13 +223,12 @@ struct RoomScanView: View {
     //SwiftData에 공간 정보를 저장하는 함수
     func addSpace() -> SampleRoom? {
         do {
-            if let model, let location = locationManager.userLocation {
+            if let model {
                 let newSpace = SampleRoom(
-                    id: UUID(),
                     mainPicture: mainPicture ?? UIImage(resource: .mainPicSample),
                     model: model.pngData()!,
-                    latitude: location.latitude,
-                    longitude: location.longitude
+                    latitude: latitude,
+                    longitude: longitude
                 )
                 
                 modelContext.insert(newSpace)

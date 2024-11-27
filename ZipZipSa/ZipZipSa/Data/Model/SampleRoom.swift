@@ -8,21 +8,26 @@
 import SwiftUI
 import SwiftData
 
-// TODO: Room model 구조 확정된 이후 수정예정
 @Model
-final class SampleRoom: Identifiable {
+final class SampleRoom {
     var id: UUID
     @Attribute(.externalStorage) var mainPictureData: Data?
     @Attribute(.externalStorage) var model: Data?
     var latitude: Double
     var longitude: Double
-    
-    init(id: UUID, mainPicture: UIImage?, model: Data, latitude: Double, longitude: Double) {
+    var availableFacilities: [String]
+
+    init(id: UUID = UUID(), mainPicture: UIImage? = nil, model: Data? = nil, latitude: Double, longitude: Double, availableFacilities: [Facility] = []) {
         self.id = id
         self.mainPictureData = mainPicture?.pngData()
         self.model = model
         self.latitude = latitude
         self.longitude = longitude
+        self.availableFacilities = availableFacilities.map { $0.rawValue }
+    }
+    
+    var facilities: [Facility] {
+        availableFacilities.compactMap { Facility(rawValue: $0) }
     }
     
     // UIImage를 가져오기 위한 computed property
