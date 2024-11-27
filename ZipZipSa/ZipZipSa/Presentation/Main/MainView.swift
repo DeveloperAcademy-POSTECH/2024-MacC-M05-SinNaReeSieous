@@ -15,13 +15,10 @@ struct MainView: View {
                 Color.Background.primary
                     .ignoresSafeArea()
                 VStack(alignment: .leading, spacing: 0){
-                    TopBar
+                    topBar
                     ZipZipSaTips
-                    MainButtons
-                    
-                    Spacer()
-                    
-                    RecentlyViewedHome
+                    mainButtons
+                    recentlyViewedHome
                 }
                 .padding(.horizontal, 16)
                 .accentColor(.black)
@@ -32,22 +29,22 @@ struct MainView: View {
 
 private extension MainView {
     
-    var TopBar: some View {
+    var topBar: some View {
         HStack (alignment: .top) {
-            NavigationTitle
+            navigationTitle
             Spacer()
-            SettingButton
+            settingButton
         }
         .padding(.top, 12)
         .padding(.bottom, 36)
     }
     
-    var NavigationTitle: some View {
-        Text("어떤 집을 \n보러 갈까요?")
+    var navigationTitle: some View {
+        Text(ZipLiteral.MainView.navigationTitleText)
             .applyZZSFont(zzsFontSet: .largeTitle)
     }
     
-    var SettingButton: some View {
+    var settingButton: some View {
         NavigationLink(destination: SettingView()) {
             Image(systemName: "gearshape")
                 .applyZZSFont(zzsFontSet: .iconLargeTitle)
@@ -82,30 +79,30 @@ private extension MainView {
             }
     }
     
-    var MainButtons: some View {
+    var mainButtons: some View {
         HStack(spacing: 11) {
             
-            HomeHuntButton
-            ViewedHomeButton
+            homeHuntButton
+            viewedHomeButton
         }
         .padding(.top, 20)
+        .padding(.bottom, 64)
     }
     
-    var HomeHuntButton: some View {
+    var homeHuntButton: some View {
         NavigationLink(destination: SettingView()) {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.Button.secondaryYellow)
                 .frame(height: UIScreen.screenSize.height / 812 * 210)
                 .overlay(alignment:.leading, content: {
                     VStack (alignment: .leading){
-                        Text("집 보러가기")
+                        Text(ZipLiteral.MainView.homeHuntButtonMain)
                             .applyZZSFont(zzsFontSet: .title2)
                             .padding(.top, 12)
                             .padding(.leading, 16)
-                        Text("용북이와 함께 집을 둘러보아요")
+                        Text(ZipLiteral.MainView.homeHuntButtonSub)
                             .applyZZSFont(zzsFontSet: .caption2)
                             .padding(.leading, 16)
-                        
                         Spacer()
                         
                         Image("excitedYongboogiLineHeadCut")
@@ -116,14 +113,14 @@ private extension MainView {
         }
     }
     
-    var ViewedHomeButton: some View {
+    var viewedHomeButton: some View {
         NavigationLink(destination: HomeListView()) {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.Button.primaryBlue)
                 .frame(height: UIScreen.screenSize.height / 812 * 210)
                 .overlay(alignment:.leading, content: {
                     VStack (alignment: .leading){
-                        Text("내가 본 집")
+                        Text(ZipLiteral.MainView.viewedHomeButton)
                             .applyZZSFont(zzsFontSet: .title2)
                             .padding(.top, 12)
                             .padding(.leading, 16)
@@ -138,17 +135,17 @@ private extension MainView {
         }
     }
     
-    var RecentlyViewedHome: some View {
+    var recentlyViewedHome: some View {
         VStack (alignment: .leading){
-            Text("최근 본 집")
+            Text(ZipLiteral.MainView.recentlyViewedHomeTitle)
                 .font(Font.system (size: 24, weight: .bold))
                 .padding(.bottom, 16)
             
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color.Background.disabled)
+                .fill(Color.Background.enable)
                 .frame(height: UIScreen.screenSize.height / 812 * 203)
                 .overlay(content: {
-                    Text("아직 내가 둘러본 집이 없어요.\n집을 보러 가서 집을 추가해 보세요.")
+                    Text(ZipLiteral.MainView.recentlyViewedHomeContent)
                         .applyZZSFont(zzsFontSet: .bodyRegular)
                         .foregroundStyle(Color.Text.tertiary)
                         .multilineTextAlignment(.center)

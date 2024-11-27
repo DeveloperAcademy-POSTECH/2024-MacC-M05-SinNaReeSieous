@@ -16,4 +16,15 @@ enum ZipLiteral {
         static let save: String = "저장하기"
         static let processing: String = "저장 중..."
     }
+    
+    enum MainView {
+        static let navigationTitleText: String = "어떤 집을 \n보러 갈까요?"
+        static let homeHuntButtonMain: String = "집 보러가기"
+        static let homeHuntButtonSub: String = "용북이와 함께 집을 둘러보아요"
+        static let viewedHomeButton: String = "내가 본 집"
+        static let recentlyViewedHomeTitle: String = "최근 본 집"
+        static let recentlyViewedHomeContent: String = "아직 내가 둘러본 집이 없어요.\n집을 보러 가서 집을 추가해 보세요."
+            
+        
+    }
 }
