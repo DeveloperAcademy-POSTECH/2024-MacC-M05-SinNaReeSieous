@@ -28,7 +28,9 @@ struct ChecklistView: View {
         }
         .overlay(alignment: .bottom) {
             ZZSMainButton(
-                action: { print("Tapped") },
+                action: {
+                    getChecklistResult()
+                },
                 text: ZipLiteral.Checklist.bottomButton
             )
             .padding([.horizontal, .top], 16)
@@ -135,6 +137,15 @@ private extension ChecklistView {
             $0.space.type == selectedSpaceType
         }
         .sorted { $0.space.questionNumber < $1.space.questionNumber }
+    }
+    
+    func getChecklistResult() {
+        print("현재 점수")
+        print(calculateCategoryScoreResult())
+        print("최대 점수")
+        print(calculateMaxCategoryScoreResult())
+        print("위험 요소")
+        print(getHazardResult())
     }
     
     func calculateCategoryScoreResult() -> [ChecklistCategory: Float] {
