@@ -38,8 +38,9 @@ private extension ChecklistRowView {
     var CategoryChipStack: some View {
         HStack(spacing: 8) {
             ForEach(chipData.indices, id:\.self) { index in
-                let chip = chipData[index]
-                CategoryChip(text: chip.text, color: chip.clolr)
+                if let chip = chipData[safe: index] {
+                    CategoryChip(text: chip.text, color: chip.clolr)
+                }
             }
         }
     }

@@ -38,6 +38,10 @@ struct ChecklistView: View {
         }
         .onAppear { updateSpaceChecklistItems() }
         .onChange(of: selectedSpaceType) { updateSpaceChecklistItems() }
+        .onChange(of: spaceChecklistItems, { oldValue, newValue in
+            print("\n\n\n")
+            print(newValue)
+        })
         .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)

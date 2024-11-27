@@ -18,9 +18,10 @@ struct ChecklistRowAnswerSectionView: View {
     var body: some View {
         LazyVGrid(columns: columns, spacing: verticalSpacing) {
             ForEach(answerOptions, id: \.self) { value in
-                let index = checklistItem.question.answerOptions.firstIndex(of: value) ?? 0
-                
-                AnswerButton(index: index)
+                //let index = checklistItem.question.answerOptions.firstIndex(of: value) ?? 0
+                if let index = checklistItem.question.answerOptions.firstIndex(of: value) {
+                    AnswerButton(index: index)
+                }
             }
         }
     }
