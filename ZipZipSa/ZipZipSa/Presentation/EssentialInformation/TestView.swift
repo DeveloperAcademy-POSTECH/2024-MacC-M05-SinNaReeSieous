@@ -12,6 +12,7 @@ struct TestView: View {
     @State var address: String = ""
     @State var imageExist: Bool = false
     @State var selectedHomeCategory: HomeCategory? = nil
+    @State var selectedHomeRentalType: HomeRentalType? = nil
     
     var body: some View {
         ScrollView {
@@ -21,6 +22,7 @@ struct TestView: View {
                 AddressSection
                 HomePhotoSection
                 HomeCategorySection
+                HomeRentalTypeSection
             }
             .padding(.horizontal, 16)
         }
@@ -183,7 +185,7 @@ private extension TestView {
                     .fill(selectedHomeCategory == category ? Color.Button.secondaryYellow : Color.Button.enable)
                     .frame(height: 40)
                     .overlay {
-                        Text(HomeCategory.allCases[index].text)
+                        Text(category.text)
                             .foregroundStyle(Color.Text.primary)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
                     }
@@ -192,6 +194,37 @@ private extension TestView {
         }
     }
     
+    // HomeCategorySection
+    
+    var HomeRentalTypeSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            SectionTitle(text: "계약형태")
+            HomeRentalTypeButtonStack
+        }
+        .padding(.bottom, 24)
+    }
+    
+    var HomeRentalTypeButtonStack: some View {
+        HStack(spacing: 8) {
+            ForEach(HomeRentalType.allCases.indices, id: \.self) { index in
+                let rentalType = HomeRentalType.allCases[index]
+                Button {
+                    selectedHomeRentalType = selectedHomeRentalType == rentalType ? nil : rentalType
+                } label: {
+                    UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
+                                                                             bottomTrailing: 16,
+                                                                             topTrailing: 16))
+                    .fill(selectedHomeRentalType == rentalType ? Color.Button.secondaryYellow : Color.Button.enable)
+                    .frame(height: 40)
+                    .overlay {
+                        Text(rentalType.text)
+                            .foregroundStyle(Color.Text.primary)
+                            .applyZZSFont(zzsFontSet: .bodyRegular)
+                    }
+                }
+            }
+        }
+    }
     
     func SectionTitle(text: String) -> some View {
         Text(text)
