@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     @State private var currentTip = ZipZipSaTip.getRandomText()
+    @State private var timer: Timer?
     var body: some View {
         NavigationStack {
             ZStack{
@@ -71,7 +72,30 @@ private extension MainView {
                 .padding(.trailing, 8)
             })
             .onAppear {
-                Timer.scheduledTimer(withTimeInterval: 8.0, repeats: true) { _ in
+                // 기존 타이머가 있다면 무효화
+                timer?.invalidate()
+                // 텍스트 초기화
+                currentTip = ZipZipSaTip.getRandomText()
+                // 새로운 타이머 시작
+                timer = Timer.scheduledTimer(withTimeInterval: 7.0, repeats: true) { _ in
+                    withAnimation {
+                        currentTip = ZipZipSaTip.getRandomText()
+                    }
+                }
+            }
+            .onDisappear {
+                timer?.invalidate()
+                timer = nil
+            }
+            .onTapGesture {
+                // 기존 타이머가 있다면 무효화
+                timer?.invalidate()
+                // 텍스트 초기화
+                withAnimation {
+                    currentTip = ZipZipSaTip.getRandomText()
+                }
+                // 새로운 타이머 시작
+                timer = Timer.scheduledTimer(withTimeInterval: 8.0, repeats: true) { _ in
                     withAnimation {
                         currentTip = ZipZipSaTip.getRandomText()
                     }
