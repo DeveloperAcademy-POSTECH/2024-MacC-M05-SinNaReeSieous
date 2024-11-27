@@ -11,17 +11,21 @@ struct MainView: View {
     @State private var currentTip = ZipZipSaTip.getRandomText()
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 0){
-                TopBar
-                ZipZipSaTips
-                MainButtons
-                
-                Spacer()
-                
-                RecentlyViewedHome
+            ZStack{
+                Color.Background.primary
+                    .ignoresSafeArea()
+                VStack(alignment: .leading, spacing: 0){
+                    TopBar
+                    ZipZipSaTips
+                    MainButtons
+                    
+                    Spacer()
+                    
+                    RecentlyViewedHome
+                }
+                .padding(.horizontal, 16)
+                .accentColor(.black)
             }
-            .padding(.horizontal, 16)
-            .accentColor(.black)
         }
     }
 }
@@ -40,13 +44,13 @@ private extension MainView {
     
     var NavigationTitle: some View {
         Text("어떤 집을 \n보러 갈까요?")
-            .font(Font.system (size: 28, weight: .bold))
+            .applyZZSFont(zzsFontSet: .largeTitle)
     }
     
     var SettingButton: some View {
         NavigationLink(destination: SettingView()) {
             Image(systemName: "gearshape")
-                .font(Font.system (size: 24))
+                .applyZZSFont(zzsFontSet: .iconLargeTitle)
         }
     }
     
@@ -56,12 +60,12 @@ private extension MainView {
             .frame(height: 61)
             .overlay(alignment: .leading, content: {
                 HStack(spacing: 12) {
-                    Image(systemName: "checkmark.circle.fill")
+                    Image("basicYongboogiHeadColor")
                         .resizable()
                         .frame(width: 36, height: 34)
                         .foregroundColor(.green)
                     Text(currentTip)
-                        .font(Font.system (size: 12, weight: .medium))
+                        .applyZZSFont(zzsFontSet: .footnote)
                         .lineLimit(3)
                         .transition(.slide)
                         .animation(.easeInOut, value: currentTip)
@@ -90,16 +94,16 @@ private extension MainView {
     var HomeHuntButton: some View {
         NavigationLink(destination: SettingView()) {
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.yellow)
+                .fill(Color.Button.secondaryYellow)
                 .frame(height: UIScreen.screenSize.height / 812 * 210)
                 .overlay(alignment:.leading, content: {
                     VStack (alignment: .leading){
                         Text("집 보러가기")
-                            .font(Font.system (size: 21, weight: .bold))
+                            .applyZZSFont(zzsFontSet: .title2)
                             .padding(.top, 12)
                             .padding(.leading, 16)
                         Text("용북이와 함께 집을 둘러보아요")
-                            .font(Font.system (size: 10, weight: .medium))
+                            .applyZZSFont(zzsFontSet: .caption2)
                             .padding(.leading, 16)
                         
                         Spacer()
@@ -115,12 +119,12 @@ private extension MainView {
     var ViewedHomeButton: some View {
         NavigationLink(destination: HomeListView()) {
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.cyan)
+                .fill(Color.Button.primaryBlue)
                 .frame(height: UIScreen.screenSize.height / 812 * 210)
                 .overlay(alignment:.leading, content: {
                     VStack (alignment: .leading){
                         Text("내가 본 집")
-                            .font(Font.system (size: 21, weight: .bold))
+                            .applyZZSFont(zzsFontSet: .title2)
                             .padding(.top, 12)
                             .padding(.leading, 16)
                         
@@ -141,11 +145,12 @@ private extension MainView {
                 .padding(.bottom, 16)
             
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color.gray.opacity(0.2))
+                .fill(Color.Background.disabled)
                 .frame(height: UIScreen.screenSize.height / 812 * 203)
                 .overlay(content: {
                     Text("아직 내가 둘러본 집이 없어요.\n집을 보러 가서 집을 추가해 보세요.")
-                        .font(Font.system (size: 16, weight: .medium))
+                        .applyZZSFont(zzsFontSet: .bodyRegular)
+                        .foregroundStyle(Color.Text.tertiary)
                         .multilineTextAlignment(.center)
                 })
         }
