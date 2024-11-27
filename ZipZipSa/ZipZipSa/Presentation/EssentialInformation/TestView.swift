@@ -277,6 +277,20 @@ private extension TestView {
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .bodyRegular)
         }
+        .onChange(of: homeAreaPyeong) { oldValue, newValue in
+            guard focusField == .areaPyeong else {
+                return
+            }
+            
+            if homeAreaPyeong.isEmpty {
+                homeAreaSquareMeter = ""
+            } else {
+                let pyeong = Float(homeAreaPyeong) ?? 0.0
+                let squareMeter = pyeong * 3.306
+                let formattedValue = String(format: "%.2f", squareMeter)
+                homeAreaSquareMeter = formattedValue
+            }
+        }
     }
     
     var SquareMeterTextField: some View {
@@ -302,6 +316,20 @@ private extension TestView {
             Text("㎡")
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .bodyRegular)
+        }
+        .onChange(of: homeAreaSquareMeter) { oldValue, newValue in
+            guard focusField == .areaSquareMeter else {
+                return
+            }
+            
+            if homeAreaSquareMeter.isEmpty {
+                homeAreaPyeong = ""
+            } else {
+                let squareMeter = Float(homeAreaSquareMeter) ?? 0.0
+                let pyeong = squareMeter / 3.306
+                let formattedValue = String(format: "%.2f", pyeong)
+                homeAreaPyeong = formattedValue
+            }
         }
     }
     
