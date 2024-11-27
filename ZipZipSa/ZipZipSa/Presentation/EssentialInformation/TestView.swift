@@ -16,6 +16,7 @@ struct TestView: View {
     @FocusState private var focusField: EssentialInfoField?
     @State var homeAreaPyeong: String = ""
     @State var homeAreaSquareMeter: String = ""
+    @State var selectedHomeDirection: HomeDirection? = nil
 
     var body: some View {
         ScrollView {
@@ -27,6 +28,7 @@ struct TestView: View {
                 HomeCategorySection
                 HomeRentalTypeSection
                 HomeAreaSection
+                HomeDirectionSection
             }
             .padding(.horizontal, 16)
         }
@@ -342,6 +344,37 @@ private extension TestView {
                 let pyeong = squareMeter / 3.306
                 let formattedValue = String(format: "%.2f", pyeong)
                 homeAreaPyeong = formattedValue
+            }
+        }
+    }
+    
+    // HomeDirection
+    
+    var HomeDirectionSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            SectionTitle(text: "집의 방향")
+            HomeDirectionButtonStack
+        }
+    }
+    
+    var HomeDirectionButtonStack: some View {
+        HStack(spacing: 8) {
+            ForEach(HomeDirection.allCases.indices, id: \.self) { index in
+                let direction = HomeDirection.allCases[index]
+                Button {
+                    selectedHomeDirection = selectedHomeDirection == direction ? nil : direction
+                } label: {
+                    UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
+                                                                             bottomTrailing: 16,
+                                                                             topTrailing: 16))
+                    .fill(selectedHomeDirection == direction ? Color.Button.secondaryYellow : Color.Button.enable)
+                    .frame(height: 40)
+                    .overlay {
+                        Text(direction.text)
+                            .foregroundStyle(Color.Text.primary)
+                            .applyZZSFont(zzsFontSet: .bodyRegular)
+                    }
+                }
             }
         }
     }
