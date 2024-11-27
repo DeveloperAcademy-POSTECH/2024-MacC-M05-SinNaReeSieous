@@ -10,16 +10,15 @@ import Vision
 
 struct ResultCardView: View {
     
-    var room: SampleRoom
-    
     @State private var card: UIImage = UIImage()
-    @Binding var hasRoomModel: Bool
+    
+    var room: SampleRoom
     
     var body: some View {
         NavigationStack {
             VStack {
                 ScrollView {
-                    ShareCard(hasRoomModel: $hasRoomModel, room: room)
+                    ShareCard(room: room)
                         .padding(.bottom, 20)
                         .background(
                             GeometryReader { proxy in
@@ -28,7 +27,7 @@ struct ResultCardView: View {
                                         DispatchQueue.main.async {
                                             // 캡처 크기를 동적으로 설정
                                             let size = CGSize(width: proxy.size.width, height: proxy.size.height + 20)
-                                            card = ShareCard(hasRoomModel: $hasRoomModel, room: room)
+                                            card = ShareCard(room: room)
                                                 .asUIImage(size: size)
                                         }
                                     }
