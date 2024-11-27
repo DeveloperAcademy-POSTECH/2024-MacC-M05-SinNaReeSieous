@@ -30,6 +30,20 @@ struct TestView: View {
             }
             .padding(.horizontal, 16)
         }
+        .scrollIndicators(.never)
+        .contentMargins(.bottom, 120, for: .scrollContent)
+        .clipped()
+        .overlay(alignment: .bottom) {
+            ZZSMainButton(
+                action: {
+                    print("Finish Essential Info")
+                },
+                text: "다음"
+            )
+            .padding([.horizontal, .top], 16)
+            .padding(.bottom, 12)
+            .background(Color.Background.primary)
+        }
         .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
@@ -242,7 +256,6 @@ private extension TestView {
         .padding(.bottom, 24)
     }
     
-    
     var HomeAreaTextFieldStack: some View {
         HStack(spacing: 8) {
             PyeongTextField
@@ -338,7 +351,6 @@ private extension TestView {
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .bodyBold)
     }
-    
     
     // MARK: - Computed Values
     
