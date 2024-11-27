@@ -8,23 +8,24 @@
 import SwiftUI
 
 struct CategorySelectView: View {
-    
     @State private var totalTime: Int = 10
     @State private var currentMessage: String = ""
     
     var body: some View {
         NavigationStack{
-            VStack  {
-                ZipZipSaTip
-                Spacer()
-                RequiredTime
-                CategoryView(totalTime: $totalTime, currentMessage: $currentMessage)
-                BottomButton
-                
+            ZStack {
+                Color.Background.primary
+                    .ignoresSafeArea()
+                VStack  {
+                    ZipZipSaTip
+                    RequiredTime
+                    CategoryView(totalTime: $totalTime, currentMessage: $currentMessage)
+                    BottomButton
+                }
             }
+            .accentColor(Color.Button.tertiary)
+            .navigationBarBackButtonHidden()
         }
-        .accentColor(Color.Button.tertiary)
-        .navigationBarBackButtonHidden()
     }
 }
 
@@ -32,7 +33,7 @@ private extension CategorySelectView {
     
     var ZipZipSaTip: some View {
         HStack(alignment: .bottom, spacing: 0) {
-            Image("remark")
+            Image("basicYongboogiHeadColor")
                 .resizable()
                 .frame(width: 62, height: 61)
                 .padding(.leading, 8)
@@ -40,16 +41,17 @@ private extension CategorySelectView {
             
             Group {
                 if currentMessage.isEmpty {
-                    Text("아래 카테고리에 해당하는 필수 질문은 이미 있어요. 중요하게 보고 싶은 카테고리를 선택하시면, 더 꼼꼼히 확인할 수 있도록 추가 질문도 챙겨드릴게요.")
+                    Text(ZipLiteral.CategorySelect.defaultMessage)
                 } else {
                     Text(currentMessage)
                 }
             }
+            .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .subheadlineBold)
             .padding(.horizontal, 8)
             .padding(.vertical, 6)
-            .frame(width: UIScreen.screenSize.width / 375 * 255, alignment: .bottom)
-            .overlay {
+            .frame(width: UIScreen.screenSize.width / 375 * 255, alignment: .bottomLeading)
+            .background {
                 GeometryReader { geometry in
                     UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(
                         topLeading: 10,
@@ -57,30 +59,31 @@ private extension CategorySelectView {
                         topTrailing: 10
                     ))
                     .stroke(.black, lineWidth: 1)
+                    .fill(Color.Layer.first)
                     .frame(
                         width: UIScreen.screenSize.width / 375 * 255,
                         height: geometry.size.height
                     )
                 }
             }
-            
         }
-        .frame(width: UIScreen.screenSize.width - 32, height: UIScreen.screenSize.height / 812 * 116)
-        .border(.black, width: 1)
+        .frame(width: UIScreen.screenSize.width - 32, height: UIScreen.screenSize.height / 812 * 116, alignment: .bottom)
         .padding(.bottom, 24)
+        .padding(.top, 24)
     }
     
     var RequiredTime: some View {
-        
         RoundedRectangle(cornerRadius: 12)
-            .fill(Color.gray.opacity(0.3))
+            .fill(Color.Background.secondary)
             .frame(width:UIScreen.screenSize.width - 32, height: 44)
             .overlay {
                 HStack(alignment: .center) {
-                    Text("집보는 시간")
+                    Text(ZipLiteral.CategorySelect.requiredTime)
+                        .foregroundStyle(Color.Text.primary)
                         .font(Font.system (size: 13, weight: .medium))
                     
                     Text("약 \(totalTime)분")
+                        .foregroundStyle(Color.Text.primary)
                         .font(Font.system (size: 16, weight: .semibold))
                 }
             }
@@ -88,21 +91,19 @@ private extension CategorySelectView {
     }
     
     var BottomButton: some View {
-        
         NavigationLink(destination: FavoriteAddressEnterView()) {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.Button.primaryBlue)
-                .frame(width:UIScreen.screenSize.width - 32, height: 44)
+                .frame(width:UIScreen.screenSize.width - 32, height: 53)
                 .overlay {
-                    Text("완료")
-                        .applyZZSFont(zzsFontSet:.bodyBold)
+                    Text(ZipLiteral.CategorySelect.done)
                         .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet:.bodyBold)
                 }
         }
         .padding(.top, 24)
         .padding(.bottom, 30)
     }
-    
 }
 
 #Preview {

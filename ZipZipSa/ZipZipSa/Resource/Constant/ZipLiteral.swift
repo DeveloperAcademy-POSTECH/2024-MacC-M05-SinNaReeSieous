@@ -39,6 +39,12 @@ enum ZipLiteral {
         static let continueButtonText: String = "계속하기"
     }
     
+    enum CategorySelect{
+        static let defaultMessage: String = "아래 카테고리에 해당하는 필수 질문은 이미 있어요. 중요하게 보고 싶은 카테고리를 선택하시면, 더 꼼꼼히 확인할 수 있도록 추가 질문도 챙겨드릴게요."
+        static let requiredTime: String = "집보는 시간"
+        static let done: String = "완료"
+    }
+    
     enum APIEndpoints {
         static let baseURL: String = "https://maps.googleapis.com/maps/api"
 

@@ -13,11 +13,11 @@ extension Color {
         static let secondary = Color(.zzsWarmGray20)
         static let enable = Color(.zzsWhite)
         static let active = Color(.zzsYellow20)
-        static let disabled = Color(.zzsWhite.opacity(0.05))
+        static let disabled = Color(.zzsBlack.opacity(0.05))
     }
     
     enum Layer {
-        static let first = Color(.zzsBlack.opacity(0.8))
+        static let first = Color(.zzsWhite.opacity(0.8))
         static let second = Color(.zzsWarmGray20)
     }
     
