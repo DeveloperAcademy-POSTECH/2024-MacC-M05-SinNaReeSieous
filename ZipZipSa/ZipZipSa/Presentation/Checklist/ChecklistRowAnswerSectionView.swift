@@ -56,7 +56,7 @@ private extension ChecklistRowAnswerSectionView {
     
     var columns: [GridItem] {
         Array(repeating: GridItem(.flexible(), spacing: horizontalSpacing),
-              count: (answerType == .twoChoices) ? 2 : 3)
+              count: answerOptions.count > 3 ? 3 : answerOptions.count)
     }
     
     func accentColor(index: Int) -> Color {
