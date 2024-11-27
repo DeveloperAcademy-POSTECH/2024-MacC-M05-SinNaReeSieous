@@ -10,7 +10,7 @@ import SwiftUI
 struct ChecklistRowAnswerSectionView: View {
     @Binding var answers: [ChecklistItem: Set<Int>]
     @Binding var scores: [ChecklistItem: Float]
-    @Binding var checklistItem: ChecklistItem
+    let checklistItem: ChecklistItem
     
     private let horizontalSpacing: CGFloat = 10
     private let verticalSpacing: CGFloat = 8
@@ -116,5 +116,5 @@ private extension ChecklistRowAnswerSectionView {
 }
 
 #Preview {
-    ChecklistRowAnswerSectionView(answers: .constant([:]), scores: .constant([:]), checklistItem: .constant(ChecklistItem.checklistItems[0]))
+    ChecklistRowAnswerSectionView(answers: .constant([:]), scores: .constant([:]), checklistItem: ChecklistItem.checklistItems[0])
 }

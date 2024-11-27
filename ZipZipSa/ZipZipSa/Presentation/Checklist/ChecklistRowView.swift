@@ -11,7 +11,7 @@ struct ChecklistRowView: View {
     @Binding var selectedCategory: [ChecklistCategory]
     @Binding var answers: [ChecklistItem: Set<Int>]
     @Binding var scores: [ChecklistItem: Float]
-    @Binding var checklistItem: ChecklistItem
+    let checklistItem: ChecklistItem
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -23,7 +23,7 @@ struct ChecklistRowView: View {
             ChecklistRowAnswerSectionView(
                 answers: $answers,
                 scores: $scores,
-                checklistItem: $checklistItem
+                checklistItem: checklistItem
             )
             .padding(.top, 8)
             
@@ -138,5 +138,5 @@ enum CaptionType {
 
 
 #Preview {
-    ChecklistRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checklistItem: .constant(ChecklistItem.checklistItems[0]))
+    ChecklistRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checklistItem: ChecklistItem.checklistItems[0])
 }

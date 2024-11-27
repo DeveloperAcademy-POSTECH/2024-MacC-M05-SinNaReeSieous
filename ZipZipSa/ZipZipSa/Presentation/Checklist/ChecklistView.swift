@@ -11,9 +11,8 @@ struct ChecklistView: View {
     @State var answers: [ChecklistItem: Set<Int>] = [:]
     @State var scores: [ChecklistItem: Float] = [:]
     @State var selectedCategory: [ChecklistCategory] = [.security, .insectproof, .ventilation]
-    @State var selectedSpaceType: SpaceType = .exterior
+    @State var selectedSpaceType: SpaceType = .kitchen
     @State var memoText: String = ""
-    @State var spaceChecklistItems: [ChecklistItem] = []
     
     var body: some View {
         VStack(spacing: 0) {
@@ -36,12 +35,9 @@ struct ChecklistView: View {
             .padding(.bottom, 12)
             .background(Color.Background.primary)
         }
-        .onAppear { updateSpaceChecklistItems() }
-        .onChange(of: selectedSpaceType) { updateSpaceChecklistItems() }
-        .onChange(of: spaceChecklistItems, { oldValue, newValue in
-            print("\n\n\n")
-            print(newValue)
-        })
+        .onAppear {
+            selectedSpaceType = .exterior
+        }
         .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
@@ -59,12 +55,12 @@ private extension ChecklistView {
             LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
                 Section {
                     Spacer().frame(height: 18)
-                    ForEach($spaceChecklistItems) { $checklistItem in
+                    ForEach(spaceChecklistItems) { checklistItem in
                         ChecklistRowView(
                             selectedCategory: $selectedCategory,
                             answers: $answers,
                             scores: $scores,
-                            checklistItem: $checklistItem
+                            checklistItem: checklistItem
                         )
                         .padding(.horizontal, 16)
                         .padding(.bottom, 40)
@@ -133,8 +129,8 @@ private extension ChecklistView {
         }
     }
     
-    func updateSpaceChecklistItems() {
-        spaceChecklistItems = filteredChecklistItems.filter {
+    var spaceChecklistItems: [ChecklistItem] {
+        return filteredChecklistItems.filter {
             $0.space.type == selectedSpaceType
         }
         .sorted { $0.space.questionNumber < $1.space.questionNumber }
