@@ -9,20 +9,24 @@ import SwiftUI
 
 struct ChecklistRowView: View {
     @Binding var selectedCategory: [ChecklistCategory]
-    @Binding var answers: [UUID: Set<Int>]
-    @Binding var scores: [UUID: Float]
-    let checkListItem: ChecklistItem
+    @Binding var answers: [ChecklistItem: Set<Int>]
+    @Binding var scores: [ChecklistItem: Float]
+    let checklistItem: ChecklistItem
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 8) {
             CategoryChipStack
             Question
             if captionType != .none {
                 Caption
             }
-            ChecklistRowAnswerSectionView(answers: $answers,
-                                          scores: $scores,
-                                          checkListItem: checkListItem)
+            ChecklistRowAnswerSectionView(
+                answers: $answers,
+                scores: $scores,
+                checklistItem: checklistItem
+            )
+            .padding(.top, 8)
+            
         }
     }
 }
@@ -32,40 +36,44 @@ private extension ChecklistRowView {
     // MARK: - View
     
     var CategoryChipStack: some View {
-        HStack {
+        HStack(spacing: 8) {
             ForEach(chipData.indices, id:\.self) { index in
-                let chip = chipData[index]
-                CategoryChip(text: chip.text, color: chip.clolr)
+                if let chip = chipData[safe: index] {
+                    CategoryChip(text: chip.text, color: chip.clolr)
+                }
             }
         }
     }
     
     func CategoryChip(text: String, color: Color) -> some View {
         Text(text)
+            .foregroundStyle(Color.ChecklistTag.colorGray)
+            .applyZZSFont(zzsFontSet: .caption1Regular)
             .padding(.vertical, 4)
-            .padding(.horizontal, 8)
+            .padding(.horizontal, 12)
             .background {
-                UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 10, bottomTrailing: 10, topTrailing: 10))
+                RoundedRectangle(cornerRadius: 8)
                     .fill(color)
             }
     }
     
     var Question: some View {
-        Text(checkListItem.question.question)
-            .bold()
-            .font(.title3)
+        Text(checklistItem.question.question)
+            .foregroundStyle(Color.Text.primary)
+            .applyZZSFont(zzsFontSet: .headline)
     }
     
     var Caption: some View {
-        HStack(alignment: .top) {
-            Image(captionType == .remark ? .remark : .crossTip)
+        HStack(alignment: .top, spacing: 8) {
+            Image(captionType == .remark ? .charChecklistRemark
+                                         : .charChecklistCross)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 22, height: 20)
+                .frame(width: 28, height: 20)
             Text(captionText)
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .caption1Regular)
                 .lineLimit(nil)
-                .font(.caption)
-                .padding(.top, 4)
         }
     }
     
@@ -73,14 +81,16 @@ private extension ChecklistRowView {
     
     var chipData: [(text: String, clolr: Color)] {
         var result: [(String, Color)]  = []
-        if checkListItem.checkListType == .advanced {
-            result.append((checkListItem.checkListType.text, .gray))
+        if checklistItem.checkListType == .advanced {
+            result.append((checklistItem.checkListType.text, Color.ChecklistTag.backgroundGray))
         }
-        if checkListItem.basicCategory.isSelectable {
-            result.append((checkListItem.basicCategory.text, .green))
+        if checklistItem.basicCategory.isSelectable {
+            result.append((checklistItem.basicCategory.text, Color.ChecklistTag.backgroundYellow))
         }
-       
-        let crossChip = checkListItem.crossTip.keys.filter { selectedCategory.contains($0) }.map { ($0.text, Color.green) }
+        
+        let crossChip = checklistItem.crossTip.keys
+            .filter { selectedCategory.contains($0) }
+            .map { ($0.text, Color.ChecklistTag.backgroundYellow) }
         
         result += crossChip
         
@@ -88,11 +98,11 @@ private extension ChecklistRowView {
     }
     
     var captionType: CaptionType {
-        let isCrossTip = checkListItem.crossTip.keys.contains(where: {
+        let isCrossTip = checklistItem.crossTip.keys.contains(where: {
             selectedCategory.contains($0)
         })
         
-        if checkListItem.remark != nil {
+        if checklistItem.remark != nil {
             return .remark
         } else if isCrossTip {
             return .crossTip
@@ -104,11 +114,11 @@ private extension ChecklistRowView {
     var captionText: String {
         switch captionType {
         case .remark:
-            return checkListItem.remark ?? ""
+            return checklistItem.remark ?? ""
         case .crossTip:
             var textData: [String?] = []
             selectedCategory.forEach {
-                textData.append(checkListItem.crossTip[$0])
+                textData.append(checklistItem.crossTip[$0])
             }
             return textData.compactMap { $0 }.joined(separator: "\n")
         case .none:
@@ -128,5 +138,5 @@ enum CaptionType {
 
 
 #Preview {
-    ChecklistRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checkListItem: ChecklistItem.checklistItems[0])
+    ChecklistRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checklistItem: ChecklistItem.checklistItems[0])
 }
