@@ -16,8 +16,6 @@ struct RoomScanView: View {
     @State private var isProcessing: Bool = false
     @State private var isSessionStarted: Bool = false
     let roomController = RoomPlanManager.shared
-    let latitude: Double
-    let longitude: Double
     
     var body: some View {
         if !isSessionStarted {
