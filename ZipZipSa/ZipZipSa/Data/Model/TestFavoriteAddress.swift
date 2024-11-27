@@ -1,5 +1,5 @@
 //
-//  FavoriteAddress.swift
+//  TestFavoriteAddress.swift
 //  ZipZipSa
 //
 //  Created by 조우현 on 11/25/24.
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @Model
-final class FavoriteAddress {
+final class TestFavoriteAddress {
     var latitude: Double
     var longitude: Double
     

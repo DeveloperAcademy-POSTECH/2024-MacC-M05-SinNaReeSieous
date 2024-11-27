@@ -126,7 +126,7 @@ struct TestFavAdressEnterView: View {
         guard let coordinates = selectedCoordinates else { return }
         
         do {
-            let newFavoriteAddress = FavoriteAddress(
+            let newFavoriteAddress = TestFavoriteAddress(
                 latitude: coordinates.latitude,
                 longitude: coordinates.longitude
             )
