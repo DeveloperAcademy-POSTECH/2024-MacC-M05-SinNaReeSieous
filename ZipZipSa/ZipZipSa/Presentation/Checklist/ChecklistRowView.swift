@@ -64,16 +64,16 @@ private extension ChecklistRowView {
     }
     
     var Caption: some View {
-        HStack(alignment: .top) {
-            Image(captionType == .remark ? .remark : .crossTip)
+        HStack(alignment: .top, spacing: 8) {
+            Image(captionType == .remark ? .charChecklistRemark
+                                         : .charChecklistCross)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 22, height: 20)
+                .frame(width: 28, height: 20)
             Text(captionText)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .caption1Regular)
                 .lineLimit(nil)
-                .padding(.top, 4)
         }
     }
     
