@@ -11,14 +11,16 @@ struct TestView: View {
     @State var homeName: String = ""
     @State var address: String = ""
     @State var imageExist: Bool = false
+    @State var selectedHomeCategory: HomeCategory? = nil
     
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 32) {
+            VStack(alignment: .leading, spacing: 0) {
                 NavigationTitle
                 NameSection
                 AddressSection
                 HomePhotoSection
+                HomeCategorySection
             }
             .padding(.horizontal, 16)
         }
@@ -36,6 +38,7 @@ private extension TestView {
         Text("기본정보를 알려주세요")
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .largeTitle)
+            .padding(.bottom, 32)
     }
     
     // NameSection
@@ -59,6 +62,7 @@ private extension TestView {
                 .fill(Color.Button.enable)
             }
         }
+        .padding(.bottom, 32)
     }
     
     // AddressSection
@@ -72,6 +76,7 @@ private extension TestView {
             SearchAddressButton
             GetCurrentAddressButton
         }
+        .padding(.bottom, 24)
     }
     
     var SearchAddressButton: some View {
@@ -106,9 +111,13 @@ private extension TestView {
                     .applyZZSFont(zzsFontSet: .iconSubheadline)
                     .padding(.horizontal, 2)
                 Text("현재위치로 저장하기")
-                    .underline()
                     .foregroundStyle(Color.Icon.tertiary)
                     .applyZZSFont(zzsFontSet: .caption1Regular)
+                    .overlay(alignment: .bottom) {
+                        Rectangle()
+                            .fill(Color.Icon.tertiary)
+                            .frame(height: 0.6)
+                    }
             }
         }
     }
@@ -118,34 +127,70 @@ private extension TestView {
     var HomePhotoSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionTitle(text: "건물 외관")
-            Button {
-                print("Get Photo")
-                imageExist.toggle()
-            } label: {
-                if imageExist {
-                    Image(.mainPicSample)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: UIScreen.screenSize.width-32, height: (UIScreen.screenSize.width-32)/343*144)
-                        .clipShape(UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
-                                                                                            bottomTrailing: 16,
-                                                                                            topTrailing: 16)))
-                } else {
-                    UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
-                                                                             bottomTrailing: 16,
-                                                                             topTrailing: 16))
-                    .fill(Color.Button.enable)
+            GetPhotoButton
+        }
+        .padding(.bottom, 32)
+    }
+    
+    var GetPhotoButton: some View {
+        Button {
+            print("Get Photo")
+            imageExist.toggle()
+        } label: {
+            if imageExist {
+                Image(.mainPicSample)
+                    .resizable()
+                    .scaledToFill()
                     .frame(width: UIScreen.screenSize.width-32, height: (UIScreen.screenSize.width-32)/343*144)
-                    .overlay {
-                        Image(systemName: "photo.badge.plus.fill")
-                            .foregroundStyle(Color.Icon.secondary)
-                            .applyZZSFont(zzsFontSet: .iconTitle1)
-                    }
+                    .clipShape(UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
+                                                                                        bottomTrailing: 16,
+                                                                                        topTrailing: 16)))
+            } else {
+                UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
+                                                                         bottomTrailing: 16,
+                                                                         topTrailing: 16))
+                .fill(Color.Button.enable)
+                .frame(width: UIScreen.screenSize.width-32, height: (UIScreen.screenSize.width-32)/343*144)
+                .overlay {
+                    Image(systemName: "photo.badge.plus.fill")
+                        .foregroundStyle(Color.Icon.secondary)
+                        .applyZZSFont(zzsFontSet: .iconTitle1)
                 }
             }
         }
     }
     
+    // HomeCategorySection
+    
+    var HomeCategorySection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            SectionTitle(text: "유형")
+            HomeCategoryButtonStack
+        }
+        .padding(.bottom, 24)
+    }
+    
+    var HomeCategoryButtonStack: some View {
+        HStack(spacing: 8) {
+            ForEach(HomeCategory.allCases.indices, id: \.self) { index in
+                let category = HomeCategory.allCases[index]
+                Button {
+                    selectedHomeCategory = selectedHomeCategory == category ? nil : category
+                } label: {
+                    UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
+                                                                             bottomTrailing: 16,
+                                                                             topTrailing: 16))
+                    .fill(selectedHomeCategory == category ? Color.Button.secondaryYellow : Color.Button.enable)
+                    .frame(height: 40)
+                    .overlay {
+                        Text(HomeCategory.allCases[index].text)
+                            .foregroundStyle(Color.Text.primary)
+                            .applyZZSFont(zzsFontSet: .bodyRegular)
+                    }
+                }
+            }
+        }
+    }
     
     
     func SectionTitle(text: String) -> some View {
