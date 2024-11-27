@@ -51,23 +51,29 @@ private extension ChecklistView {
     // MARK: - View
     
     var ChecklistList: some View {
-        LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-            Section {
-                Spacer().frame(height: 18)
-                ForEach($spaceChecklistItems) { $checklistItem in
-                    ChecklistRowView(
-                        selectedCategory: $selectedCategory,
-                        answers: $answers,
-                        scores: $scores,
-                        checklistItem: $checklistItem
-                    )
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 40)
+        ScrollViewReader { scrollView in
+            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+                Section {
+                    Spacer().frame(height: 18)
+                    ForEach($spaceChecklistItems) { $checklistItem in
+                        ChecklistRowView(
+                            selectedCategory: $selectedCategory,
+                            answers: $answers,
+                            scores: $scores,
+                            checklistItem: $checklistItem
+                        )
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 40)
+                    }
+                    Memo
+                    
+                } header: {
+                    ChecklistSpaceButtonStackView(selectedSpaceType: $selectedSpaceType)
+                        .id(1)
                 }
-                Memo
-                
-            } header: {
-                ChecklistSpaceButtonStackView(selectedSpaceType: $selectedSpaceType)
+            }
+            .onChange(of: selectedSpaceType) { oldValue, newValue in
+                scrollView.scrollTo(1)
             }
         }
     }
