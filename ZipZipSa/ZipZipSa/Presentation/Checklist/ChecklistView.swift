@@ -137,7 +137,7 @@ private extension ChecklistView {
         .sorted { $0.space.questionNumber < $1.space.questionNumber }
     }
     
-    func calculateCategoryScores() -> [ChecklistCategory: Float] {
+    func calculateCategoryScoreResult() -> [ChecklistCategory: Float] {
         var categoryScores: [ChecklistCategory: Float] = [:]
         
         filteredChecklistItems.forEach { checklistItem in
@@ -161,7 +161,7 @@ private extension ChecklistView {
         return categoryScores
     }
     
-    func calculateMaxCategoryScores() -> [ChecklistCategory: Float] {
+    func calculateMaxCategoryScoreResult() -> [ChecklistCategory: Float] {
         var categoryScores: [ChecklistCategory: Float] = [:]
         
         filteredChecklistItems.forEach { checklistItem in
