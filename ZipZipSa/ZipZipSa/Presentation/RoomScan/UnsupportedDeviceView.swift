@@ -10,14 +10,14 @@ import SwiftUI
 struct UnsupportedDeviceView: View {
     var body: some View {
         ZStack {
-            cameraView
+            CameraView
             VStack {
                 Spacer()
-                characterImage
+                CharacterImage
                 UnsupportedTitle
                 UnsupportedDescription
                 Spacer()
-                bottomButton
+                ShowResultCardButton
             }
         }
     }
@@ -26,7 +26,7 @@ struct UnsupportedDeviceView: View {
 private extension UnsupportedDeviceView {
     // MARK: - View
     
-    var cameraView: some View {
+    var CameraView: some View {
         CameraViewRepresentable()
             .blur(radius: 6, opaque: true)
             .overlay {
@@ -36,7 +36,7 @@ private extension UnsupportedDeviceView {
             .ignoresSafeArea()
     }
     
-    var characterImage: some View {
+    var CharacterImage: some View {
         Image(.charUnsupportedDevice)
             .resizable()
             .scaledToFit()
@@ -59,23 +59,21 @@ private extension UnsupportedDeviceView {
             .applyZZSFont(zzsFontSet: .bodyRegular)
     }
     
-    var bottomButton: some View {
-        VStack {
-            Button {
-                // TODO: 모델 이미지가 없는 상태로 결과지 시트 띄우기
-            } label: {
-                RoundedRectangle(cornerRadius: 16)
-                    .foregroundStyle(Color.Button.primaryBlue)
-                    .frame(height: 53)
-                    .overlay(
-                        Text(ZipLiteral.UnsupportedDevice.showResult)
-                            .foregroundStyle(Color.Text.primary)
-                            .applyZZSFont(zzsFontSet: .bodyBold)
-                    )
-            }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 35)
+    var ShowResultCardButton: some View {
+        Button {
+            // TODO: 모델 이미지가 없는 상태로 결과지 시트 띄우기
+        } label: {
+            RoundedRectangle(cornerRadius: 16)
+                .foregroundStyle(Color.Button.primaryBlue)
+                .frame(height: 53)
+                .overlay(
+                    Text(ZipLiteral.UnsupportedDevice.showResult)
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyBold)
+                )
         }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 35)
     }
 }
 

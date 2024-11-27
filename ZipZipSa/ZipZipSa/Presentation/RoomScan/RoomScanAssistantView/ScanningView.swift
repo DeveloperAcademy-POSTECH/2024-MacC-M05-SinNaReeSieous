@@ -16,7 +16,11 @@ struct ScanningView: View {
     var body: some View {
         VStack {
             Spacer()
-            scanningButton
+            HStack(spacing: 8) {
+                QuitScanButton
+                DoneScanButton
+            }
+            .padding(.horizontal, 16)
         }
         .alert(ZipLiteral.Alert.quitAlertTitle, isPresented: $showAlert) {
             Button(ZipLiteral.Alert.cancel, role: .cancel) { }
@@ -34,35 +38,35 @@ struct ScanningView: View {
 private extension ScanningView {
     // MARK: - View
     
-    var scanningButton: some View {
-        HStack(spacing: 8) {
-            Button {
-                showAlert = true
-            } label: {
-                RoundedRectangle(cornerRadius: 16)
-                    .foregroundStyle(Color.Button.secondaryBlue)
-                    .frame(height: 53)
-                    .overlay(
-                        Text(ZipLiteral.RoomScan.cancle)
-                            .foregroundStyle(Color.Text.secondary)
-                            .applyZZSFont(zzsFontSet: .bodyBold)
-                    )
-            }
-            
-            Button {
-                roomController.stopSession()
-                doneScanning = true
-            } label: {
-                RoundedRectangle(cornerRadius: 16)
-                    .foregroundStyle(Color.Button.primaryBlue)
-                    .frame(height: 53)
-                    .overlay(
-                        Text(ZipLiteral.RoomScan.done)
-                            .foregroundStyle(Color.Text.primary)
-                            .applyZZSFont(zzsFontSet: .bodyBold)
-                    )
-            }
+    var QuitScanButton: some View {
+        Button {
+            showAlert = true
+        } label: {
+            RoundedRectangle(cornerRadius: 16)
+                .foregroundStyle(Color.Button.secondaryBlue)
+                .frame(height: 53)
+                .overlay(
+                    Text(ZipLiteral.RoomScan.cancle)
+                        .foregroundStyle(Color.Text.secondary)
+                        .applyZZSFont(zzsFontSet: .bodyBold)
+                )
         }
-        .padding(.horizontal, 16)
+        
+    }
+    
+    var DoneScanButton: some View {
+        Button {
+            roomController.stopSession()
+            doneScanning = true
+        } label: {
+            RoundedRectangle(cornerRadius: 16)
+                .foregroundStyle(Color.Button.primaryBlue)
+                .frame(height: 53)
+                .overlay(
+                    Text(ZipLiteral.RoomScan.done)
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyBold)
+                )
+        }
     }
 }

@@ -21,7 +21,7 @@ struct RoomScanView: View {
         if !isSessionStarted {
             checkDecive()
         } else {
-            roomCaptureView
+            RoomCaptureView
                 .onChange(of: model) { _, newModel in
                     if newModel != nil {
                         showResultSheet = true
@@ -30,7 +30,7 @@ struct RoomScanView: View {
                 }
                 .sheet(isPresented: $showResultSheet) {
                     // TODO: ResultCardView로 교체
-                    modelPreview
+                    ModelPreview
                 }
         }
     }
@@ -39,7 +39,7 @@ struct RoomScanView: View {
 private extension RoomScanView {
     // MARK: - View
     
-    var roomCaptureView: some View {
+    var RoomCaptureView: some View {
         ZStack {
             RoomCaptureViewRepresentable()
                 .onAppear {
@@ -51,22 +51,20 @@ private extension RoomScanView {
                 .ignoresSafeArea()
             
             if doneScanning {
-                doneScanningView
+                DoneScanningView(
+                    capturedView: $capturedView,
+                    model: $model,
+                    isProcessing: $isProcessing,
+                    showResultSheet: $showResultSheet,
+                    doneScanning: $doneScanning
+                )
             } else {
-                scanningView
+                ScanningView(doneScanning: $doneScanning)
             }
         }
     }
     
-    var doneScanningView: some View {
-        DoneScanningView(capturedView: $capturedView, model: $model, isProcessing: $isProcessing, showResultSheet: $showResultSheet, doneScanning: $doneScanning)
-    }
-    
-    var scanningView: some View {
-        ScanningView(doneScanning: $doneScanning)
-    }
-    
-    var modelPreview: some View {
+    var ModelPreview: some View {
         VStack {
             if let modelData = model {
                 Image(uiImage: modelData)

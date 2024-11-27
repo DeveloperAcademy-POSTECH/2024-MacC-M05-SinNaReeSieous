@@ -13,14 +13,15 @@ struct RoomScanInfoView: View {
     
     var body: some View {
         ZStack {
-            cameraView
+            CameraView
             VStack {
                 Spacer()
-                characterImage
-                infoTitle
-                infoDescription
+                CharacterImage
+                InfoTitle
+                InfoDescription
                 Spacer()
-                bottomButtons
+                StartScanButton
+                SkipScanButton
             }
         }
         .alert(ZipLiteral.Alert.skipAlertTitle, isPresented: $showAlert) {
@@ -39,7 +40,7 @@ struct RoomScanInfoView: View {
 private extension RoomScanInfoView {
     // MARK: - View
     
-    var cameraView: some View {
+    var CameraView: some View {
         CameraViewRepresentable()
             .blur(radius: 6, opaque: true)
             .overlay {
@@ -49,7 +50,7 @@ private extension RoomScanInfoView {
             .ignoresSafeArea()
     }
     
-    var characterImage: some View {
+    var CharacterImage: some View {
         Image(.charRoomScanInfo)
             .resizable()
             .scaledToFit()
@@ -57,47 +58,47 @@ private extension RoomScanInfoView {
             .padding(.bottom, 48)
     }
     
-    var infoTitle: some View {
+    var InfoTitle: some View {
         Text(ZipLiteral.RoomScanInfo.title)
             .foregroundStyle(Color.Text.onColorPrimary)
             .applyZZSFont(zzsFontSet: .title1)
             .padding(.bottom, 36)
     }
     
-    var infoDescription: some View {
+    var InfoDescription: some View {
         Text(ZipLiteral.RoomScanInfo.description)
             .multilineTextAlignment(.center)
             .foregroundStyle(Color.Text.onColorPrimary)
             .applyZZSFont(zzsFontSet: .bodyRegular)
     }
     
-    var bottomButtons: some View {
-        VStack {
-            Button {
-                withAnimation(.easeInOut(duration: 1)) {
-                    isSessionStarted = true
-                }
-            } label: {
-                RoundedRectangle(cornerRadius: 16)
-                    .foregroundStyle(Color.Button.primaryBlue)
-                    .frame(height: 53)
-                    .overlay(
-                        Text(ZipLiteral.RoomScanInfo.start)
-                            .foregroundStyle(Color.Text.primary)
-                            .applyZZSFont(zzsFontSet: .bodyBold)
-                    )
+    var StartScanButton: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 1)) {
+                isSessionStarted = true
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 22)
-            
-            Button {
-                showAlert = true
-            } label: {
-                Text(ZipLiteral.RoomScanInfo.skip)
-                    .foregroundStyle(Color.Text.onColorSecondary)
-                    .applyZZSFont(zzsFontSet: .bodyBold)
-            }
-            .padding(.bottom, 35)
+        } label: {
+            RoundedRectangle(cornerRadius: 16)
+                .foregroundStyle(Color.Button.primaryBlue)
+                .frame(height: 53)
+                .overlay(
+                    Text(ZipLiteral.RoomScanInfo.start)
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyBold)
+                )
         }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 22)
+    }
+    
+    var SkipScanButton: some View {
+        Button {
+            showAlert = true
+        } label: {
+            Text(ZipLiteral.RoomScanInfo.skip)
+                .foregroundStyle(Color.Text.onColorSecondary)
+                .applyZZSFont(zzsFontSet: .bodyBold)
+        }
+        .padding(.bottom, 35)
     }
 }

@@ -19,9 +19,13 @@ struct DoneScanningView: View {
     
     var body: some View {
         VStack {
-            doneScanText
+            DoneScanText
             Spacer()
-            doneScanningButton
+            HStack(spacing: 8) {
+                ReScanButton
+                SaveButton
+            }
+            .padding(.horizontal, 16)
         }
     }
 }
@@ -29,7 +33,7 @@ struct DoneScanningView: View {
 private extension DoneScanningView {
     // MARK: - View
     
-    var doneScanText: some View {
+    var DoneScanText: some View {
         Text(ZipLiteral.RoomScan.doneSacnText)
             .multilineTextAlignment(.center)
             .foregroundStyle(Color.Text.primary)
@@ -37,41 +41,40 @@ private extension DoneScanningView {
             .padding(.top, 17)
     }
     
-    var doneScanningButton: some View {
-        HStack(spacing: 8) {
-            Button {
-                doneScanning = false
-                roomController.startSession()
-            } label: {
-                RoundedRectangle(cornerRadius: 16)
-                    .foregroundStyle(Color.Button.secondaryBlue)
-                    .frame(height: 53)
-                    .overlay(
-                        Text(ZipLiteral.RoomScan.reScasn)
-                            .foregroundStyle(Color.Text.secondary)
-                            .applyZZSFont(zzsFontSet: .bodyBold)
-                    )
-            }
-            
-            Button {
-                isProcessing = true
-                captureScreen()
-                if let modelImage = capturedView {
-                    createSticker(image: modelImage)
-                }
-            } label: {
-                RoundedRectangle(cornerRadius: 16)
-                    .foregroundStyle(Color.Button.primaryBlue)
-                    .frame(height: 53)
-                    .overlay(
-                        Text(isProcessing ? ZipLiteral.RoomScan.processing : ZipLiteral.RoomScan.save)
-                            .foregroundStyle(Color.Text.primary)
-                            .applyZZSFont(zzsFontSet: .bodyBold)
-                    )
-            }
-            .disabled(isProcessing)
+    var ReScanButton: some View {
+        Button {
+            doneScanning = false
+            roomController.startSession()
+        } label: {
+            RoundedRectangle(cornerRadius: 16)
+                .foregroundStyle(Color.Button.secondaryBlue)
+                .frame(height: 53)
+                .overlay(
+                    Text(ZipLiteral.RoomScan.reScasn)
+                        .foregroundStyle(Color.Text.secondary)
+                        .applyZZSFont(zzsFontSet: .bodyBold)
+                )
         }
-        .padding(.horizontal, 16)
+    }
+    
+    var SaveButton: some View {
+        Button {
+            isProcessing = true
+            captureScreen()
+            if let modelImage = capturedView {
+                createSticker(image: modelImage)
+            }
+        } label: {
+            RoundedRectangle(cornerRadius: 16)
+                .foregroundStyle(Color.Button.primaryBlue)
+                .frame(height: 53)
+                .overlay(
+                    Text(isProcessing ? ZipLiteral.RoomScan.processing : ZipLiteral.RoomScan.save)
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyBold)
+                )
+        }
+        .disabled(isProcessing)
     }
     
     // MARK: - Action
