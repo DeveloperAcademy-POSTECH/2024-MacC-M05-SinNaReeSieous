@@ -12,7 +12,7 @@ struct ChecklistView: View {
     @State var scores: [ChecklistItem: Float] = [:]
     @State var selectedCategory: [ChecklistCategory] = [.security, .insectproof, .ventilation]
     @State var selectedSpaceType: SpaceType = .kitchen
-    @State var memoText: String = ""
+    @State var memoText: [String] = Array(repeating: "", count: SpaceType.allCases.count)
     
     var body: some View {
         VStack(spacing: 0) {
@@ -95,12 +95,12 @@ private extension ChecklistView {
             Text(ZipLiteral.Checklist.memoSectionTitle)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .headline)
-            TextEditor(text: $memoText)
+            TextEditor(text: $memoText[selectedSpaceType.rawValue])
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .bodyRegular)
                 .tint(Color.Text.placeholder)
                 .overlay(alignment: .topLeading) {
-                    if memoText.isEmpty {
+                    if memoText[selectedSpaceType.rawValue].isEmpty {
                         Text(ZipLiteral.Checklist.memoPlaceHolder)
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
