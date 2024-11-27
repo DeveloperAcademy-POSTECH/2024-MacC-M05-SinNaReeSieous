@@ -102,11 +102,12 @@ extension ChecklistItem {
         ChecklistItem(
             space: Space(type: .exterior,
                          questionNumber: 6),
-            checkListType: .advanced,
-            basicCategory: .insectproof,
+            checkListType: .basic,
+            basicCategory: .cleanliness,
             question: Question(question: "쓰레기 처리장이 청결하게 관리되고있나요?",
                                answerType: .multiChoices,
-                               answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
+                               answerOptions: ["더러워요", "보통이에요", "깨끗해요"]),
+            crossTip: [.insectproof : "쓰레기 처리장에서 발생한 벌레가 집으로 들어올 수 있어요."]
         ),
         ChecklistItem(
             space: Space(type: .exterior,
@@ -435,7 +436,7 @@ extension ChecklistItem {
             question: Question(question: "찬장 안이나 냉장고 아래에 전 세입자가 치우지 않은 음식물이 있나요?",
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
-            remark: "후드 위 찬장과 같은 곳도 꼭 확인하세요."
+            remark: "후드 위 찬장과 같은 곳도 꼭 확인하세요. 썩은 음식물 때문에 벌레가 꼬일 수 있어요."
         ),
         ChecklistItem(
             space: Space(type: .kitchen,
@@ -504,6 +505,7 @@ extension ChecklistItem {
             question: Question(question: "하부장 안쪽 배수관에 누수의 흔적이 있나요?",
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
+            remark: "하부장 바닥이 축축하거나 울어 있는지 확인해 보세요. 심한 경우 아랫집 천장에 누수를 일으킬 수 있어요.",
             hazard: .waterLeak
         ),
         ChecklistItem(
