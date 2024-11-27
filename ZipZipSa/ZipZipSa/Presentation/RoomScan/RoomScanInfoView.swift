@@ -14,7 +14,7 @@ struct RoomScanInfoView: View {
     var body: some View {
         ZStack {
             CameraView
-            VStack {
+            VStack(spacing: 0) {
                 Spacer()
                 CharacterImage
                 InfoTitle

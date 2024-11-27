@@ -21,6 +21,7 @@ struct ScanningView: View {
                 DoneScanButton
             }
             .padding(.horizontal, 16)
+            .padding(.bottom, 24)
         }
         .alert(ZipLiteral.Alert.quitAlertTitle, isPresented: $showAlert) {
             Button(ZipLiteral.Alert.cancel, role: .cancel) { }

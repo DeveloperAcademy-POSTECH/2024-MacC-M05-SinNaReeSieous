@@ -26,6 +26,7 @@ struct DoneScanningView: View {
                 SaveButton
             }
             .padding(.horizontal, 16)
+            .padding(.bottom, 24)
         }
     }
 }
