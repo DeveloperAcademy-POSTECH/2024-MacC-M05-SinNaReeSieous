@@ -132,6 +132,7 @@ private extension MainView {
                         Image("excitedYongboogiLineHeadCut")
                             .resizable()
                             .frame(height: UIScreen.screenSize.height / 812 * 147)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                 })
         }
@@ -153,6 +154,7 @@ private extension MainView {
                         
                         Image("bowingYongboogiLine")
                             .resizable()
+                            .scaledToFill()
                             .frame(height: UIScreen.screenSize.height / 812 * 154)
                     }
                 })
