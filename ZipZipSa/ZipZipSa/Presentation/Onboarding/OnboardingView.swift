@@ -18,58 +18,78 @@ struct OnboardingView: View {
     let onboardingImages = ["helloYongboogiFullColor", "smileYongboogiFullColor", "writingYongboogiFullColor", "winkingYongboogiFullColor"]
     
     var body: some View {
-        VStack(spacing: 0){
-            OnboardingMessageBubble
-            OnboardingImage
-            Spacer()
-            OnboardingButton
+        NavigationStack {
+            VStack(spacing: 0){
+                OnboardingMessageBubble
+                OnboardingImage
+                Spacer()
+                OnboardingButton
+            }
         }
+        .accentColor(Color.Button.tertiary)
     }
 }
 
 private extension OnboardingView {
     
     var OnboardingMessageBubble: some View {
-        VStack {
+        GeometryReader { geometry in
             Text(onboardingGreetings[currentPage])
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
-                .font(Font.system (size: 18, weight: .semibold))
+                .applyZZSFont(zzsFontSet: .bodyBold)
                 .background(Color.white)
                 .overlay {
                     UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 10, bottomTrailing: 10, topTrailing: 10))
                         .stroke(.black, lineWidth: 1)
                         .frame(width: UIScreen.screenSize.width - 48)
                 }
+                .position(x: geometry.size.width / 2, y: geometry.size.height / 2) // 중심축 고정
         }
-        .padding(.top, 200)
-        .padding(.bottom, 48)
+        .frame(width: UIScreen.screenSize.width - 32, height: UIScreen.screenSize.height / 812 * 100)
+        .accentColor(Color.Button.tertiary)
+        .padding(.top, 140)
     }
     
     var OnboardingImage: some View {
         Image(onboardingImages[currentPage])
+            .border(.black, width: 1)
+        
     }
     
     var OnboardingButton: some View {
-        VStack {
-            Button {
-                // 마지막 페이지가 아닐 경우에만 다음 페이지로 이동
-                if currentPage < onboardingGreetings.count - 1 {
-                    withAnimation {
-                        currentPage += 1
+        NavigationStack {
+            VStack {
+                if currentPage == onboardingGreetings.count - 1 {
+                    NavigationLink(destination: CategorySelectView()) {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.Button.primaryBlue)
+                            .frame(width: UIScreen.screenSize.width - 32, height: 53)
+                            .overlay {
+                                Text("시작하기")
+                                    .applyZZSFont(zzsFontSet: .bodyBold)
+                                    .foregroundColor(.black)
+                            }
+                    }
+                } else {
+                    Button {
+                        withAnimation {
+                            currentPage += 1
+                        }
+                    } label: {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.Button.primaryBlue)
+                            .frame(width: UIScreen.screenSize.width - 32, height: 53)
+                            .overlay {
+                                Text("계속하기")
+                                    .applyZZSFont(zzsFontSet: .bodyBold)
+                                    .foregroundColor(.black)
+                            }
                     }
                 }
-            } label: {
-                RoundedRectangle(cornerRadius: 12)
-                    .frame(width: UIScreen.screenSize.width - 32, height: 53)
-                    .overlay {
-                        Text(currentPage == onboardingGreetings.count - 1 ? "시작하기" : "계속하기")
-                            .font(Font.system(size: 16, weight: .semibold))
-                            .foregroundColor(.black)
-                    }
             }
+            .padding(.bottom, 32)
         }
-        .padding(.bottom, 32)
     }
 }
 
