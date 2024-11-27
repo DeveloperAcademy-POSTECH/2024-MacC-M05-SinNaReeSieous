@@ -51,4 +51,26 @@ class AddressSearchManager {
             throw NetworkError.AddressSearchError.networkError(description: error.localizedDescription)
         }
     }
+    
+    func getAddressForLatLng(latitude: Double, longitude: Double) async throws -> String {
+        let urlString = ZipLiteral.APIEndpoints.reverseGeocode(latitude: latitude, longitude: longitude, apiKey: apiKey).url
+        
+        guard let url = URL(string: urlString) else {
+            throw NetworkError.AddressSearchError.invalidURL
+        }
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any],
+               let results = json["results"] as? [[String: Any]],
+               let firstResult = results.first,
+               let address = firstResult["formatted_address"] as? String {
+                return address
+            } else {
+                throw NetworkError.AddressSearchError.noResults
+            }
+        } catch {
+            throw NetworkError.AddressSearchError.networkError(description: error.localizedDescription)
+        }
+    }
 }

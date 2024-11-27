@@ -145,12 +145,41 @@ struct TestRoomAdressEnterView: View {
         locationManager.requestLocationAuthorization()
         if let location = locationManager.userLocation {
             selectedCoordinates = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-            // TODO: 역지오코딩으로 좌표 -> 주소로 변경해서 넣어야 함
-            searchText = "현재 위치"
+            reverseGeocode()
         } else {
             errorMessage = "현재 위치를 가져올 수 없습니다."
         }
     }
+    
+    private func reverseGeocode() {
+        guard let coordinates = selectedCoordinates else {
+            errorMessage = "좌표가 선택되지 않았습니다."
+            return
+        }
+        
+        isLoading = true
+        errorMessage = nil
+        
+        Task {
+            do {
+                let address = try await AddressSearchManager.shared.getAddressForLatLng(
+                    latitude: coordinates.latitude,
+                    longitude: coordinates.longitude
+                )
+                await MainActor.run {
+                    searchText = address
+                    isLoading = false
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = "주소 변환 실패: \(error.localizedDescription)"
+                    isLoading = false
+                }
+                print("Error occurred: \(error)")
+            }
+        }
+    }
+
     
     //SwiftData에 공간 정보를 저장하는 함수
     private func saveRoomAddress() async {

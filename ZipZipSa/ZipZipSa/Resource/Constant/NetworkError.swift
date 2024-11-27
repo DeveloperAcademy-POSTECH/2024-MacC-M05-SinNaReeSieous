@@ -28,6 +28,7 @@ enum NetworkError: Error {
     
     enum AddressSearchError: Error {
         case invalidURL
+        case noResults
         case networkError(description: String)
     }
 }

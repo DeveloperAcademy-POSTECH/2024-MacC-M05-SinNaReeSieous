@@ -23,6 +23,7 @@ enum ZipLiteral {
         case nearbySearch(latitude: Double, longitude: Double, radius: Int, keyword: String, apiKey: String)
         case autoComplete(query: String, apiKey: String)
         case placeDetails(placeID: String, apiKey: String)
+        case reverseGeocode(latitude: Double, longitude: Double, apiKey: String)
         
 
         var url: String {
@@ -38,6 +39,10 @@ enum ZipLiteral {
             case .placeDetails(placeID: let placeID, apiKey: let apiKey):
                 return """
                 \(APIEndpoints.baseURL)/place/details/json?place_id=\(placeID)&key=\(apiKey)
+                """
+            case .reverseGeocode(latitude: let latitude, longitude: let longitude, apiKey: let apiKey):
+                return """
+                \(APIEndpoints.baseURL)/geocode/json?latlng=\(latitude),\(longitude)&key=\(apiKey)
                 """
             }
         }
