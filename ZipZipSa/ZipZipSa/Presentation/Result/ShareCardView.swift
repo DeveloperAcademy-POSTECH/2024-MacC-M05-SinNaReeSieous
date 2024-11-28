@@ -10,6 +10,9 @@ import SwiftUI
 struct ShareCardView: View {
     @Binding var model: UIImage?
     
+    let columnLayout = Array(repeating: GridItem(), count: 3)
+    let criticalTags: [String] = ["바퀴위험", "곰팡이 위험", "담배 위험", "사생활 위험", "소음 위험", "누수 위험", "수압 안좋음", "배수 안좋음", "온수 잘 안 나옴"]
+    
     var body: some View {
         VStack {
             ShareCardHeaderView()
@@ -58,11 +61,19 @@ private extension ShareCardView {
     }
     
     var CriticalTags: some View {
-        Group {
-            Text("TEST TEXT")
-            Text("TEST TEXT")
-            Text("TEST TEXT")
+        VStack(alignment: .leading, spacing: 0) {
+            Text("필수체크")
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .bodyBold)
+                .padding(.bottom, 12)
+            
+            LazyVGrid(columns: columnLayout) {
+                ForEach(criticalTags, id: \.self) { tag in
+                    ZZSTag(text: tag)
+                }
+            }
         }
+        .padding(16)
     }
     
     var RoomModel: some View {
