@@ -11,6 +11,9 @@ struct AddressEnterView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State private var searchText: String = ""
+    @State private var isLoading: Bool = false
+    @State private var errorMessage: String? = nil
+    @State private var searchResults: [(description: String, placeID: String)] = []
     
     var body: some View {
         NavigationStack {
@@ -18,8 +21,11 @@ struct AddressEnterView: View {
                 SearchBar
                 
                 Spacer()
+                ErrorMessage
+                Spacer()
             }
             .background(Color.Background.primary)
+            .dismissKeyboard()
             .navigationTitle("주소 찾기")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -38,7 +44,7 @@ private extension AddressEnterView {
     var SearchBar: some View {
         HStack(spacing: 4) {
             TextField(text: $searchText) {
-                Text("주소를 알려주세요(예: 학교, 회사)")
+                Text("집 주소를 입력해 주세요.")
                     .foregroundStyle(Color.Text.placeholder)
                     .applyZZSFont(zzsFontSet: .bodyRegular)
             }
@@ -47,9 +53,10 @@ private extension AddressEnterView {
             
             Button {
                 print("Search")
-                //                Task {
-                //                    await fetchSearchResults(for: searchText)
-                //                }
+                Task {
+                    await fetchSearchResults(for: searchText)
+                    print(searchResults)
+                }
             } label: {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(Color.Icon.tertiary)
@@ -68,6 +75,13 @@ private extension AddressEnterView {
         .padding(.horizontal, 16)
     }
     
+    var ErrorMessage: some View {
+        Text(errorMessage ?? "")
+            .foregroundStyle(Color.Text.tertiary)
+            .multilineTextAlignment(.center)
+            .applyZZSFont(zzsFontSet: .bodyRegular)
+    }
+    
     
     var CancelButton: some View {
         Button {
@@ -76,6 +90,26 @@ private extension AddressEnterView {
             Text("취소")
                 .foregroundStyle(Color.Text.tertiary)
                 .applyZZSFont(zzsFontSet: .bodyRegular)
+        }
+    }
+    
+    
+    // MARK: - Custom Method
+    
+    private func fetchSearchResults(for query: String) async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            let results = try await AddressSearchManager.shared.fetchAutocompleteResults(for: query)
+            searchResults = results
+            isLoading = false
+            if results.isEmpty {
+                errorMessage = "검색 결과가 없어요\n이름을 다시 확인해주세요"
+            }
+        } catch {
+            errorMessage = "검색 실패: \(error.localizedDescription)"
+            isLoading = false
         }
     }
 }
