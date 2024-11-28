@@ -26,11 +26,11 @@ struct ShareCard: View {
             NearbyFacilities
         }
         .background(
-            RoundedRectangle(cornerRadius: 20)
+            RoundedRectangle(cornerRadius: 16)
                 .stroke(Color.clear, lineWidth: 1)
-                .background(Color.Layer.first.clipShape(RoundedRectangle(cornerRadius: 20)))
+                .background(Color.Layer.first.clipShape(RoundedRectangle(cornerRadius: 16)))
         )
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 16)
         .padding(.bottom, 50)
     }
 }
@@ -48,47 +48,60 @@ private extension ShareCard {
             .overlay(Color.black.opacity(0.3))
             .overlay {
                 VStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 20)
-                        .foregroundStyle(.black)
-                        .frame(width: 60, height: 30)
-                        .overlay {
-                            Text("집 별명")
-                                .foregroundStyle(.white)
-                        }
-                    
-                    HStack {
-                        Text("집 주소 집 주소 집 주소 집 주소 집 주소 집 주소")
-                            .lineLimit(nil)
-                            .multilineTextAlignment(.leading)
-                            .font(.title3.bold())
-                        
-                        Button {
-                            // TODO: 복사하기
-                        } label: {
-                            Image(systemName: "square.on.square")
-                                .resizable()
-                                .frame(width: 15, height: 15)
-                        }
-                        
+                    HStack(alignment: .top) {
+                        RoomNickname
                         Spacer()
+                        RoomType
                     }
-                    .foregroundColor(.white)
+                    .padding(.top, 8)
+                    
+                    RoomAddress
                     
                     Spacer()
                     
-                    HStack {
-                        // TODO: 태그 컴포넌트화
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(.gray)
-                            .frame(width: 50, height: 35)
-                            .overlay(Text("태그"))
-                        
-                        Spacer()
-                    }
+                    RoomTags
                 }
-                .padding()
+                .padding(8)
             }
-            .clipShape(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 20, topTrailing: 20)))
+            .clipShape(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 16, topTrailing: 16)))
+    }
+    
+    var RoomNickname: some View {
+        Text("세 번째 집")
+            .foregroundStyle(Color.Tag.colorGray)
+            .applyZZSFont(zzsFontSet: .subheadlineBold)
+            .padding(.horizontal, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.Tag.backgroundGray)
+                    .frame(height: 32)
+            )
+    }
+    
+    var RoomType: some View {
+        Text("빌라")
+            .foregroundStyle(Color.Text.onColorSecondary)
+            .applyZZSFont(zzsFontSet: .caption1Bold)
+            .padding(.horizontal, 6)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.Text.onColorSecondary, lineWidth: 1)
+                    .frame(height: 22)
+            )
+    }
+    
+    var RoomAddress: some View {
+        Text("부산광역시 강서구 녹산산단 382로 14번가길 10~29번지 (송정동)")
+            .foregroundStyle(Color.Text.onColorPrimary)
+            .applyZZSFont(zzsFontSet: .caption1Bold)
+    }
+    
+    var RoomTags: some View {
+        HStack(spacing: 6) {
+            ZZSTag(text: "보증금 0000만원")
+            ZZSTag(text: "보증금 0000만원")
+            ZZSTag(text: "보증금 0000만원")
+        }
     }
     
     var ChecklistResult: some View {
