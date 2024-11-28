@@ -7,8 +7,8 @@
 
 import Foundation
 
-enum SpaceType: CaseIterable {
-    case exterior
+enum SpaceType: Int, CaseIterable {
+    case exterior = 0
     case livingRoom
     case window
     case kitchen
@@ -25,7 +25,7 @@ enum SpaceType: CaseIterable {
     }
 }
 
-struct Space {
+struct Space: Hashable {
     let type: SpaceType
     let questionNumber: Int
 }

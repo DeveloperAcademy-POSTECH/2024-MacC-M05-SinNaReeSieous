@@ -194,7 +194,7 @@ private extension MainView {
     var RecentlyViewedHomeList: some View {
         LazyHGrid(rows: [GridItem(.fixed(UIScreen.screenSize.height / 812 * 208))], spacing: 20) {
             ForEach(Array(homeList.suffix(3).enumerated()), id: \.element.id) { index, home in
-                RecentlyViewedHomCell(home: $homeList[homeList.count - min(3, homeList.count) + index])
+                RecentlyViewedHomeCellView(home: $homeList[homeList.count - min(3, homeList.count) + index])
             }
         }
         .frame(height: UIScreen.screenSize.height / 812 * 208)

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import RoomPlan
+import AVFoundation
 
 class RoomPlanManager: RoomCaptureViewDelegate {
     func encode(with coder: NSCoder) {
@@ -59,5 +60,46 @@ struct RoomCaptureViewRepresentable : UIViewRepresentable {
     
     func updateUIView(_ uiView: RoomCaptureView, context: Context) {
         
+    }
+}
+
+struct CameraViewRepresentable: UIViewRepresentable {
+    class Coordinator: NSObject, AVCapturePhotoCaptureDelegate {
+        var parent: CameraViewRepresentable
+        
+        init(parent: CameraViewRepresentable) {
+            self.parent = parent
+        }
+    }
+    
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+        
+        let captureSession = AVCaptureSession()
+        captureSession.sessionPreset = .photo
+        
+        guard let backCamera = AVCaptureDevice.default(for: .video),
+              let input = try? AVCaptureDeviceInput(device: backCamera) else {
+            return view
+        }
+        
+        captureSession.addInput(input)
+        
+        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        previewLayer.frame = view.bounds
+        previewLayer.videoGravity = .resizeAspectFill
+        view.layer.addSublayer(previewLayer)
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            captureSession.startRunning()
+        }
+        
+        return view
+    }
+    
+    func updateUIView(_ uiView: UIView, context: Context) {}
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(parent: self)
     }
 }

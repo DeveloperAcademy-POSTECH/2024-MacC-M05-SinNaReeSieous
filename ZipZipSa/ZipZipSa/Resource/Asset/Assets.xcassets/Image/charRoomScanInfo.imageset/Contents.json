@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "IMG_9658.jpeg",
+      "filename" : "charRoomScanInfo.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "charRoomScanInfo@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "charRoomScanInfo@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct Question {
+struct Question: Hashable {
     let question: String
     let answerType: AnswerType
     let answerOptions: [String]
 }
 
-enum AnswerType: Equatable {
+enum AnswerType: Equatable, Hashable {
     case twoChoices
     case multiChoices
     case multiSelect(basicScore: Float, answerDisposition: AnswerDisposition = .neutral)
