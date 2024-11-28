@@ -17,7 +17,8 @@ struct TestView: View {
     @State var homeAreaPyeong: String = ""
     @State var homeAreaSquareMeter: String = ""
     @State var selectedHomeDirection: HomeDirection? = nil
-
+    @State var rentalFee: [String] = ["", "", "", ""]
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
@@ -27,10 +28,12 @@ struct TestView: View {
                 HomePhotoSection
                 HomeCategorySection
                 HomeRentalTypeSection
+                if selectedHomeRentalType != nil {
+                    HomeRentalMoneySection
+                }
                 HomeAreaSection
                 HomeDirectionSection
             }
-            .padding(.horizontal, 16)
         }
         .scrollIndicators(.never)
         .contentMargins(.bottom, 120, for: .scrollContent)
@@ -47,6 +50,7 @@ struct TestView: View {
             .background(Color.Background.primary)
         }
         .background(Color.Background.primary)
+        .animation(.easeInOut, value: selectedHomeRentalType)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")
@@ -62,6 +66,7 @@ private extension TestView {
         Text("기본정보를 알려주세요")
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .largeTitle)
+            .padding(.horizontal, 16)
             .padding(.bottom, 32)
     }
     
@@ -86,6 +91,7 @@ private extension TestView {
                 .fill(Color.Button.enable)
             }
         }
+        .padding(.horizontal, 16)
         .padding(.bottom, 32)
     }
     
@@ -100,6 +106,7 @@ private extension TestView {
             SearchAddressButton
             GetCurrentAddressButton
         }
+        .padding(.horizontal, 16)
         .padding(.bottom, 24)
     }
     
@@ -153,6 +160,7 @@ private extension TestView {
             SectionTitle(text: "건물 외관")
             GetPhotoButton
         }
+        .padding(.horizontal, 16)
         .padding(.bottom, 32)
     }
     
@@ -191,6 +199,7 @@ private extension TestView {
             SectionTitle(text: "유형")
             HomeCategoryButtonStack
         }
+        .padding(.horizontal, 16)
         .padding(.bottom, 24)
     }
     
@@ -223,6 +232,7 @@ private extension TestView {
             SectionTitle(text: "계약형태")
             HomeRentalTypeButtonStack
         }
+        .padding(.horizontal, 16)
         .padding(.bottom, 24)
     }
     
@@ -248,6 +258,107 @@ private extension TestView {
         }
     }
     
+    // HomeRentalMoneySection
+    
+    var HomeRentalMoneySection: some View {
+        VStack(alignment: .leading, spacing: 24) {
+            if let selectedHomeRentalType {
+                ForEach(selectedHomeRentalType.moneyTypes.indices, id: \.self) { index in
+                    let moneyType = selectedHomeRentalType.moneyTypes[index]
+                    HomeRentalMoneyTextFieldSection(moneyType: moneyType)
+                }
+            }
+        }
+        .padding(16)
+        .background(Color.Background.secondary)
+        .padding(.bottom, 24)
+    }
+    
+    func HomeRentalMoneyTextFieldSection(moneyType: HomeRentalMoneytype) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            SectionTitle(text: moneyType.text)
+            HomeRentalMoneyTextField(moneyType: moneyType)
+        }
+    }
+    
+    func HomeRentalMoneyTextField(moneyType: HomeRentalMoneytype) -> some View  {
+        HStack(spacing: 16) {
+            if moneyType == .deposit {
+                HStack(spacing: 6) {
+                    TextField(text: $rentalFee[moneyType.index[1]]) {
+                        Text("000")
+                            .foregroundStyle(Color.Text.placeholder)
+                            .applyZZSFont(zzsFontSet: .bodyRegular)
+                    }
+                    .keyboardType(.decimalPad)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(Color.Text.primary)
+                    .applyZZSFont(zzsFontSet: .bodyRegular)
+                    .padding(.horizontal, 20)
+                    .frame(height: 40)
+                    .background {
+                        UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
+                                                                                 bottomTrailing: 16,
+                                                                                 topTrailing: 16))
+                        .fill(Color.Button.enable)
+                    }
+                    Text("억")
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyRegular)
+                }
+            }
+            
+            HStack(spacing: 6) {
+                TextField(text: $rentalFee[moneyType.index[0]]) {
+                    Text("000")
+                        .foregroundStyle(Color.Text.placeholder)
+                        .applyZZSFont(zzsFontSet: .bodyRegular)
+                }
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.center)
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .bodyRegular)
+                .padding(.horizontal, 20)
+                .frame(height: 40)
+                .background {
+                    UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
+                                                                             bottomTrailing: 16,
+                                                                             topTrailing: 16))
+                    .fill(Color.Button.enable)
+                }
+                Text("만원")
+                    .foregroundStyle(Color.Text.primary)
+                    .applyZZSFont(zzsFontSet: .bodyRegular)
+            }
+            
+            if moneyType != .deposit {
+                HStack(spacing: 6) {
+                    TextField(text: $rentalFee[moneyType.index[0]]) {
+                        Text("000")
+                            .foregroundStyle(Color.Text.placeholder)
+                            .applyZZSFont(zzsFontSet: .bodyRegular)
+                    }
+                    .keyboardType(.decimalPad)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(Color.Text.primary)
+                    .applyZZSFont(zzsFontSet: .bodyRegular)
+                    .padding(.horizontal, 20)
+                    .frame(height: 40)
+                    .background {
+                        UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
+                                                                                 bottomTrailing: 16,
+                                                                                 topTrailing: 16))
+                        .fill(Color.Button.enable)
+                    }
+                    Text("억")
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyRegular)
+                }
+                .hidden()
+            }
+        }
+    }
+    
     // HomeArea
     
     var HomeAreaSection: some View {
@@ -255,6 +366,7 @@ private extension TestView {
             SectionTitle(text: "면적")
             HomeAreaTextFieldStack
         }
+        .padding(.horizontal, 16)
         .padding(.bottom, 24)
     }
     
@@ -355,6 +467,7 @@ private extension TestView {
             SectionTitle(text: "집의 방향")
             HomeDirectionButtonStack
         }
+        .padding(.horizontal, 16)
     }
     
     var HomeDirectionButtonStack: some View {

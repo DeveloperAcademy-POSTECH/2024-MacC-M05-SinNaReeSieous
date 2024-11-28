@@ -19,4 +19,12 @@ enum HomeRentalType: CaseIterable {
         case .semiDeposit: return "반전세"
         }
     }
+    
+    var moneyTypes: [HomeRentalMoneytype] {
+        switch self {
+        case .monthlyRent: return [.deposit, .monthlyFee, .managementFee]
+        case .fullDeposit: return [.deposit, .managementFee]
+        case .semiDeposit: return [.deposit, .monthlyFee, .managementFee]
+        }
+    }
 }
