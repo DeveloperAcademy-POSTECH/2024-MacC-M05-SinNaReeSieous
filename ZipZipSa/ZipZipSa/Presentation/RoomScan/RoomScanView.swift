@@ -29,8 +29,8 @@ struct RoomScanView: View {
                     }
                 }
                 .sheet(isPresented: $showResultSheet) {
-                    // TODO: ResultCardView로 교체
-                    ModelPreview
+                    ResultCardView(model: $model)
+                        .presentationDragIndicator(.visible)
                 }
         }
     }
