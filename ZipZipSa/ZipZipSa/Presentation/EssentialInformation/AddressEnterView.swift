@@ -20,8 +20,39 @@ struct AddressEnterView: View {
             VStack {
                 SearchBar
                 
-                Spacer()
-                ErrorMessage
+                if isLoading {
+                    ProgressView("검색 중...")
+                } else if errorMessage != nil {
+                    Spacer()
+                    ErrorMessage
+                } else {
+                    List(searchResults, id: \.placeID) { result in
+                        Button {
+                            print("Tapped")
+//                            Task {
+//                                await selectAddress(result)
+//                            }
+                        } label: {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text(result.description)
+                                    .foregroundStyle(Color.Text.primary)
+                                    .applyZZSFont(zzsFontSet: .bodyRegular)
+                                
+                                Rectangle()
+                                    .fill(Color.Additional.seperator)
+                                    .frame(height: 1)
+                            }
+                            .background(Color.clear)
+                        }
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets(top: 12, leading: 8, bottom: 0, trailing: 8))
+                        .listRowSeparator(.hidden)
+                    }
+                    .scrollContentBackground(.hidden)
+                    .listStyle(.plain)
+                    .scrollIndicators(.hidden)
+                    .padding(16)
+                }
                 Spacer()
             }
             .background(Color.Background.primary)
