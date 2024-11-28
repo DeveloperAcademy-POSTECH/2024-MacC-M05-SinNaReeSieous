@@ -6,19 +6,25 @@
 //
 
 import SwiftUI
+import SwiftData
 import CoreLocation
 
 struct ShareCard: View {
     
     @State private var availableFacilities: [Facility] = []
     
-    var room: SampleRoom
+    @Query var rooms: [SampleRoom]
+    
+    var room: SampleRoom? {
+        rooms.first
+    }
+    
     let facilityChecker = FacilityChecker.shared
     
     var body: some View {
         VStack {
             // 사진뷰
-            let image = Image(uiImage: room.mainPicture ?? UIImage(resource: .mainPicSample))
+            let image = Image(uiImage: room?.mainPicture ?? UIImage(resource: .mainPicSample))
                 .resizable()
                 .scaledToFill()
             
@@ -98,7 +104,7 @@ struct ShareCard: View {
                 .padding()
             
             // 집 구조 뷰
-            if let modelData = room.model, let uiImage = UIImage(data: modelData) {
+            if let modelData = room?.model, let uiImage = UIImage(data: modelData) {
                 Image(uiImage: uiImage)
                     .resizable()
                     .frame(width: 150, height: 150)
@@ -113,30 +119,23 @@ struct ShareCard: View {
             
             // 주변시설 뷰
             HStack {
-                ForEach(availableFacilities, id: \.self) { facility in
-                    Image(systemName: facility.icon)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 30)
+                if let room = room {
+                    if room.facilities.isEmpty {
+                        Text("No facilities available")
+                            .foregroundColor(.gray)
+                    } else {
+                        ForEach(room.facilities, id: \.self) { facility in
+                            Image(systemName: facility.icon)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 30, height: 30)
+                        }
+                    }
                 }
-                
                 Spacer()
+                    
             }
             .padding()
-        }
-        .task {
-            do {
-                let location = CLLocationCoordinate2D(latitude: room.latitude, longitude: room.longitude)
-                let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.keyword })
-                
-                availableFacilities = Facility.allCases.filter { facility in
-                    results[facility.keyword] == true
-                }
-            } catch let networkError as NetworkError {
-                networkError.logError()
-            } catch {
-                print("Unexpected error: \(error)")
-            }
         }
         .background(
             RoundedRectangle(cornerRadius: 20)
