@@ -6,18 +6,23 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct EssentialInfoView: View {
-    @State var homeName: String = ""
-    @State var address: String = ""
-    @State var imageExist: Bool = false
-    @State var selectedHomeCategory: HomeCategory? = nil
-    @State var selectedHomeRentalType: HomeRentalType? = nil
+    @State private var homeName: String = ""
+    @State private var address: String = ""
+    @State private var imageExist: Bool = false
+    @State private var selectedHomeCategory: HomeCategory? = nil
+    @State private var selectedHomeRentalType: HomeRentalType? = nil
     @FocusState private var focusField: EssentialInfoField?
-    @State var homeAreaPyeong: String = ""
-    @State var homeAreaSquareMeter: String = ""
-    @State var selectedHomeDirection: HomeDirection? = nil
-    @State var rentalFee: [String] = ["", "", "", ""]
+    @State private var homeAreaPyeong: String = ""
+    @State private var homeAreaSquareMeter: String = ""
+    @State private var selectedHomeDirection: HomeDirection? = nil
+    @State private var rentalFee: [String] = ["", "", "", ""]
+    
+    @State private var showPhotoPicker: Bool = false
+    @State private var selectedPhotos: PhotosPickerItem? = nil
+    @State private var showPhotoTypeSelectSheet: Bool = false
     
     var body: some View {
         ScrollView {
@@ -166,8 +171,7 @@ private extension EssentialInfoView {
     
     var GetPhotoButton: some View {
         Button {
-            print("Get Photo")
-            imageExist.toggle()
+            showPhotoTypeSelectSheet = true
         } label: {
             if imageExist {
                 Image(.mainPicSample)
@@ -189,6 +193,10 @@ private extension EssentialInfoView {
                         .applyZZSFont(zzsFontSet: .iconTitle1)
                 }
             }
+        }
+        .confirmationDialog("타이틀", isPresented: $showPhotoTypeSelectSheet) {
+            Button("카메라") {}
+            Button("사진 보관함") {}
         }
     }
     
