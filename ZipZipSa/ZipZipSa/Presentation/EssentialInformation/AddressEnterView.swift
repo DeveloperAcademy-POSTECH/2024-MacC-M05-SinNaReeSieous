@@ -17,12 +17,13 @@ struct AddressEnterView: View {
     @State private var errorMessage: String? = nil
     @State private var searchResults: [(description: String, placeID: String)] = []
     @FocusState private var focusedTextField: AddressEnterFocusField?
+    @Binding var resultCoordinates: CLLocationCoordinate2D?
+    @Binding var resultLocationText: String?
     
     var body: some View {
         NavigationStack {
             VStack {
                 SearchBar
-                
                 if isLoading {
                     Spacer()
                     ProgressView("검색 중...")
@@ -33,6 +34,7 @@ struct AddressEnterView: View {
                     SearchResultList
                 }
                 Spacer()
+                CompleteButton
             }
             .background(Color.Background.primary)
             .dismissKeyboard()
@@ -64,6 +66,12 @@ private extension AddressEnterView {
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .bodyRegular)
             .focused($focusedTextField, equals: .searchBar)
+            .onSubmit {
+                Task {
+                    await fetchSearchResults(for: searchText)
+                    print(searchResults)
+                }
+            }
             
             Button {
                 print("Search")
@@ -128,13 +136,37 @@ private extension AddressEnterView {
     
     var CancelButton: some View {
         Button {
-            self.presentationMode.wrappedValue.dismiss()
+            cancelSearch()
         } label: {
             Text("취소")
                 .foregroundStyle(Color.Text.tertiary)
                 .applyZZSFont(zzsFontSet: .bodyRegular)
         }
     }
+    
+    var CompleteButton: some View {
+        ZZSMainButton(
+            action: { applySearchResult() },
+            text: "완료"
+        )
+        .padding(.bottom, 12)
+        .padding([.horizontal, .top], 16)
+    }
+    
+    // MARK: - Action
+    
+    func applySearchResult() {
+        self.presentationMode.wrappedValue.dismiss()
+        if selectedCoordinates != nil && !searchText.isEmpty {
+            self.resultCoordinates = selectedCoordinates
+            self.resultLocationText = searchText
+        }
+    }
+    
+    func cancelSearch() {
+        self.presentationMode.wrappedValue.dismiss()
+    }
+    
     
     // MARK: - Custom Method
     
@@ -156,17 +188,14 @@ private extension AddressEnterView {
     }
     
     private func selectAddress(_ result: (description: String, placeID: String)) async {
-        isLoading = true
         errorMessage = nil
         
         do {
             let coordinates = try await AddressSearchManager.shared.fetchCoordinates(for: result.placeID)
             selectedCoordinates = coordinates
             searchText = result.description
-            isLoading = false
         } catch {
             errorMessage = "위치 정보를 가져올 수 없습니다."
-            isLoading = false
         }
     }
 }
@@ -176,5 +205,5 @@ enum AddressEnterFocusField {
 }
 
 #Preview {
-    AddressEnterView()
+    AddressEnterView(resultCoordinates: .constant(nil), resultLocationText: .constant(nil))
 }

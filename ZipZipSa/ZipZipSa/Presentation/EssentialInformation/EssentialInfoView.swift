@@ -119,7 +119,8 @@ private extension EssentialInfoView {
         .padding(.horizontal, 16)
         .padding(.bottom, 24)
         .sheet(isPresented: $showAddressEnterView) {
-            AddressEnterView()
+            AddressEnterView(resultCoordinates: $selectedCoordinates,
+                             resultLocationText: $selectedLocationText)
                 .presentationDragIndicator(.visible)
         }
     }
