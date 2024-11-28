@@ -8,11 +8,20 @@
 import SwiftUI
 
 struct ZZSTag: View {
+    let text: String
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        RoundedRectangle(cornerRadius: 8)
+            .fill(Color.Tag.backgroundWhite)
+            .frame(height: 28)
+            .overlay {
+                Text(text)
+                    .foregroundStyle(Color.Tag.colorWhite)
+                    .applyZZSFont(zzsFontSet: .footnote)
+            }
     }
 }
 
 #Preview {
-    ZZSTag()
+    ZZSTag(text: "보증금 0000만원")
 }
