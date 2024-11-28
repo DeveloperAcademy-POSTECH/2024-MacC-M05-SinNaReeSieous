@@ -20,9 +20,10 @@ struct EssentialInfoView: View {
     @State private var selectedHomeDirection: HomeDirection? = nil
     @State private var rentalFee: [String] = ["", "", "", ""]
     
-    @State private var showPhotoPicker: Bool = false
-    @State private var selectedPhotos: PhotosPickerItem? = nil
     @State private var showPhotoTypeSelectSheet: Bool = false
+    @State private var showImagePicker: Bool = false
+    @State private var useCamera: Bool = false
+    @State private var selectedImageData: Data? = nil
     
     var body: some View {
         ScrollView {
@@ -55,7 +56,6 @@ struct EssentialInfoView: View {
             .background(Color.Background.primary)
         }
         .background(Color.Background.primary)
-        .animation(.easeInOut, value: selectedHomeRentalType)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("")
@@ -167,14 +167,28 @@ private extension EssentialInfoView {
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 32)
+        .confirmationDialog("타이틀", isPresented: $showPhotoTypeSelectSheet) {
+            Button("카메라") {
+                useCamera = true
+                showImagePicker = true
+            }
+            Button("사진 보관함") {
+                useCamera = false
+                showImagePicker = true
+            }
+        }
+        .fullScreenCover(isPresented: $showImagePicker) {
+            ImagePicker(imageData: $selectedImageData, useCamera: $useCamera)
+                .ignoresSafeArea()
+        }
     }
     
     var GetPhotoButton: some View {
         Button {
             showPhotoTypeSelectSheet = true
         } label: {
-            if imageExist {
-                Image(.mainPicSample)
+            if let selectedImageData {
+                Image(uiImage: UIImage(data: selectedImageData)!)
                     .resizable()
                     .scaledToFill()
                     .frame(width: UIScreen.screenSize.width-32, height: (UIScreen.screenSize.width-32)/343*144)
@@ -193,10 +207,6 @@ private extension EssentialInfoView {
                         .applyZZSFont(zzsFontSet: .iconTitle1)
                 }
             }
-        }
-        .confirmationDialog("타이틀", isPresented: $showPhotoTypeSelectSheet) {
-            Button("카메라") {}
-            Button("사진 보관함") {}
         }
     }
     
