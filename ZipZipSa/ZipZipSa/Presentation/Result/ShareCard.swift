@@ -6,25 +6,15 @@
 //
 
 import SwiftUI
-import SwiftData
 import CoreLocation
 
 struct ShareCard: View {
-    
-    @State private var availableFacilities: [Facility] = []
-    
-    @Query var rooms: [SampleRoom]
-    
-    var room: SampleRoom? {
-        rooms.first
-    }
-    
-    let facilityChecker = FacilityChecker.shared
+    @Binding var model: UIImage?
     
     var body: some View {
         VStack {
             // 사진뷰
-            let image = Image(uiImage: room?.mainPicture ?? UIImage(resource: .mainPicSample))
+            let image = Image(uiImage: UIImage(resource: .mainPicSample))
                 .resizable()
                 .scaledToFill()
             
@@ -54,19 +44,24 @@ struct ShareCard: View {
                                     .resizable()
                                     .frame(width: 15, height: 15)
                             }
+                            
+                            Spacer()
                         }
                         .foregroundColor(.white)
                         
                         Spacer()
                         
-                        // TODO: 태그 컴포넌트화
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(.gray)
-                            .frame(width: 50, height: 35)
-                            .overlay(Text("태그"))
+                        HStack {
+                            // TODO: 태그 컴포넌트화
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(.gray)
+                                .frame(width: 50, height: 35)
+                                .overlay(Text("태그"))
+                            
+                            Spacer()
+                        }
                     }
-                    .padding(.horizontal, 5)
-                    .padding(.vertical, 10)
+                    .padding()
                 }
                 .clipShape(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 20, topTrailing: 20)))
             
@@ -104,36 +99,34 @@ struct ShareCard: View {
                 .padding()
             
             // 집 구조 뷰
-            if let modelData = room?.model, let uiImage = UIImage(data: modelData) {
-                Image(uiImage: uiImage)
+            if let modelData = model {
+                Image(uiImage: modelData)
                     .resizable()
                     .frame(width: 150, height: 150)
                     .scaledToFit()
+            } else {
+                Text("모델이 없습니다.")
+                    .font(.headline)
+                    .foregroundColor(.red)
+            }
                 
                 Line()
                     .stroke(style: .init(dash: [2]))
                     .foregroundStyle(.gray)
                     .frame(height: 1)
                     .padding()
-            }
             
             // 주변시설 뷰
             HStack {
-                if let room = room {
-                    if room.facilities.isEmpty {
-                        Text("No facilities available")
-                            .foregroundColor(.gray)
-                    } else {
-                        ForEach(room.facilities, id: \.self) { facility in
-                            Image(systemName: facility.icon)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 30, height: 30)
-                        }
-                    }
+                ForEach(Facility.allCases, id: \.self) { facility in
+                    Image(systemName: facility.icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 30, height: 30)
                 }
+                
                 Spacer()
-                    
+                
             }
             .padding()
         }
