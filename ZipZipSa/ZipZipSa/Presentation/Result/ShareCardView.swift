@@ -77,32 +77,47 @@ private extension ShareCardView {
     }
     
     var RoomModel: some View {
-        VStack {
+        VStack(spacing: 0) {
+            HStack {
+                Text("집 구조")
+                    .foregroundStyle(Color.Text.primary)
+                    .applyZZSFont(zzsFontSet: .bodyBold)
+                
+                Spacer()
+            }
+            .padding(.bottom, 12)
+            
             if let modelData = model {
                 Image(uiImage: modelData)
                     .resizable()
-                    .frame(width: 150, height: 150)
                     .scaledToFit()
+                    .frame(height: 140)
             } else {
                 Text("모델이 없습니다.")
                     .font(.headline)
                     .foregroundColor(.red)
             }
         }
+        .padding(16)
     }
     
     var NearbyFacilities: some View {
-        HStack {
-            ForEach(Facility.allCases, id: \.self) { facility in
-                Image(systemName: facility.icon)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 30, height: 30)
+        VStack(alignment: .leading, spacing: 0) {
+            Text("주변 시설")
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .bodyBold)
+                .padding(.bottom, 12)
+            
+            HStack {
+                ForEach(Facility.allCases, id: \.self) { facility in
+                    Image(systemName: facility.icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 29, height: 29)
+                }
+                Spacer()
             }
-            
-            Spacer()
-            
         }
-        .padding()
+        .padding(16)
     }
 }
