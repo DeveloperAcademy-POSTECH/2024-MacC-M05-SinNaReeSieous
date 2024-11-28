@@ -25,6 +25,10 @@ struct EssentialInfoView: View {
     @State private var useCamera: Bool = false
     @State private var selectedImageData: Data? = nil
     
+    @StateObject private var locationManager = LocationManager()
+    @State private var selectedCoordinates: CLLocationCoordinate2D?
+    @State private var selectedLocationText: String? = nil
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
@@ -120,9 +124,15 @@ private extension EssentialInfoView {
             print("주소 검색뷰로 이동")
         } label: {
             HStack {
-                Text("주소를 입력해 주세요")
-                    .foregroundStyle(Color.Text.placeholder)
-                    .applyZZSFont(zzsFontSet: .bodyRegular)
+                if let selectedLocationText {
+                    Text(selectedLocationText)
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyRegular)
+                } else {
+                    Text("주소를 입력해 주세요")
+                        .foregroundStyle(Color.Text.placeholder)
+                        .applyZZSFont(zzsFontSet: .bodyRegular)
+                }
                 Spacer()
             }
             .padding(.horizontal, 20)
@@ -140,6 +150,9 @@ private extension EssentialInfoView {
     var GetCurrentAddressButton: some View {
         Button {
             print("get Current Address")
+            Task {
+                await fetchCurrentLocation()
+            }
         } label: {
             HStack(spacing: 0) {
                 Image(systemName: "location.fill")
@@ -520,6 +533,37 @@ private extension EssentialInfoView {
     
     var basicHouseName: String {
         "1번째 집"
+    }
+    
+    // MARK: - Custom Method
+    
+    private func fetchCurrentLocation() async {
+        locationManager.requestLocationAuthorization()
+        if let location = locationManager.userLocation {
+            selectedCoordinates = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
+            await reverseGeocode()
+        } else {
+            print("현재 위치를 가져올 수 없습니다.")
+        }
+    }
+    
+    private func reverseGeocode() async {
+        guard let coordinates = selectedCoordinates else {
+            print("좌표가 선택되지 않았습니다.")
+            return
+        }
+        
+        do {
+            let address = try await AddressSearchManager.shared.getAddressForLatLng(
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude
+            )
+            
+            selectedLocationText = address
+        } catch {
+            print("주소 변환 실패: \(error.localizedDescription)")
+            print("Error occurred: \(error)")
+        }
     }
 }
 
