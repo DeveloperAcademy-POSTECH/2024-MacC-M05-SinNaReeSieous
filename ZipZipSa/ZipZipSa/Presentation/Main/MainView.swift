@@ -8,46 +8,65 @@
 import SwiftUI
 
 struct MainView: View {
+    @State private var homeList: [ViewedHome] = [
+        ViewedHome(image: "mainPic_sample", title: "첫 번째 집", address: "부산광역시 강서구 녹산산단 382로 10~29번지 (송정동)"),
+        ViewedHome(image: "mainPic_sample", title: "두 번째 집", address: "서울시 강동구 동남로78길 48 (고덕1동)")
+    ]  // 데이터 모델을 위한 배열
     @State private var currentTip = ZipZipSaTip.getRandomText()
     @State private var timer: Timer?
+    
     var body: some View {
         NavigationStack {
             ZStack{
                 Color.Background.primary
                     .ignoresSafeArea()
                 VStack(alignment: .leading, spacing: 0){
-                    topBar
+                    TopBar
                     ZipZipSaTips
-                    mainButtons
-                    recentlyViewedHome
+                    MainButtons
+                    RecentlyViewedHomeTitle
+                    
+                    if homeList.isEmpty {
+                        EmptyRecentlyViewedHome
+                    } else {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            RecentlyViewedHomeList
+                        }
+                    }
                 }
                 .padding(.horizontal, 16)
-                .accentColor(.black)
             }
         }
+        .accentColor(Color.Button.tertiary)
+        .navigationBarBackButtonHidden()
     }
 }
 
 private extension MainView {
     
-    var topBar: some View {
+    var TopBar: some View {
         HStack (alignment: .top) {
-            navigationTitle
+            NavigationTitle
             Spacer()
-            settingButton
+            SettingButton
         }
         .padding(.top, 12)
-        .padding(.bottom, 36)
+        .padding(.bottom, 32)
     }
     
-    var navigationTitle: some View {
+    var NavigationTitle: some View {
         Text(ZipLiteral.MainView.navigationTitleText)
+            .foregroundStyle(Color.Text.primary)
+            .multilineTextAlignment(.leading)
+            .lineLimit(2)  // nil 대신 2로 명시적 설정
+            .fixedSize(horizontal: false, vertical: true)  // 세로 방향으로 필요한 만큼 공간 확보
             .applyZZSFont(zzsFontSet: .largeTitle)
     }
     
-    var settingButton: some View {
+    var SettingButton: some View {
         NavigationLink(destination: SettingView()) {
             Image(systemName: "gearshape")
+                .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .iconLargeTitle)
         }
     }
@@ -103,82 +122,102 @@ private extension MainView {
             }
     }
     
-    var mainButtons: some View {
+    var MainButtons: some View {
         HStack(spacing: 11) {
-            
-            homeHuntButton
-            viewedHomeButton
+            HomeHuntButton
+            ViewedHomeButton
         }
-        .padding(.top, 20)
+        .padding(.top, 24)
         .padding(.bottom, 64)
     }
     
-    var homeHuntButton: some View {
+    var HomeHuntButton: some View {
         NavigationLink(destination: EssentialInfoView()) {
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 16)
                 .fill(Color.Button.secondaryYellow)
-                .frame(height: UIScreen.screenSize.height / 812 * 210)
-                .overlay(alignment:.leading, content: {
-                    VStack (alignment: .leading){
+                .frame(height: ((UIScreen.screenSize.width - 43) / 2) / 166 * 210)
+                .overlay(alignment: .bottom) {
+                    Image("excitedYongboogiLineHeadCut")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: (UIScreen.screenSize.width - 43) / 2, height: (UIScreen.screenSize.width - 43) / 2)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                }
+                .overlay(alignment: .topLeading, content: {
+                    VStack(alignment: .leading, spacing: 2) {
                         Text(ZipLiteral.MainView.homeHuntButtonMain)
+                            .foregroundStyle(Color.Text.primary)
                             .applyZZSFont(zzsFontSet: .title2)
-                            .padding(.top, 12)
-                            .padding(.leading, 16)
                         Text(ZipLiteral.MainView.homeHuntButtonSub)
+                            .foregroundStyle(Color.Text.primary)
                             .applyZZSFont(zzsFontSet: .caption2)
-                            .padding(.leading, 16)
-                        Spacer()
-                        
-                        Image("excitedYongboogiLineHeadCut")
-                            .resizable()
-                            .frame(height: UIScreen.screenSize.height / 812 * 147)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
+                    .padding(.top, 12)
+                    .padding(.leading, 16)
                 })
         }
     }
     
-    var viewedHomeButton: some View {
+    var ViewedHomeButton: some View {
         NavigationLink(destination: HomeListView()) {
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 16)
                 .fill(Color.Button.primaryBlue)
-                .frame(height: UIScreen.screenSize.height / 812 * 210)
-                .overlay(alignment:.leading, content: {
-                    VStack (alignment: .leading){
+                .frame(height: ((UIScreen.screenSize.width - 43) / 2) / 166 * 210)
+                .overlay(alignment: .bottom) {
+                    Image("bowingYongboogiLine")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: (UIScreen.screenSize.width - 43) / 2, height: (UIScreen.screenSize.width - 43) / 2)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                }
+                .overlay(alignment: .topLeading) {
+                    VStack(alignment: .leading) {
                         Text(ZipLiteral.MainView.viewedHomeButton)
+                            .foregroundStyle(Color.Text.primary)
                             .applyZZSFont(zzsFontSet: .title2)
                             .padding(.top, 12)
                             .padding(.leading, 16)
-                        
-                        Spacer()
-                        
-                        Image("bowingYongboogiLine")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(height: UIScreen.screenSize.height / 812 * 154)
                     }
-                })
+                }
         }
     }
     
-    var recentlyViewedHome: some View {
+    var RecentlyViewedHomeTitle: some View {
         VStack (alignment: .leading){
             Text(ZipLiteral.MainView.recentlyViewedHomeTitle)
+                .foregroundStyle(Color.Text.primary)
                 .font(Font.system (size: 24, weight: .bold))
-                .padding(.bottom, 16)
-            
+                .padding(.bottom, 24)
+        }
+    }
+    
+    var RecentlyViewedHomeList: some View {
+        LazyHGrid(rows: [GridItem(.fixed(UIScreen.screenSize.height / 812 * 208))], spacing: 20) {
+            ForEach(Array(homeList.suffix(3).enumerated()), id: \.element.id) { index, home in
+                RecentlyViewedHomCell(home: $homeList[homeList.count - min(3, homeList.count) + index])
+            }
+        }
+        .frame(height: UIScreen.screenSize.height / 812 * 208)
+        .padding(.bottom, 8)
+    }
+    
+    var EmptyRecentlyViewedHome: some View {
+        VStack (alignment: .leading){
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.Background.disabled)
                 .frame(height: UIScreen.screenSize.height / 812 * 203)
                 .overlay(content: {
                     Text(ZipLiteral.MainView.recentlyViewedHomeContent)
+                        .foregroundStyle(Color.Text.primary)
                         .applyZZSFont(zzsFontSet: .bodyRegular)
                         .foregroundStyle(Color.Text.tertiary)
                         .multilineTextAlignment(.center)
                 })
         }
+        .padding(.bottom, 8)
     }
 }
+
 
 #Preview {
     MainView()
