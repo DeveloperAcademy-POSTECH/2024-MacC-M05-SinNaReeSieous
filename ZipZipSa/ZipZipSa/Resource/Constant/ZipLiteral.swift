@@ -104,6 +104,14 @@ enum ZipLiteral {
         static let done: String = "완료"
     }
     
+    enum Setting{
+        static let setting: String = "설정"
+        static let categoryChange: String = "카테고리"
+        static let termsOfUse: String = "이용약관"
+        static let privacyPolicy: String = "개인정보 처리방침"
+        static let support: String = "지원"
+    }
+    
     enum APIEndpoints {
         static let baseURL: String = "https://maps.googleapis.com/maps/api"
         
