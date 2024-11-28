@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import CoreLocation
 
 struct ShareCard: View {
     @Binding var model: UIImage?
@@ -132,8 +131,8 @@ struct ShareCard: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 20)
-                .stroke(Color.black.opacity(0.5), lineWidth: 1)
-                .background(Color.pink.opacity(0.05).clipShape(RoundedRectangle(cornerRadius: 20)))
+                .stroke(Color.clear, lineWidth: 1)
+                .background(Color.Layer.first.clipShape(RoundedRectangle(cornerRadius: 20)))
         )
         .padding(.horizontal, 20)
     }

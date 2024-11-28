@@ -30,6 +30,7 @@ struct RoomScanView: View {
                 }
                 .sheet(isPresented: $showResultSheet) {
                     ResultCardView(model: $model)
+                        .presentationDragIndicator(.visible)
                 }
         }
     }
