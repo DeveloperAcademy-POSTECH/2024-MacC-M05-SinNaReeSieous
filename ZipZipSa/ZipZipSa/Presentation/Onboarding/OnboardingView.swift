@@ -13,14 +13,18 @@ struct OnboardingView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0){
-                MessageBubble
-                GreetingYongboogiImage
-                Spacer()
-                ContinueAndStartButton
+            ZStack{
+                Color.Background.primary
+                    .ignoresSafeArea()
+                VStack(spacing: 0){
+                    MessageBubble
+                    GreetingYongboogiImage
+                    Spacer()
+                    ContinueAndStartButton
+                }
             }
+            .accentColor(Color.Button.tertiary)
         }
-        .accentColor(Color.Button.tertiary)
     }
 }
 
@@ -33,13 +37,13 @@ private extension OnboardingView {
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
-                .background(Color.white)
-                .overlay {
+                .background {
                     UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 10, bottomTrailing: 10, topTrailing: 10))
+                        .fill(Color.Layer.first)
                         .stroke(.black, lineWidth: 1)
                         .frame(width: UIScreen.screenSize.width - 48)
                 }
-                .position(x: geometry.size.width / 2, y: geometry.size.height / 2) // 중심축 고정
+                .position(x: geometry.size.width / 2, y: geometry.size.height / 812 * 169) // 중심축 고정
         }
         .frame(width: UIScreen.screenSize.width - 32, height: UIScreen.screenSize.height / 812 * 100)
         .accentColor(Color.Button.tertiary)
