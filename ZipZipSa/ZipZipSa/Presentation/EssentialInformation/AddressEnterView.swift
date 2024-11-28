@@ -14,6 +14,7 @@ struct AddressEnterView: View {
     @State private var isLoading: Bool = false
     @State private var errorMessage: String? = nil
     @State private var searchResults: [(description: String, placeID: String)] = []
+    @FocusState private var focusedTextField: AddressEnterFocusField?
     
     var body: some View {
         NavigationStack {
@@ -21,37 +22,13 @@ struct AddressEnterView: View {
                 SearchBar
                 
                 if isLoading {
+                    Spacer()
                     ProgressView("검색 중...")
                 } else if errorMessage != nil {
                     Spacer()
                     ErrorMessage
                 } else {
-                    List(searchResults, id: \.placeID) { result in
-                        Button {
-                            print("Tapped")
-//                            Task {
-//                                await selectAddress(result)
-//                            }
-                        } label: {
-                            VStack(alignment: .leading, spacing: 12) {
-                                Text(result.description)
-                                    .foregroundStyle(Color.Text.primary)
-                                    .applyZZSFont(zzsFontSet: .bodyRegular)
-                                
-                                Rectangle()
-                                    .fill(Color.Additional.seperator)
-                                    .frame(height: 1)
-                            }
-                            .background(Color.clear)
-                        }
-                        .listRowBackground(Color.clear)
-                        .listRowInsets(EdgeInsets(top: 12, leading: 8, bottom: 0, trailing: 8))
-                        .listRowSeparator(.hidden)
-                    }
-                    .scrollContentBackground(.hidden)
-                    .listStyle(.plain)
-                    .scrollIndicators(.hidden)
-                    .padding(16)
+                    SearchResultList
                 }
                 Spacer()
             }
@@ -63,6 +40,9 @@ struct AddressEnterView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     CancelButton
                 }
+            }
+            .onAppear {
+                focusedTextField = .searchBar
             }
         }
     }
@@ -81,6 +61,7 @@ private extension AddressEnterView {
             }
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .bodyRegular)
+            .focused($focusedTextField, equals: .searchBar)
             
             Button {
                 print("Search")
@@ -104,6 +85,35 @@ private extension AddressEnterView {
         }
         .padding(.top, 14)
         .padding(.horizontal, 16)
+    }
+    
+    var SearchResultList: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                ForEach(searchResults, id: \.placeID) { result in
+                    Button {
+                        print("Taaped")
+//                            Task {
+//                                await selectAddress(result)
+//                            }
+                    } label: {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text(result.description)
+                                .foregroundStyle(Color.Text.primary)
+                                .applyZZSFont(zzsFontSet: .bodyRegular)
+                                .multilineTextAlignment(.leading)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 12)
+                            Rectangle()
+                                .fill(Color.Additional.seperator)
+                                .frame(height: 1)
+                        }
+                    }
+                }
+            }
+            .padding(16)
+        }
+        .scrollIndicators(.hidden)
     }
     
     var ErrorMessage: some View {
@@ -143,6 +153,10 @@ private extension AddressEnterView {
             isLoading = false
         }
     }
+}
+
+enum AddressEnterFocusField {
+    case searchBar
 }
 
 #Preview {
