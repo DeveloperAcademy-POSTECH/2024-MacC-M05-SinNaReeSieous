@@ -14,7 +14,7 @@ extension View {
         let view = controller.view
         
         view?.bounds = CGRect(origin: .zero, size: size)
-        view?.backgroundColor = .white
+        view?.backgroundColor = UIColor(Color.Background.primary)
         
         let renderer = UIGraphicsImageRenderer(size: size)
         return renderer.image { _ in
