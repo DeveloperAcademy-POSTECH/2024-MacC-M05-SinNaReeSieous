@@ -87,6 +87,23 @@ enum ZipLiteral {
         
     }
     
+    enum Onboarding {
+       static let onboardingGreetings = [
+            "안녕하세요.\n저는 용궁에서 올라온 거북이, 용북이에요!",
+            "저와 함께라면 빠르고 꼼꼼하게 \n집을 살펴볼 수 있어요.",
+            "주인님이 집을 볼 때, 어디를 더 신경써서 \n보고싶은지 알려주세요. 주인님의 선호에 \n맞게 체크리스트를 준비할게요!",
+            "그럼 바로 시작할까요?"
+        ]
+        static let startButtonText: String = "시작하기"
+        static let continueButtonText: String = "계속하기"
+    }
+    
+    enum CategorySelect{
+        static let defaultMessage: String = "아래 카테고리에 해당하는 필수 질문은 이미 있어요. 중요하게 보고 싶은 카테고리를 선택하시면, 더 꼼꼼히 확인할 수 있도록 추가 질문도 챙겨드릴게요."
+        static let requiredTime: String = "집보는 시간"
+        static let done: String = "완료"
+    }
+    
     enum APIEndpoints {
         static let baseURL: String = "https://maps.googleapis.com/maps/api"
         
