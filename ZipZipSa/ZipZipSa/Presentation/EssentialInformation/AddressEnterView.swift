@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 struct AddressEnterView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State private var searchText: String = ""
+    @State private var selectedCoordinates: CLLocationCoordinate2D?
     @State private var isLoading: Bool = false
     @State private var errorMessage: String? = nil
     @State private var searchResults: [(description: String, placeID: String)] = []
@@ -93,9 +95,9 @@ private extension AddressEnterView {
                 ForEach(searchResults, id: \.placeID) { result in
                     Button {
                         print("Taaped")
-//                            Task {
-//                                await selectAddress(result)
-//                            }
+                        Task {
+                            await selectAddress(result)
+                        }
                     } label: {
                         VStack(alignment: .leading, spacing: 0) {
                             Text(result.description)
@@ -111,7 +113,8 @@ private extension AddressEnterView {
                     }
                 }
             }
-            .padding(16)
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
         }
         .scrollIndicators(.hidden)
     }
@@ -123,7 +126,6 @@ private extension AddressEnterView {
             .applyZZSFont(zzsFontSet: .bodyRegular)
     }
     
-    
     var CancelButton: some View {
         Button {
             self.presentationMode.wrappedValue.dismiss()
@@ -133,7 +135,6 @@ private extension AddressEnterView {
                 .applyZZSFont(zzsFontSet: .bodyRegular)
         }
     }
-    
     
     // MARK: - Custom Method
     
@@ -150,6 +151,21 @@ private extension AddressEnterView {
             }
         } catch {
             errorMessage = "검색 실패: \(error.localizedDescription)"
+            isLoading = false
+        }
+    }
+    
+    private func selectAddress(_ result: (description: String, placeID: String)) async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            let coordinates = try await AddressSearchManager.shared.fetchCoordinates(for: result.placeID)
+            selectedCoordinates = coordinates
+            searchText = result.description
+            isLoading = false
+        } catch {
+            errorMessage = "위치 정보를 가져올 수 없습니다."
             isLoading = false
         }
     }
