@@ -15,13 +15,13 @@ struct ShareCardView: View {
             ShareCardHeaderView()
             
             ChecklistResult
-            Seperator
+            ZZSSperator()
             
             CriticalTags
-            Seperator
+            ZZSSperator()
             
             RoomModel
-            Seperator
+            ZZSSperator()
             
             NearbyFacilities
         }
@@ -39,30 +39,22 @@ private extension ShareCardView {
     // MARK: - View
     
     var ChecklistResult: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
             Text("카테고리")
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
             
-            Group {
-                Text("TEST TEXT")
-                Text("TEST TEXT")
-                Text("TEST TEXT")
-                Text("TEST TEXT")
-                Text("TEST TEXT")
-                Text("TEST TEXT")
-            }
+            ScoreGraph(category: "방충", maxScore: 30, currentScore: 5)
+            ScoreGraph(category: "청결", maxScore: 100, currentScore: 80)
+            ScoreGraph(category: "치안", maxScore: 70, currentScore: 70)
+            ScoreGraph(category: "환기", maxScore: 40, currentScore: 30)
+            ScoreGraph(category: "방음", maxScore: 30, currentScore: 16)
+            ScoreGraph(category: "채광", maxScore: 30, currentScore: 25)
         }
         .padding(.horizontal, 16)
         .padding(.top, 24)
-        .padding(.bottom, 16)
-    }
-    
-    var Seperator: some View {
-        Rectangle()
-            .fill(Color.Additional.seperator)
-            .frame(height: 1)
+        .padding(.bottom, 4)
     }
     
     var CriticalTags: some View {
