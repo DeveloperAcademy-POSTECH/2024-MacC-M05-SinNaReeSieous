@@ -19,10 +19,12 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 
     func requestLocationAuthorization() {
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.requestWhenInUseAuthorization()
-        } else {
-            print("위치 서비스가 비활성화되어 있습니다.")
+        DispatchQueue.global().async {
+            if CLLocationManager.locationServicesEnabled() {
+                self.locationManager.requestWhenInUseAuthorization()
+            } else {
+                print("위치 서비스가 비활성화되어 있습니다.")
+            }
         }
     }
 
