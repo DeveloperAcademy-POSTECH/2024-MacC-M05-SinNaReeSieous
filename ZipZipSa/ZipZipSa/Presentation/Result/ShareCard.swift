@@ -135,6 +135,7 @@ struct ShareCard: View {
                 .background(Color.Layer.first.clipShape(RoundedRectangle(cornerRadius: 20)))
         )
         .padding(.horizontal, 20)
+        .padding(.bottom, 50)
     }
 }
 

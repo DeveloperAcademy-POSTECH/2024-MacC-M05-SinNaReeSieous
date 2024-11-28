@@ -26,7 +26,6 @@ struct ResultCardView: View {
             
             ScrollView {
                 ShareCard(model: $model)
-                    .padding(.bottom, 24)
                     .background(
                         GeometryReader { proxy in
                             Color.clear
@@ -65,7 +64,3 @@ struct ResultCardView: View {
         .background(Color.Background.primary)
     }
 }
-
-//#Preview {
-//    SpaceDetailVIew()
-//}
