@@ -28,6 +28,7 @@ struct EssentialInfoView: View {
     @StateObject private var locationManager = LocationManager()
     @State private var selectedCoordinates: CLLocationCoordinate2D?
     @State private var selectedLocationText: String? = nil
+    @State private var showAddressEnterView: Bool = false
     
     var body: some View {
         ScrollView {
@@ -117,11 +118,15 @@ private extension EssentialInfoView {
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 24)
+        .sheet(isPresented: $showAddressEnterView) {
+            AddressEnterView()
+                .presentationDragIndicator(.visible)
+        }
     }
     
     var SearchAddressButton: some View {
         Button {
-            print("주소 검색뷰로 이동")
+            showAddressEnterView = true
         } label: {
             HStack {
                 if let selectedLocationText {
