@@ -17,7 +17,7 @@ extension Color {
     }
     
     enum Layer {
-        static let first = Color(.zzsBlack.opacity(0.8))
+        static let first = Color(.zzsWhite.opacity(0.8))
         static let second = Color(.zzsWarmGray20)
     }
     
