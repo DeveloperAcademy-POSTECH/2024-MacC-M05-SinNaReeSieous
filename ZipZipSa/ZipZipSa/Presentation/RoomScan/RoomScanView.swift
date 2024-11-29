@@ -15,24 +15,19 @@ struct RoomScanView: View {
     @State private var model: UIImage?
     @State private var showResultSheet: Bool = false
     @State private var isProcessing: Bool = false
-    @State private var isSessionStarted: Bool = false
     
     var body: some View {
-        if !isSessionStarted {
-            checkDecive()
-        } else {
-            RoomCaptureView
-                .onChange(of: model) { _, newModel in
-                    if newModel != nil {
-                        showResultSheet = true
-                        isProcessing = false
-                    }
+        RoomCaptureView
+            .onChange(of: model) { _, newModel in
+                if newModel != nil {
+                    showResultSheet = true
+                    isProcessing = false
                 }
-                .sheet(isPresented: $showResultSheet) {
-                    ResultCardView(model: $model)
-                        .presentationDragIndicator(.visible)
-                }
-        }
+            }
+            .sheet(isPresented: $showResultSheet) {
+                ResultCardView(model: $model)
+                    .presentationDragIndicator(.visible)
+            }
     }
 }
 
@@ -83,12 +78,5 @@ private extension RoomScanView {
     
     // MARK: - Computed Values
     
-    @ViewBuilder
-    func checkDecive() -> some View {
-        if RoomCaptureSession.isSupported {
-            RoomScanInfoView(isSessionStarted: $isSessionStarted)
-        } else {
-            UnsupportedDeviceView()
-        }
-    }
+    
 }

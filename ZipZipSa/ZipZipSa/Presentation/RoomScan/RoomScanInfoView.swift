@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct RoomScanInfoView: View {
-    @Binding var isSessionStarted: Bool
     @State var showAlert: Bool = false
     
     var body: some View {
@@ -74,19 +73,17 @@ private extension RoomScanInfoView {
     }
     
     var StartScanButton: some View {
-        Button {
-            withAnimation(.easeInOut(duration: 1)) {
-                isSessionStarted = true
+        NavigationLink(destination: RoomScanView()) {
+            withAnimation(.easeOut(duration: 1)) {
+                RoundedRectangle(cornerRadius: 16)
+                    .foregroundStyle(Color.Button.primaryBlue)
+                    .frame(height: 53)
+                    .overlay(
+                        Text(ZipLiteral.RoomScanInfo.start)
+                            .foregroundStyle(Color.Text.primary)
+                            .applyZZSFont(zzsFontSet: .bodyBold)
+                    )
             }
-        } label: {
-            RoundedRectangle(cornerRadius: 16)
-                .foregroundStyle(Color.Button.primaryBlue)
-                .frame(height: 53)
-                .overlay(
-                    Text(ZipLiteral.RoomScanInfo.start)
-                        .foregroundStyle(Color.Text.primary)
-                        .applyZZSFont(zzsFontSet: .bodyBold)
-                )
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 22)
