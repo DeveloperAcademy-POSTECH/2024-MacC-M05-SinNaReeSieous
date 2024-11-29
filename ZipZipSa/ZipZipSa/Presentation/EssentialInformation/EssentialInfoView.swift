@@ -10,7 +10,6 @@ import PhotosUI
 
 struct EssentialInfoView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @Binding var showHomeHuntSheet: Bool
     
     @State private var homeName: String = ""
     @State private var address: String = ""
@@ -560,7 +559,7 @@ private extension EssentialInfoView {
     
     var CloseButton: some View {
         Button {
-            showHomeHuntSheet = false
+            presentationMode.wrappedValue.dismiss()
         } label: {
             Image(systemName: "xmark")
                 .foregroundStyle(Color.Icon.tertiary)
@@ -643,5 +642,5 @@ enum EssentialInfoField {
 
 
 #Preview {
-    EssentialInfoView(showHomeHuntSheet: .constant(true))
+    EssentialInfoView()
 }

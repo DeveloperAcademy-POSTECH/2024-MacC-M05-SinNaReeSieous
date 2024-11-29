@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RoomPlan
 
 struct ChecklistView: View {
     @State var answers: [ChecklistItem: Set<Int>] = [:]
@@ -13,7 +14,8 @@ struct ChecklistView: View {
     @State var selectedCategory: [ChecklistCategory] = [.security, .insectproof, .ventilation]
     @State var selectedSpaceType: SpaceType = .kitchen
     @State var memoText: [String] = Array(repeating: "", count: SpaceType.allCases.count)
-    @State var moveToRoomScanView: Bool = false
+    @State private var moveToRoomScanInfoView: Bool = false
+    @State private var moveToUnsupportedDeviceView: Bool = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -46,8 +48,11 @@ struct ChecklistView: View {
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
-        .navigationDestination(isPresented: $moveToRoomScanView) {
-            RoomScanView()
+        .navigationDestination(isPresented: $moveToRoomScanInfoView) {
+            RoomScanInfoView()
+        }
+        .navigationDestination(isPresented: $moveToUnsupportedDeviceView) {
+            UnsupportedDeviceView()
         }
     }
 }
@@ -154,7 +159,11 @@ private extension ChecklistView {
     func moveNextStep() {
         if selectedSpaceType.rawValue == 4 {
             getChecklistResult()
-            moveToRoomScanView = true
+            if RoomCaptureSession.isSupported {
+                moveToRoomScanInfoView = true
+            } else {
+                moveToUnsupportedDeviceView = true
+            }
         } else {
             let nextSpaceType = SpaceType(rawValue: selectedSpaceType.rawValue + 1)
             if let nextSpaceType {
