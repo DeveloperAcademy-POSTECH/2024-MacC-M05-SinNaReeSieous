@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ShareCardView: View {
     @Binding var model: UIImage?
+    @Binding var mainPicture: UIImage?
     
     let columnLayout = Array(repeating: GridItem(), count: 3)
     let criticalTags: [String] = ["바퀴위험", "곰팡이 위험", "담배 위험", "사생활 위험", "소음 위험", "누수 위험", "수압 안좋음", "배수 안좋음", "온수 잘 안 나옴"]
@@ -16,7 +17,7 @@ struct ShareCardView: View {
     
     var body: some View {
         VStack {
-            ShareCardHeaderView()
+            ShareCardHeaderView(mainPicture: $mainPicture)
             
             ChecklistResult
             ZZSSperator()
