@@ -10,6 +10,7 @@ import Foundation
 struct OnboardingCategory {
     
     let checklistCategory: ChecklistCategory
+    let categoryElement: String
     let onImage: String
     let offImage: String
     let requiredTime: Int
@@ -20,6 +21,7 @@ extension OnboardingCategory {
     static let categories: [OnboardingCategory] = [
         OnboardingCategory(
             checklistCategory: .insectproof,
+            categoryElement: "InsectProof",
             onImage: "InsectProofColor",
             offImage: "InsectProofSepia",
             requiredTime: 3,
@@ -27,6 +29,7 @@ extension OnboardingCategory {
         ),
         OnboardingCategory(
             checklistCategory: .cleanliness,
+            categoryElement: "Cleenliness",
             onImage: "CleanlinessColor",
             offImage: "CleanlinessSepia",
             requiredTime: 3,
@@ -34,6 +37,7 @@ extension OnboardingCategory {
         ),
         OnboardingCategory(
             checklistCategory: .security,
+            categoryElement: "Security",
             onImage: "SecurityColor",
             offImage: "SecuritySepia",
             requiredTime: 3,
@@ -41,6 +45,7 @@ extension OnboardingCategory {
         ),
         OnboardingCategory(
             checklistCategory: .ventilation,
+            categoryElement: "Ventilation",
             onImage: "VentilationColor",
             offImage: "VentilationSepia",
             requiredTime: 3,
@@ -48,6 +53,7 @@ extension OnboardingCategory {
         ),
         OnboardingCategory(
             checklistCategory: .soundproof,
+            categoryElement: "Soundproof",
             onImage: "SoundproofColor",
             offImage: "SoundproofSepia",
             requiredTime: 3,
@@ -55,6 +61,7 @@ extension OnboardingCategory {
         ),
         OnboardingCategory(
             checklistCategory: .sunlight,
+            categoryElement: "Lighted",
             onImage: "LightedColor",
             offImage: "LightedSepia",
             requiredTime: 3,
