@@ -30,15 +30,7 @@ struct ChecklistView: View {
         .overlay(alignment: .bottom) {
             ZZSMainButton(
                 action: {
-                    if selectedSpaceType.rawValue == 4 {
-                        getChecklistResult()
-                        moveToRoomScanView = true
-                    } else {
-                        let nextSpaceType = SpaceType(rawValue: selectedSpaceType.rawValue + 1)
-                        if let nextSpaceType {
-                            selectedSpaceType = nextSpaceType
-                        }
-                    }
+                    moveNextStep()
                 },
                 text: bottomButtonText
             )
@@ -156,6 +148,22 @@ private extension ChecklistView {
             return "다음"
         }
     }
+    
+    // MARK: - Action
+    
+    func moveNextStep() {
+        if selectedSpaceType.rawValue == 4 {
+            getChecklistResult()
+            moveToRoomScanView = true
+        } else {
+            let nextSpaceType = SpaceType(rawValue: selectedSpaceType.rawValue + 1)
+            if let nextSpaceType {
+                selectedSpaceType = nextSpaceType
+            }
+        }
+    }
+    
+    // MARK: - Custom Method
     
     func getChecklistResult() {
         print("현재 점수")
