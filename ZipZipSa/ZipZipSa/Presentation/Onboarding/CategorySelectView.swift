@@ -33,9 +33,9 @@ private extension CategorySelectView {
     
     var ZipZipSaTip: some View {
         HStack(alignment: .bottom, spacing: 0) {
-            Image("basicYongboogiHeadColor")
+            Image("basicYongboogiBowtieHeadColor")
                 .resizable()
-                .frame(width: 62, height: 61)
+                .frame(width: 62, height: 62)
                 .padding(.leading, 8)
                 .padding(.trailing, 18)
             
@@ -50,7 +50,7 @@ private extension CategorySelectView {
             .applyZZSFont(zzsFontSet: .subheadlineBold)
             .padding(.horizontal, 8)
             .padding(.vertical, 6)
-            .frame(width: UIScreen.screenSize.width - 58, alignment: .bottomLeading)
+            .frame(width: UIScreen.screenSize.width - 120, alignment: .bottomLeading)
             .background {
                 GeometryReader { geometry in
                     UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(
@@ -60,16 +60,12 @@ private extension CategorySelectView {
                     ))
                     .stroke(.black, lineWidth: 1)
                     .fill(Color.Layer.first)
-                    .frame(
-                        width: UIScreen.screenSize.width - 58,
-                        height: geometry.size.height
-                    )
+                    .frame(width: UIScreen.screenSize.width - 120)
                 }
             }
         }
         .frame(width: UIScreen.screenSize.width - 32, height: UIScreen.screenSize.height / 812 * 116, alignment: .bottom)
         .padding(.bottom, 24)
-        .padding(.top, 24)
     }
     
     var RequiredTime: some View {
@@ -94,7 +90,7 @@ private extension CategorySelectView {
         Button {
             firstLaunch = false
         } label: {
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 16)
                 .fill(Color.Button.primaryBlue)
                 .frame(width:UIScreen.screenSize.width - 32, height: 53)
                 .overlay {
@@ -104,7 +100,7 @@ private extension CategorySelectView {
                 }
         }
         .padding(.top, 24)
-        .padding(.bottom, 30)
+        .padding(.bottom, 12)
     }
 }
 
