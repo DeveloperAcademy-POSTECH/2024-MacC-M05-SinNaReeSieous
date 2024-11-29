@@ -11,7 +11,7 @@ struct ScanningView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var doneScanning: Bool
     @State var showAlert: Bool = false
-    let roomController = RoomPlanManager.shared
+    let roomManager: RoomPlanManager
     
     var body: some View {
         VStack {
@@ -57,7 +57,7 @@ private extension ScanningView {
     
     var DoneScanButton: some View {
         Button {
-            roomController.stopSession()
+            roomManager.stopSession()
             doneScanning = true
         } label: {
             RoundedRectangle(cornerRadius: 16)

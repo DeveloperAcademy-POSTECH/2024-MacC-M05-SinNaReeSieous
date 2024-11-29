@@ -17,7 +17,7 @@ struct DoneScanningView: View {
     @Binding var isProcessing: Bool
     @Binding var showResultSheet: Bool
     @Binding var doneScanning: Bool
-    let roomController = RoomPlanManager.shared
+    let roomManager: RoomPlanManager
     
     var body: some View {
         VStack {
@@ -61,7 +61,7 @@ private extension DoneScanningView {
     var ReScanButton: some View {
         Button {
             doneScanning = false
-            roomController.startSession()
+            roomManager.startSession()
         } label: {
             RoundedRectangle(cornerRadius: 16)
                 .foregroundStyle(Color.Button.secondaryBlue)

@@ -9,13 +9,13 @@ import SwiftUI
 import RoomPlan
 
 struct RoomScanView: View {
+    @StateObject private var roomManager = RoomPlanManager()
     @State private var doneScanning: Bool = false
     @State private var capturedView: UIImage?
     @State private var model: UIImage?
     @State private var showResultSheet: Bool = false
     @State private var isProcessing: Bool = false
     @State private var isSessionStarted: Bool = false
-    let roomController = RoomPlanManager.shared
     
     var body: some View {
         if !isSessionStarted {
@@ -41,12 +41,12 @@ private extension RoomScanView {
     
     var RoomCaptureView: some View {
         ZStack {
-            RoomCaptureViewRepresentable()
+            RoomCaptureViewRepresentable(manager: roomManager)
                 .onAppear {
-                    roomController.startSession()
+                    roomManager.startSession()
                 }
                 .onDisappear {
-                    roomController.stopSession()
+                    roomManager.stopSession()
                 }
                 .ignoresSafeArea()
             
@@ -56,10 +56,11 @@ private extension RoomScanView {
                     model: $model,
                     isProcessing: $isProcessing,
                     showResultSheet: $showResultSheet,
-                    doneScanning: $doneScanning
+                    doneScanning: $doneScanning,
+                    roomManager: roomManager
                 )
             } else {
-                ScanningView(doneScanning: $doneScanning)
+                ScanningView(doneScanning: $doneScanning, roomManager: roomManager)
             }
         }
     }
