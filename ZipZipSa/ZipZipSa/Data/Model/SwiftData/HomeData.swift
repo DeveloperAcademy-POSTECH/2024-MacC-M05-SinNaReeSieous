@@ -13,55 +13,79 @@ import SwiftData
 final class HomeData {
     var homeName: String
     var address: String
-    var homeCategory: String
-    var homeRentalType: String
+    var homeCategoryData: String?
+    var homeRentalTypeData: String?
     var homeAreaPyeong: String
     var homeAreaSquareMeter: String
-    var selectedHomeDirection: String
+    var homeDirectionData: String?
     
     @Relationship(deleteRule: .cascade)
     var rentalFee: [RentalFeeData]
     
     @Attribute(.externalStorage)
-    var selectedImageData: Data?
+    var imageData: Data?
     
     var location: LocationData?
-    var selectedLocationText: String?
+    var locationText: String?
     
     init(
         homeName: String = "",
         address: String = "",
-        homeCategory: String = "",
-        homeRentalType: String = "",
+        homeCategory: String? = nil,
+        homeRentalTypeData: String? = nil,
         homeAreaPyeong: String = "",
         homeAreaSquareMeter: String = "",
-        selectedHomeDirection: String = "",
+        homeDirectionData: String? = nil,
         rentalFee: [RentalFeeData] = [RentalFeeData(), RentalFeeData(), RentalFeeData(), RentalFeeData()],
-        selectedImageData: Data? = nil,
+        imageData: Data? = nil,
         location: LocationData? = nil,
-        selectedLocationText: String? = nil
+        locationText: String? = nil
     ) {
         self.homeName = homeName
         self.address = address
-        self.homeCategory = homeCategory
-        self.homeRentalType = homeRentalType
+        self.homeCategoryData = homeCategory
+        self.homeRentalTypeData = homeRentalTypeData
         self.homeAreaPyeong = homeAreaPyeong
         self.homeAreaSquareMeter = homeAreaSquareMeter
-        self.selectedHomeDirection = selectedHomeDirection
+        self.homeDirectionData = homeDirectionData
         self.rentalFee = rentalFee
-        self.selectedImageData = selectedImageData
+        self.imageData = imageData
         self.location = location
-        self.selectedLocationText = selectedLocationText
+        self.locationText = locationText
     }
 }
 
 extension HomeData {
     var homeImage: UIImage? {
-        if let data = selectedImageData,
+        if let data = imageData,
            let image = UIImage(data: data) {
             return image
         }
         return nil
+    }
+    
+    var homeCategoryType: HomeCategory? {
+        if let homeCategoryData {
+            return HomeCategory(rawValue: homeCategoryData)
+        } else {
+            return nil
+        }
+    }
+    
+    var homeRentalType: HomeRentalType? {
+        if let homeRentalTypeData {
+            return HomeRentalType(rawValue: homeRentalTypeData)
+        } else {
+            return nil
+        }
+    }
+    
+    var homeDirectionType: HomeDirection? {
+        if let homeDirectionData {
+            return HomeDirection(rawValue: homeDirectionData)
+        } else {
+            return nil
+        }
     }
 }
 
@@ -82,6 +106,11 @@ final class LocationData {
     init(latitude: Double, longitude: Double) {
         self.latitude = latitude
         self.longitude = longitude
+    }
+    
+    init(coordinate: CLLocationCoordinate2D?) {
+        self.latitude = coordinate?.latitude ?? 0.0
+        self.longitude = coordinate?.longitude ?? 0.0
     }
 }
 
