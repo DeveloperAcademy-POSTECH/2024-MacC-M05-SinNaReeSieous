@@ -12,6 +12,8 @@ struct EssentialInfoView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var showHomeHuntSheet: Bool
     
+    @State private var homeData = HomeData()
+    
     @State private var homeName: String = ""
     @State private var address: String = ""
     @State private var isGettingAddress: Bool = false
@@ -78,6 +80,9 @@ struct EssentialInfoView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     CloseButton
                 }
+            }
+            .onAppear {
+                homeData = HomeData()
             }
         }
     }

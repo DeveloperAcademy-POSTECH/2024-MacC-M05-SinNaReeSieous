@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum HomeDirection: CaseIterable {
+enum HomeDirection: String, CaseIterable {
     case east
     case west
     case south

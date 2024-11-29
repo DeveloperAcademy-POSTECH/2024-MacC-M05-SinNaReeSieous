@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum HomeCategory: CaseIterable {
+enum HomeCategory: String, CaseIterable {
     case mutiUnitHouse
     case villa
     case officetel
