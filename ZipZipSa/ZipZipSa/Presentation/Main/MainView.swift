@@ -35,7 +35,6 @@ struct MainView: View {
                         }
                     }
                 }
-                .padding(.horizontal, 16)
             }
         }
         .accentColor(Color.Button.tertiary)
@@ -56,6 +55,7 @@ private extension MainView {
         }
         .padding(.top, 12)
         .padding(.bottom, 32)
+        .padding(.horizontal, 16)
     }
     
     var NavigationTitle: some View {
@@ -94,6 +94,7 @@ private extension MainView {
                 .padding(.leading, 12)
                 .padding(.trailing, 8)
             })
+            .padding(.horizontal, 16)
             .onAppear {
                 // 기존 타이머가 있다면 무효화
                 timer?.invalidate()
@@ -132,7 +133,8 @@ private extension MainView {
             ViewedHomeButton
         }
         .padding(.top, 24)
-        .padding(.bottom, 64)
+        .padding(.bottom, UIScreen.isSe ? 12 : 64)
+        .padding(.horizontal, 16)
     }
     
     var HomeHuntButton: some View {
@@ -195,6 +197,7 @@ private extension MainView {
                 .font(Font.system (size: 24, weight: .bold))
                 .padding(.bottom, 24)
         }
+        .padding(.horizontal, 16)
     }
     
     var RecentlyViewedHomeList: some View {
@@ -205,6 +208,7 @@ private extension MainView {
         }
         .frame(height: UIScreen.screenSize.height / 812 * 208)
         .padding(.bottom, 8)
+        .padding(.horizontal, 16)
     }
     
     var EmptyRecentlyViewedHome: some View {
@@ -221,6 +225,7 @@ private extension MainView {
                 })
         }
         .padding(.bottom, 8)
+        .padding(.horizontal, 16)
     }
 }
 
