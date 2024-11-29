@@ -67,10 +67,21 @@ private extension ShareCardView {
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
             
-            LazyVGrid(columns: columnLayout) {
-                ForEach(criticalTags, id: \.self) { tag in
-                    ZZSTag(text: tag)
+            if !criticalTags.isEmpty {
+                LazyVGrid(columns: columnLayout) {
+                    ForEach(criticalTags, id: \.self) { tag in
+                        ZZSTag(text: tag)
+                    }
                 }
+            } else {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.Button.secondaryBlue)
+                    .frame(height: 100)
+                    .overlay(alignment: .center) {
+                        Text("우와, 여기는 안전한 곳이에요!")
+                            .foregroundStyle(Color.Text.secondary)
+                            .applyZZSFont(zzsFontSet: .subheadlineRegular)
+                    }
             }
         }
         .padding(16)
