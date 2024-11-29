@@ -20,7 +20,9 @@ struct CategorySelectView: View {
                 VStack(spacing: 0) {
                     ZipZipSaTip
                     RequiredTime
+                    Spacer()
                     CategoryView(totalTime: $totalTime, currentMessage: $currentMessage)
+                    Spacer()
                     BottomButton
                 }
             }
@@ -76,14 +78,13 @@ private extension CategorySelectView {
                 HStack(alignment: .center) {
                     Text(ZipLiteral.CategorySelect.requiredTime)
                         .foregroundStyle(Color.Text.primary)
-                        .font(Font.system (size: 13, weight: .medium))
+                        .applyZZSFont(zzsFontSet: .footnote)
                     
                     Text("약 \(totalTime)분")
                         .foregroundStyle(Color.Text.primary)
-                        .font(Font.system (size: 16, weight: .semibold))
+                        .applyZZSFont(zzsFontSet: .bodyBold)
                 }
             }
-            .padding(.bottom, 32)
     }
     
     var BottomButton: some View {
@@ -99,7 +100,6 @@ private extension CategorySelectView {
                         .applyZZSFont(zzsFontSet:.bodyBold)
                 }
         }
-        .padding(.top, 24)
         .padding(.bottom, 12)
     }
 }

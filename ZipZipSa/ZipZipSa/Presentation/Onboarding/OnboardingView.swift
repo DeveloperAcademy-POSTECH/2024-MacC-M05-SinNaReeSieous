@@ -19,6 +19,7 @@ struct OnboardingView: View {
                 VStack(spacing: 0){
                     MessageBubble
                     GreetingYongboogiImage
+                    Spacer()
                     ContinueAndStartButton
                 }
             }
@@ -84,7 +85,6 @@ private extension OnboardingView {
                 }
             }
             .padding(.bottom, 12)
-            .padding(.top, 160)
         }
     }
 }
