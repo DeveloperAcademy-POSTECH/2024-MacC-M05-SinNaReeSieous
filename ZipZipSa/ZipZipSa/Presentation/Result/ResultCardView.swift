@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ResultCardView: View {
     @State private var card: UIImage = UIImage()
+    @State private var mainPicture: UIImage? = UIImage(resource: .mainPicSample)
     @Binding var model: UIImage?
     
     var body: some View {
@@ -16,7 +17,7 @@ struct ResultCardView: View {
             NavigationTitle
             
             ScrollView {
-                ShareCard(model: $model)
+                ShareCardView(model: $model, mainPicture: $mainPicture)
                     .background(BackgroundForCapture)
                 
                 ResultDetailViewButton
@@ -49,7 +50,7 @@ private extension ResultCardView {
                 .onAppear {
                     DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
-                        card = ShareCard(model: $model)
+                        card = ShareCardView(model: $model, mainPicture: $mainPicture)
                             .asUIImage(size: size)
                     }
                 }

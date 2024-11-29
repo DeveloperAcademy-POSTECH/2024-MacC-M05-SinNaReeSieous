@@ -26,6 +26,7 @@ struct RoomScanInfoView: View {
         }
         .alert(ZipLiteral.Alert.skipAlertTitle, isPresented: $showAlert) {
             Button(ZipLiteral.Alert.cancel, role: .cancel) { }
+                .tint(.blue)
             
             Button(ZipLiteral.RoomScanInfo.skip, role: .destructive) {
                 // TODO: 모델 이미지가 없는 상태로 결과지 시트 띄우기

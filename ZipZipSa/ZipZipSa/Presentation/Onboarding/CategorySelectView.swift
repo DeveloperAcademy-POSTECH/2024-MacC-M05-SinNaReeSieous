@@ -6,20 +6,30 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CategorySelectView: View {
+    @Environment(\.modelContext) private var modelContext
+    @AppStorage("firstLaunch") var firstLaunch: Bool = true
+    
     @State private var totalTime: Int = 10
     @State private var currentMessage: String = ""
+    @State private var selectedCategory: Set<ChecklistCategory> = []
     
     var body: some View {
         NavigationStack{
             ZStack {
                 Color.Background.primary
                     .ignoresSafeArea()
-                VStack  {
+                VStack(spacing: 0) {
                     ZipZipSaTip
                     RequiredTime
-                    CategoryView(totalTime: $totalTime, currentMessage: $currentMessage)
+                    Spacer()
+                    CategoryView(
+                        totalTime: $totalTime,
+                        currentMessage: $currentMessage,
+                        selectedCategories: $selectedCategory)
+                    Spacer()
                     BottomButton
                 }
             }
@@ -32,12 +42,11 @@ struct CategorySelectView: View {
 private extension CategorySelectView {
     
     var ZipZipSaTip: some View {
-        HStack(alignment: .bottom, spacing: 0) {
+        HStack(alignment: .bottom, spacing: 16) {
             Image("basicYongboogiHeadColor")
                 .resizable()
-                .frame(width: 62, height: 61)
-                .padding(.leading, 8)
-                .padding(.trailing, 18)
+                .scaledToFit()
+                .frame(width: 62, height: 62)
             
             Group {
                 if currentMessage.isEmpty {
@@ -91,18 +100,21 @@ private extension CategorySelectView {
     }
     
     var BottomButton: some View {
-        NavigationLink(destination: FavoriteAddressEnterView()) {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.Button.primaryBlue)
-                .frame(width:UIScreen.screenSize.width - 32, height: 53)
-                .overlay {
-                    Text(ZipLiteral.CategorySelect.done)
-                        .foregroundStyle(Color.Text.primary)
-                        .applyZZSFont(zzsFontSet:.bodyBold)
-                }
+        ZZSMainButton(action: { endOnboarding() },
+                      text: ZipLiteral.CategorySelect.done)
+        .padding(.horizontal, 16)
+        .padding(.bottom, 12)
+    }
+    
+    // MARK: - Action
+    
+    func endOnboarding() {
+        let checklistCategoryData = selectedCategory.map {
+            ChecklistCategoryData(name: $0.text)
         }
-        .padding(.top, 24)
-        .padding(.bottom, 30)
+        
+        modelContext.insert(User(favoriteCategories: checklistCategoryData))
+        firstLaunch = false
     }
 }
 

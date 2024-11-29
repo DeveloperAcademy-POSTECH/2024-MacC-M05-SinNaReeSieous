@@ -9,8 +9,12 @@ import SwiftUI
 import PhotosUI
 
 struct EssentialInfoView: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Binding var showHomeHuntSheet: Bool
+    
     @State private var homeName: String = ""
     @State private var address: String = ""
+    @State private var isGettingAddress: Bool = false
     @State private var imageExist: Bool = false
     @State private var selectedHomeCategory: HomeCategory? = nil
     @State private var selectedHomeRentalType: HomeRentalType? = nil
@@ -25,41 +29,63 @@ struct EssentialInfoView: View {
     @State private var useCamera: Bool = false
     @State private var selectedImageData: Data? = nil
     
+    @StateObject private var locationManager = LocationManager()
+    @State private var selectedCoordinates: CLLocationCoordinate2D?
+    @State private var selectedLocationText: String? = nil
+    @State private var showAddressEnterView: Bool = false
+    
+    @State private var moveToChecklistView: Bool = false
+    
+    @State private var availableFacilities: [Facility] = []
+    
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 0) {
-                NavigationTitle
-                NameSection
-                AddressSection
-                HomePhotoSection
-                HomeCategorySection
-                HomeRentalTypeSection
-                if selectedHomeRentalType != nil {
-                    HomeRentalMoneySection
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    NavigationTitle
+                    NameSection
+                    AddressSection
+                    HomePhotoSection
+                    HomeCategorySection
+                    HomeRentalTypeSection
+                    if selectedHomeRentalType != nil {
+                        HomeRentalMoneySection
+                    }
+                    HomeAreaSection
+                    HomeDirectionSection
                 }
-                HomeAreaSection
-                HomeDirectionSection
+            }
+            .scrollIndicators(.never)
+            .contentMargins(.bottom, 120, for: .scrollContent)
+            .clipped()
+            .overlay(alignment: .bottom) {
+                ZZSMainButton(
+                    action: {
+                        moveToChecklistView = true
+                        Task {
+                            await searchNearbyFacilities()
+                            print(availableFacilities)
+                        }
+                    },
+                    text: "다음"
+                )
+                .padding([.horizontal, .top], 16)
+                .padding(.bottom, 12)
+                .background(Color.Background.primary)
+            }
+            .navigationDestination(isPresented: $moveToChecklistView, destination: {
+                ChecklistView()
+            })
+            .background(Color.Background.primary)
+            .dismissKeyboard()
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    CloseButton
+                }
             }
         }
-        .scrollIndicators(.never)
-        .contentMargins(.bottom, 120, for: .scrollContent)
-        .clipped()
-        .overlay(alignment: .bottom) {
-            ZZSMainButton(
-                action: {
-                    print("Finish Essential Info")
-                },
-                text: "다음"
-            )
-            .padding([.horizontal, .top], 16)
-            .padding(.bottom, 12)
-            .background(Color.Background.primary)
-        }
-        .background(Color.Background.primary)
-        .dismissKeyboard()
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("")
-        .toolbarBackground(.hidden, for: .navigationBar)
     }
 }
 
@@ -103,26 +129,38 @@ private extension EssentialInfoView {
     // AddressSection
     
     var AddressSection: some View {
-        VStack(alignment: .center, spacing: 8) {
+        VStack(alignment: .center, spacing: 0) {
             HStack {
                 SectionTitle(text: "주소")
                 Spacer()
             }
+            .padding(.bottom, 8)
             SearchAddressButton
             GetCurrentAddressButton
         }
         .padding(.horizontal, 16)
-        .padding(.bottom, 24)
+        .padding(.bottom, 16)
+        .sheet(isPresented: $showAddressEnterView) {
+            AddressEnterView(resultCoordinates: $selectedCoordinates,
+                             resultLocationText: $selectedLocationText)
+                .presentationDragIndicator(.visible)
+        }
     }
     
     var SearchAddressButton: some View {
         Button {
-            print("주소 검색뷰로 이동")
+            showAddressEnterView = true
         } label: {
             HStack {
-                Text("주소를 입력해 주세요")
-                    .foregroundStyle(Color.Text.placeholder)
-                    .applyZZSFont(zzsFontSet: .bodyRegular)
+                if let selectedLocationText {
+                    Text(selectedLocationText)
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyRegular)
+                } else {
+                    Text(addressPlaceHolder)
+                        .foregroundStyle(Color.Text.placeholder)
+                        .applyZZSFont(zzsFontSet: .bodyRegular)
+                }
                 Spacer()
             }
             .padding(.horizontal, 20)
@@ -133,13 +171,15 @@ private extension EssentialInfoView {
                                                                          topTrailing: 16))
                 .fill(Color.Button.enable)
             }
-            .padding(.top, 3)
         }
     }
     
     var GetCurrentAddressButton: some View {
         Button {
             print("get Current Address")
+            Task {
+                await fetchCurrentLocation()
+            }
         } label: {
             HStack(spacing: 0) {
                 Image(systemName: "location.fill")
@@ -155,6 +195,8 @@ private extension EssentialInfoView {
                             .frame(height: 0.6)
                     }
             }
+            .padding(8)
+            .padding(.horizontal, 8)
         }
     }
     
@@ -516,10 +558,80 @@ private extension EssentialInfoView {
             .applyZZSFont(zzsFontSet: .bodyBold)
     }
     
+    var CloseButton: some View {
+        Button {
+            showHomeHuntSheet = false
+        } label: {
+            Image(systemName: "xmark")
+                .foregroundStyle(Color.Icon.tertiary)
+                .applyZZSFont(zzsFontSet: .bodyBold)
+        }
+    }
+    
     // MARK: - Computed Values
     
     var basicHouseName: String {
         "1번째 집"
+    }
+    
+    var addressPlaceHolder: String {
+        if isGettingAddress {
+            return "주소를 가져오는중 ..."
+        } else {
+            return "주소를 입력해 주세요"
+        }
+    }
+    
+    // MARK: - Custom Method
+    
+    private func fetchCurrentLocation() async {
+        isGettingAddress = true
+        locationManager.requestLocationAuthorization()
+        if let location = locationManager.userLocation {
+            selectedCoordinates = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
+            await reverseGeocode()
+        } else {
+            print("현재 위치를 가져올 수 없습니다.")
+        }
+        isGettingAddress = false
+    }
+    
+    private func reverseGeocode() async {
+        guard let coordinates = selectedCoordinates else {
+            print("좌표가 선택되지 않았습니다.")
+            return
+        }
+        
+        do {
+            let address = try await AddressSearchManager.shared.getAddressForLatLng(
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude
+            )
+            
+            selectedLocationText = address
+        } catch {
+            print("주소 변환 실패: \(error.localizedDescription)")
+            print("Error occurred: \(error)")
+        }
+    }
+    
+    private func searchNearbyFacilities() async {
+        if let coordinates = selectedCoordinates {
+            do {
+                let location = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
+                let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.rawValue })
+                
+                availableFacilities = Facility.allCases.filter { facility in
+                    results[facility.rawValue] == true
+                }
+            } catch let networkError as NetworkError {
+                networkError.logError()
+            } catch {
+                print("Unexpected error: \(error)")
+            }
+        } else {
+            availableFacilities = []
+        }
     }
 }
 
@@ -531,5 +643,5 @@ enum EssentialInfoField {
 
 
 #Preview {
-    EssentialInfoView()
+    EssentialInfoView(showHomeHuntSheet: .constant(true))
 }

@@ -8,14 +8,26 @@
 import SwiftUI
 
 struct ContentView: View {
+    @AppStorage("firstLaunch") var firstLaunch: Bool = true
+    @State var isLoading: Bool = true
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if isLoading {
+            LaunchScreen()
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        withAnimation {
+                            isLoading = false
+                        }
+                    }
+                }
+        } else {
+            if firstLaunch {
+                OnboardingView()
+            } else {
+                MainView()
+            }
         }
-        .padding()
     }
 }
 
