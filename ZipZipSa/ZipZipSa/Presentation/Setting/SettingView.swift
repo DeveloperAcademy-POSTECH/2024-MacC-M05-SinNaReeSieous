@@ -68,13 +68,13 @@ private extension SettingView {
     
     var CategoryCellList: some View {
         HStack (spacing: 12) {
-            ForEach(Category.categories, id: \.categoryElement) { category in
+            ForEach(OnboardingCategory.categories, id: \.categoryElement) { category in
                 CategoryCell(for: category)
             }
         }
     }
     
-    func CategoryCell(for category: Category) -> some View {
+    func CategoryCell(for category: OnboardingCategory) -> some View {
         Text(categoryDisplayName(for: category.categoryElement))
             .applyZZSFont(zzsFontSet: .caption1Regular)
             .foregroundStyle(Color.Text.primary)
