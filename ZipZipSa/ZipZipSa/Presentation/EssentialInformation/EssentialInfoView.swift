@@ -10,6 +10,7 @@ import PhotosUI
 
 struct EssentialInfoView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Binding var showHomeHuntSheet: Bool
     
     @State private var homeName: String = ""
     @State private var address: String = ""
@@ -79,6 +80,11 @@ struct EssentialInfoView: View {
             .dismissKeyboard()
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    CloseButton
+                }
+            }
         }
     }
 }
@@ -552,6 +558,16 @@ private extension EssentialInfoView {
             .applyZZSFont(zzsFontSet: .bodyBold)
     }
     
+    var CloseButton: some View {
+        Button {
+            showHomeHuntSheet = false
+        } label: {
+            Image(systemName: "xmark")
+                .foregroundStyle(Color.Icon.tertiary)
+                .applyZZSFont(zzsFontSet: .bodyBold)
+        }
+    }
+    
     // MARK: - Computed Values
     
     var basicHouseName: String {
@@ -627,5 +643,5 @@ enum EssentialInfoField {
 
 
 #Preview {
-    EssentialInfoView()
+    EssentialInfoView(showHomeHuntSheet: .constant(true))
 }

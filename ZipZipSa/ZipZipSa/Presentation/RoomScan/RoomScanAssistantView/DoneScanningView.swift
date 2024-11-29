@@ -45,7 +45,8 @@ struct DoneScanningView: View {
         }
         .alert("경고", isPresented: $showErrorAlert) {
             Button("저장하기", role: .destructive) {
-                // TODO: 집 모델 = nil인 상태로 결과지 띄우기
+                isProcessing = false
+                showResultSheet = true
             }
             
             Button("다시찍기", role: .cancel) {
@@ -110,17 +111,20 @@ private extension DoneScanningView {
     
     //캡쳐된 모델이 보이는 뷰를 이미지로 캡쳐하기 위한 함수
     func captureScreen() {
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-            if let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
-                let rootView = window.rootViewController?.view
-                let topMargin: CGFloat = 100
-                let bottomMargin: CGFloat = 300
-                let screenHeight = UIScreen.main.bounds.height
-                let screenWidth = UIScreen.main.bounds.width
-                let rect = CGRect(x: 0, y: topMargin, width: screenWidth, height: screenHeight - topMargin - bottomMargin)
-                capturedView = rootView?.snapshot(of: rect)
-            }
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first(where: { $0.isKeyWindow }),
+              let topViewController = window.topMostViewController() else {
+            print("Top view controller not found")
+            return
         }
+
+        let topMargin: CGFloat = 100
+        let bottomMargin: CGFloat = 300
+        let screenHeight = UIScreen.main.bounds.height
+        let screenWidth = UIScreen.main.bounds.width
+        let rect = CGRect(x: 0, y: topMargin, width: screenWidth, height: screenHeight - topMargin - bottomMargin)
+
+        capturedView = topViewController.view.snapshot(of: rect)
     }
     
     //이미지의 배경을 제거하는 함수
