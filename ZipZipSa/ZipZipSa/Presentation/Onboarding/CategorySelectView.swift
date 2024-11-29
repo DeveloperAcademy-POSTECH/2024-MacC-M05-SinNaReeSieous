@@ -110,7 +110,7 @@ private extension CategorySelectView {
     
     func endOnboarding() {
         let checklistCategoryData = selectedCategory.map {
-            ChecklistCategoryData(name: $0.rawValue)
+            ChecklistCategoryData(rawValue: $0.rawValue)
         }
         let user = User(favoriteCategories: checklistCategoryData)
         modelContext.insert(user)

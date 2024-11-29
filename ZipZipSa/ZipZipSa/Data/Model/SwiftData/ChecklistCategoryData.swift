@@ -12,8 +12,8 @@ import SwiftData
 final class ChecklistCategoryData {
     var rawValue: String
     
-    init(name: String) {
-        self.rawValue = name
+    init(rawValue: String) {
+        self.rawValue = rawValue
     }
 }
 
