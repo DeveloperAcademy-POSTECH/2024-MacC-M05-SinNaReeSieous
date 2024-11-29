@@ -36,6 +36,8 @@ struct EssentialInfoView: View {
     
     @State private var moveToChecklistView: Bool = false
     
+    @State private var availableFacilities: [Facility] = []
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -60,6 +62,10 @@ struct EssentialInfoView: View {
                 ZZSMainButton(
                     action: {
                         moveToChecklistView = true
+                        Task {
+                            await searchNearbyFacilities()
+                            print(availableFacilities)
+                        }
                     },
                     text: "다음"
                 )
@@ -606,6 +612,25 @@ private extension EssentialInfoView {
         } catch {
             print("주소 변환 실패: \(error.localizedDescription)")
             print("Error occurred: \(error)")
+        }
+    }
+    
+    private func searchNearbyFacilities() async {
+        if let coordinates = selectedCoordinates {
+            do {
+                let location = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
+                let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.rawValue })
+                
+                availableFacilities = Facility.allCases.filter { facility in
+                    results[facility.rawValue] == true
+                }
+            } catch let networkError as NetworkError {
+                networkError.logError()
+            } catch {
+                print("Unexpected error: \(error)")
+            }
+        } else {
+            availableFacilities = []
         }
     }
 }
