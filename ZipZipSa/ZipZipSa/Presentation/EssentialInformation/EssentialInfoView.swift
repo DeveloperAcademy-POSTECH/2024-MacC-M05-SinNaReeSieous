@@ -14,6 +14,7 @@ struct EssentialInfoView: View {
     
     @State private var homeName: String = ""
     @State private var address: String = ""
+    @State private var isGettingAddress: Bool = false
     @State private var imageExist: Bool = false
     @State private var selectedHomeCategory: HomeCategory? = nil
     @State private var selectedHomeRentalType: HomeRentalType? = nil
@@ -150,7 +151,7 @@ private extension EssentialInfoView {
                         .foregroundStyle(Color.Text.primary)
                         .applyZZSFont(zzsFontSet: .bodyRegular)
                 } else {
-                    Text("주소를 입력해 주세요")
+                    Text(addressPlaceHolder)
                         .foregroundStyle(Color.Text.placeholder)
                         .applyZZSFont(zzsFontSet: .bodyRegular)
                 }
@@ -567,9 +568,18 @@ private extension EssentialInfoView {
         "1번째 집"
     }
     
+    var addressPlaceHolder: String {
+        if isGettingAddress {
+            return "주소를 가져오는중 ..."
+        } else {
+            return "주소를 입력해 주세요"
+        }
+    }
+    
     // MARK: - Custom Method
     
     private func fetchCurrentLocation() async {
+        isGettingAddress = true
         locationManager.requestLocationAuthorization()
         if let location = locationManager.userLocation {
             selectedCoordinates = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
@@ -577,6 +587,7 @@ private extension EssentialInfoView {
         } else {
             print("현재 위치를 가져올 수 없습니다.")
         }
+        isGettingAddress = false
     }
     
     private func reverseGeocode() async {
