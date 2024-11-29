@@ -16,7 +16,7 @@ struct ResultCardView: View {
             NavigationTitle
             
             ScrollView {
-                ShareCard(model: $model)
+                ShareCardView(model: $model)
                     .background(BackgroundForCapture)
                 
                 ResultDetailViewButton
@@ -49,7 +49,7 @@ private extension ResultCardView {
                 .onAppear {
                     DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
-                        card = ShareCard(model: $model)
+                        card = ShareCardView(model: $model)
                             .asUIImage(size: size)
                     }
                 }

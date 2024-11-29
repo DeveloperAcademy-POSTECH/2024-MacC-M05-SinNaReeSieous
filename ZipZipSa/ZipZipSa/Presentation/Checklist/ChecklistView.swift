@@ -13,6 +13,7 @@ struct ChecklistView: View {
     @State var selectedCategory: [ChecklistCategory] = [.security, .insectproof, .ventilation]
     @State var selectedSpaceType: SpaceType = .kitchen
     @State var memoText: [String] = Array(repeating: "", count: SpaceType.allCases.count)
+    @State var moveToRoomScanView: Bool = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -29,9 +30,9 @@ struct ChecklistView: View {
         .overlay(alignment: .bottom) {
             ZZSMainButton(
                 action: {
-                    getChecklistResult()
+                    moveNextStep()
                 },
-                text: ZipLiteral.Checklist.bottomButton
+                text: bottomButtonText
             )
             .padding([.horizontal, .top], 16)
             .padding(.bottom, 12)
@@ -39,13 +40,15 @@ struct ChecklistView: View {
         }
         .onAppear {
             // 오류 해결을 위한 임시방편 코드
-            selectedSpaceType = .exterior
+            selectedSpaceType = .livingRoom
         }
         .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("")
         .toolbarBackground(.hidden, for: .navigationBar)
+        .navigationDestination(isPresented: $moveToRoomScanView) {
+            RoomScanView()
+        }
     }
 }
 
@@ -137,6 +140,30 @@ private extension ChecklistView {
         }
         .sorted { $0.space.questionNumber < $1.space.questionNumber }
     }
+    
+    var bottomButtonText: String {
+        if selectedSpaceType.rawValue == 4 {
+            return "집 구조 스캔하기"
+        } else {
+            return "다음"
+        }
+    }
+    
+    // MARK: - Action
+    
+    func moveNextStep() {
+        if selectedSpaceType.rawValue == 4 {
+            getChecklistResult()
+            moveToRoomScanView = true
+        } else {
+            let nextSpaceType = SpaceType(rawValue: selectedSpaceType.rawValue + 1)
+            if let nextSpaceType {
+                selectedSpaceType = nextSpaceType
+            }
+        }
+    }
+    
+    // MARK: - Custom Method
     
     func getChecklistResult() {
         print("현재 점수")
