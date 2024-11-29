@@ -18,7 +18,6 @@ struct SettingView: View {
                     NavigationTitle
                     CategoryChange
                     CustomDivider
-                    TermsOfUse
                     PrivacyPolicy
                     Support
                     Spacer()
@@ -46,7 +45,7 @@ private extension SettingView {
     
     var CategoryChange: some View {
         NavigationLink(destination: CategoryChangeView()) {
-            VStack(spacing:12) {
+            VStack(alignment:.leading, spacing:12) {
                 HStack{
                     Text(ZipLiteral.Setting.categoryChange)
                         .foregroundStyle(Color.Text.tertiary)
@@ -68,7 +67,7 @@ private extension SettingView {
     }
     
     var CategoryCellList: some View {
-        HStack {
+        HStack (spacing: 12) {
             ForEach(Category.categories, id: \.categoryElement) { category in
                 CategoryCell(for: category)
             }
@@ -99,23 +98,6 @@ private extension SettingView {
         }
     }
     
-    var TermsOfUse: some View {
-        NavigationLink(destination: TermsOfUseView()) {
-            HStack{
-                Text(ZipLiteral.Setting.termsOfUse)
-                    .foregroundStyle(Color.Text.tertiary)
-                    .applyZZSFont(zzsFontSet: .headline)
-                
-                Spacer()
-                
-                Image(systemName: "chevron.right")
-                    .foregroundStyle(Color.Button.tertiary)
-                    .applyZZSFont(zzsFontSet: .iconBody)
-            }
-            .padding()
-        }
-    }
-    
     var PrivacyPolicy: some View {
         NavigationLink(destination: PrivacyPolicyView()) {
             HStack{
@@ -134,7 +116,7 @@ private extension SettingView {
     }
     
     var Support: some View {
-        NavigationLink(destination: SupportView()) {
+        Link(destination: URL(string: "https://jinthelemon.notion.site/c9a91e1e9a56481d9e4084575426e370")!, label: {
             HStack{
                 Text(ZipLiteral.Setting.support)
                     .foregroundStyle(Color.Text.tertiary)
@@ -147,7 +129,7 @@ private extension SettingView {
                     .applyZZSFont(zzsFontSet: .iconBody)
             }
             .padding()
-        }
+        })
     }
 }
 
