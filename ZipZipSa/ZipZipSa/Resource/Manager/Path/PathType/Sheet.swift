@@ -16,4 +16,5 @@ enum Sheet: Identifiable, Hashable {
     
     // 결과카드
     case resultCard
+    case resultDetails
 }
