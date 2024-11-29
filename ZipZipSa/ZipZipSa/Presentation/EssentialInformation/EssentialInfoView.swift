@@ -30,6 +30,8 @@ struct EssentialInfoView: View {
     @State private var selectedLocationText: String? = nil
     @State private var showAddressEnterView: Bool = false
     
+    @State private var moveToChecklistView: Bool = false
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
@@ -52,7 +54,7 @@ struct EssentialInfoView: View {
         .overlay(alignment: .bottom) {
             ZZSMainButton(
                 action: {
-                    print("Finish Essential Info")
+                    moveToChecklistView = true
                 },
                 text: "다음"
             )
@@ -60,10 +62,12 @@ struct EssentialInfoView: View {
             .padding(.bottom, 12)
             .background(Color.Background.primary)
         }
+        .navigationDestination(isPresented: $moveToChecklistView, destination: {
+            ChecklistView()
+        })
         .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("")
         .toolbarBackground(.hidden, for: .navigationBar)
     }
 }

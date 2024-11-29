@@ -9,17 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        NavigationStack {
-            NavigationLink(destination: EssentialInfoView()) {
-                VStack {
-                    Image(systemName: "globe")
-                        .imageScale(.large)
-                        .foregroundStyle(.tint)
-                    Text("Hello, world!")
-                }
-                .padding()
-            }
-        }
+        OnboardingView()
     }
 }
 

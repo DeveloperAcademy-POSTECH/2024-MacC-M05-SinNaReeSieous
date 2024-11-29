@@ -13,6 +13,7 @@ struct ChecklistView: View {
     @State var selectedCategory: [ChecklistCategory] = [.security, .insectproof, .ventilation]
     @State var selectedSpaceType: SpaceType = .kitchen
     @State var memoText: [String] = Array(repeating: "", count: SpaceType.allCases.count)
+    @State var moveToRoomScanView: Bool = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -30,6 +31,7 @@ struct ChecklistView: View {
             ZZSMainButton(
                 action: {
                     getChecklistResult()
+                    moveToRoomScanView = true
                 },
                 text: ZipLiteral.Checklist.bottomButton
             )
@@ -44,8 +46,10 @@ struct ChecklistView: View {
         .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("")
         .toolbarBackground(.hidden, for: .navigationBar)
+        .navigationDestination(isPresented: $moveToRoomScanView) {
+            RoomScanView()
+        }
     }
 }
 
