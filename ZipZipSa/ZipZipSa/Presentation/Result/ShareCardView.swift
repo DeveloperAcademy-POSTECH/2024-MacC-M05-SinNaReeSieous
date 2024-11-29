@@ -93,9 +93,15 @@ private extension ShareCardView {
                     .scaledToFit()
                     .frame(height: 140)
             } else {
-                Text("모델이 없습니다.")
-                    .font(.headline)
-                    .foregroundColor(.red)
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.Background.disabled)
+                    .frame(height: 140)
+                    .overlay(alignment: .center) {
+                        Text("집 구조 등록으로 내게 꼭 맞는 집을\n더 쉽게 찾아보세요")
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(Color.Text.tertiary)
+                            .applyZZSFont(zzsFontSet: .subheadlineRegular)
+                    }
             }
         }
         .padding(16)
