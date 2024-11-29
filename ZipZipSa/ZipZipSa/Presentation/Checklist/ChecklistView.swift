@@ -13,7 +13,6 @@ struct ChecklistView: View {
     @State var selectedCategory: [ChecklistCategory] = [.security, .insectproof, .ventilation]
     @State var selectedSpaceType: SpaceType = .kitchen
     @State var memoText: [String] = Array(repeating: "", count: SpaceType.allCases.count)
-    @State var showScanView: Bool = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -30,7 +29,7 @@ struct ChecklistView: View {
         .overlay(alignment: .bottom) {
             ZZSMainButton(
                 action: {
-                    showScanView = true
+                    getChecklistResult()
                 },
                 text: ZipLiteral.Checklist.bottomButton
             )
@@ -38,9 +37,6 @@ struct ChecklistView: View {
             .padding(.bottom, 12)
             .background(Color.Background.primary)
         }
-        .navigationDestination(isPresented: $showScanView, destination: {
-            RoomScanView()
-        })
         .onAppear {
             // 오류 해결을 위한 임시방편 코드
             selectedSpaceType = .exterior
