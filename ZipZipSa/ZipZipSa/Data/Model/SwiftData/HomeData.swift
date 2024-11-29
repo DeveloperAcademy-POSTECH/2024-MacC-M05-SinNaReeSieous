@@ -26,6 +26,7 @@ final class HomeData {
     var selectedImageData: Data?
     
     var location: LocationData?
+    var selectedLocationText: String?
     
     init(
         homeName: String = "",
@@ -37,7 +38,8 @@ final class HomeData {
         selectedHomeDirection: String = "",
         rentalFee: [RentalFeeData] = [RentalFeeData(), RentalFeeData(), RentalFeeData(), RentalFeeData()],
         selectedImageData: Data? = nil,
-        location: LocationData? = nil
+        location: LocationData? = nil,
+        selectedLocationText: String? = nil
     ) {
         self.homeName = homeName
         self.address = address
@@ -49,11 +51,18 @@ final class HomeData {
         self.rentalFee = rentalFee
         self.selectedImageData = selectedImageData
         self.location = location
+        self.selectedLocationText = selectedLocationText
     }
 }
 
 extension HomeData {
-    
+    var homeImage: UIImage? {
+        if let data = selectedImageData,
+           let image = UIImage(data: data) {
+            return image
+        }
+        return nil
+    }
 }
 
 @Model
