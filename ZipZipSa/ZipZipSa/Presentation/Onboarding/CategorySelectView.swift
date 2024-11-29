@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CategorySelectView: View {
+    @Environment(\.modelContext) private var modelContext
     @AppStorage("firstLaunch") var firstLaunch: Bool = true
+    
     @State private var totalTime: Int = 10
     @State private var currentMessage: String = ""
     @State private var selectedCategory: Set<ChecklistCategory> = []
@@ -39,13 +42,11 @@ struct CategorySelectView: View {
 private extension CategorySelectView {
     
     var ZipZipSaTip: some View {
-        HStack(alignment: .bottom, spacing: 0) {
+        HStack(alignment: .bottom, spacing: 16) {
             Image("basicYongboogiHeadColor")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 62, height: 62)
-                .padding(.leading, 8)
-                .padding(.trailing, 18)
             
             Group {
                 if currentMessage.isEmpty {
@@ -108,6 +109,11 @@ private extension CategorySelectView {
     // MARK: - Action
     
     func endOnboarding() {
+        let checklistCategoryData = selectedCategory.map {
+            ChecklistCategoryData(name: $0.text)
+        }
+        
+        modelContext.insert(User(favoriteCategories: checklistCategoryData))
         firstLaunch = false
     }
 }

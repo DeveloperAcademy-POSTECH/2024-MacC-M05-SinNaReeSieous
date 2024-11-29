@@ -10,17 +10,20 @@ import SwiftData
 
 @Model
 final class User {
-    var favoriteCategories: [String]
+    @Relationship(deleteRule: .cascade)
+    var favoriteCategories: [ChecklistCategoryData]
     
-    init(favoriteCategories: [String]) {
+    init(favoriteCategories: [ChecklistCategoryData] = []) {
         self.favoriteCategories = favoriteCategories
     }
-    
+}
+
+extension User {
     var categories: [ChecklistCategory] {
         var categories: [ChecklistCategory] = []
         
         for favoriteCategory in favoriteCategories {
-            if let category = ChecklistCategory(rawValue: favoriteCategory) {
+            if let category = ChecklistCategory(rawValue: favoriteCategory.name) {
                 categories.append(category)
             }
         }
