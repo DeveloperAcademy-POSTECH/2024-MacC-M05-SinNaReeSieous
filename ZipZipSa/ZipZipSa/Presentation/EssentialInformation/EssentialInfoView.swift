@@ -79,11 +79,6 @@ struct EssentialInfoView: View {
             .dismissKeyboard()
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    CloseButton
-                }
-            }
         }
     }
 }
@@ -555,16 +550,6 @@ private extension EssentialInfoView {
         Text(text)
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .bodyBold)
-    }
-    
-    var CloseButton: some View {
-        Button {
-            presentationMode.wrappedValue.dismiss()
-        } label: {
-            Image(systemName: "xmark")
-                .foregroundStyle(Color.Icon.tertiary)
-                .applyZZSFont(zzsFontSet: .bodyBold)
-        }
     }
     
     // MARK: - Computed Values
