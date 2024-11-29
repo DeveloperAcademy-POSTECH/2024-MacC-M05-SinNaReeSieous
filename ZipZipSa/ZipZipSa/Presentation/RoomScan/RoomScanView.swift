@@ -12,7 +12,7 @@ struct RoomScanView: View {
     @StateObject private var roomManager = RoomPlanManager()
     @State private var doneScanning: Bool = false
     @State private var capturedView: UIImage?
-    @State private var model: UIImage?
+    @Binding var model: UIImage?
     @State private var showResultSheet: Bool = false
     @State private var isProcessing: Bool = false
     

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct RoomScanInfoView: View {
     @State var showAlert: Bool = false
+    @State var showResultCard: Bool = false
+    @Binding var model: UIImage?
     
     var body: some View {
         ZStack {
@@ -28,11 +30,14 @@ struct RoomScanInfoView: View {
                 .tint(.blue)
             
             Button(ZipLiteral.RoomScanInfo.skip, role: .destructive) {
-                // TODO: 모델 이미지가 없는 상태로 결과지 시트 띄우기
+                showResultCard = true
             }
         } message: {
             Text(ZipLiteral.Alert.skipAlertMessage)
                 .multilineTextAlignment(.center)
+        }
+        .sheet(isPresented: $showResultCard) {
+            ResultCardView(model: $model)
         }
     }
 }
@@ -73,7 +78,7 @@ private extension RoomScanInfoView {
     }
     
     var StartScanButton: some View {
-        NavigationLink(destination: RoomScanView()) {
+        NavigationLink(destination: RoomScanView(model: $model)) {
             withAnimation(.easeOut(duration: 1)) {
                 RoundedRectangle(cornerRadius: 16)
                     .foregroundStyle(Color.Button.primaryBlue)
