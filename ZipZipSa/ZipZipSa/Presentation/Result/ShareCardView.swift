@@ -12,6 +12,7 @@ struct ShareCardView: View {
     
     let columnLayout = Array(repeating: GridItem(), count: 3)
     let criticalTags: [String] = ["바퀴위험", "곰팡이 위험", "담배 위험", "사생활 위험", "소음 위험", "누수 위험", "수압 안좋음", "배수 안좋음", "온수 잘 안 나옴"]
+    let availableFacility: [Facility] = []
     
     var body: some View {
         VStack {
@@ -125,14 +126,25 @@ private extension ShareCardView {
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
             
-            HStack {
-                ForEach(Facility.allCases, id: \.self) { facility in
-                    Image(systemName: facility.icon)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 29, height: 29)
+            if !availableFacility.isEmpty {
+                HStack {
+                    ForEach(availableFacility, id: \.self) { facility in
+                        Image(systemName: facility.icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 29, height: 29)
+                    }
+                    Spacer()
                 }
-                Spacer()
+            } else {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.Background.disabled)
+                    .frame(height: 29)
+                    .overlay(alignment: .center) {
+                        Text("이 집 주변에는 시설이 없어요")
+                            .foregroundStyle(Color.Text.tertiary)
+                            .applyZZSFont(zzsFontSet: .subheadlineRegular)
+                    }
             }
         }
         .padding(16)
