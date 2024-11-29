@@ -45,7 +45,8 @@ struct DoneScanningView: View {
         }
         .alert("경고", isPresented: $showErrorAlert) {
             Button("저장하기", role: .destructive) {
-                // TODO: 집 모델 = nil인 상태로 결과지 띄우기
+                isProcessing = false
+                showResultSheet = true
             }
             
             Button("다시찍기", role: .cancel) {

@@ -14,6 +14,7 @@ struct ChecklistView: View {
     @State var selectedCategory: [ChecklistCategory] = [.security, .insectproof, .ventilation]
     @State var selectedSpaceType: SpaceType = .kitchen
     @State var memoText: [String] = Array(repeating: "", count: SpaceType.allCases.count)
+    @State private var model: UIImage? = nil
     @State private var moveToRoomScanInfoView: Bool = false
     @State private var moveToUnsupportedDeviceView: Bool = false
     
@@ -49,10 +50,10 @@ struct ChecklistView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
         .navigationDestination(isPresented: $moveToRoomScanInfoView) {
-            RoomScanInfoView()
+            RoomScanInfoView(model: $model)
         }
         .navigationDestination(isPresented: $moveToUnsupportedDeviceView) {
-            UnsupportedDeviceView()
+            UnsupportedDeviceView(model: $model)
         }
     }
 }
