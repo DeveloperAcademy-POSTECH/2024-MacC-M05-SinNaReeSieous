@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CategorySelectView: View {
+    @AppStorage("firstLaunch") var firstLaunch: Bool = true
     @State private var totalTime: Int = 10
     @State private var currentMessage: String = ""
     
@@ -91,7 +92,9 @@ private extension CategorySelectView {
     }
     
     var BottomButton: some View {
-        NavigationLink(destination: FavoriteAddressEnterView()) {
+        Button {
+            firstLaunch = false
+        } label: {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.Button.primaryBlue)
                 .frame(width:UIScreen.screenSize.width - 32, height: 53)
