@@ -22,6 +22,7 @@ struct OnboardingView: View {
                     GreetingYongboogiImage
                     Spacer().frame(height: UIScreen.screenSize.height/812*160)
                     ContinueAndStartButton
+                        .padding(.bottom, UIScreen.isSe ? 30 : 0)
                 }
             }
         }
