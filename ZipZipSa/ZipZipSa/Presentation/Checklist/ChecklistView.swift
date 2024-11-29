@@ -30,10 +30,17 @@ struct ChecklistView: View {
         .overlay(alignment: .bottom) {
             ZZSMainButton(
                 action: {
-                    getChecklistResult()
-                    moveToRoomScanView = true
+                    if selectedSpaceType.rawValue == 4 {
+                        getChecklistResult()
+                        moveToRoomScanView = true
+                    } else {
+                        let nextSpaceType = SpaceType(rawValue: selectedSpaceType.rawValue + 1)
+                        if let nextSpaceType {
+                            selectedSpaceType = nextSpaceType
+                        }
+                    }
                 },
-                text: ZipLiteral.Checklist.bottomButton
+                text: bottomButtonText
             )
             .padding([.horizontal, .top], 16)
             .padding(.bottom, 12)
@@ -41,7 +48,7 @@ struct ChecklistView: View {
         }
         .onAppear {
             // 오류 해결을 위한 임시방편 코드
-            selectedSpaceType = .exterior
+            selectedSpaceType = .livingRoom
         }
         .background(Color.Background.primary)
         .dismissKeyboard()
@@ -140,6 +147,14 @@ private extension ChecklistView {
             $0.space.type == selectedSpaceType
         }
         .sorted { $0.space.questionNumber < $1.space.questionNumber }
+    }
+    
+    var bottomButtonText: String {
+        if selectedSpaceType.rawValue == 4 {
+            return "집 구조 스캔하기"
+        } else {
+            return "다음"
+        }
     }
     
     func getChecklistResult() {

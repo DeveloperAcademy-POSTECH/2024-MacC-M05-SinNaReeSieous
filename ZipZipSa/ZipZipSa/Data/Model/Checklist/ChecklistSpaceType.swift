@@ -8,11 +8,11 @@
 import Foundation
 
 enum SpaceType: Int, CaseIterable {
-    case exterior = 0
-    case livingRoom
+    case livingRoom = 0
     case window
     case kitchen
     case toilet
+    case exterior
     
     var text: String {
         switch self {
