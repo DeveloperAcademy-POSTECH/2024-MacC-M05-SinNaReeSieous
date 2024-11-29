@@ -9,7 +9,7 @@ import SwiftUI
 import RoomPlan
 import AVFoundation
 
-class RoomPlanManager: RoomCaptureViewDelegate {
+class RoomPlanManager: RoomCaptureViewDelegate, ObservableObject {
     func encode(with coder: NSCoder) {
         fatalError("Not Needed")
     }
@@ -18,13 +18,11 @@ class RoomPlanManager: RoomCaptureViewDelegate {
         fatalError("Not Needed")
     }
     
-    static var shared = RoomPlanManager()
-    
     var captureView: RoomCaptureView
     var sessionConfig: RoomCaptureSession.Configuration
     var finalResult: CapturedRoom?
     
-    private init() {
+    init() {
         captureView = RoomCaptureView(frame: .zero)
         sessionConfig = RoomCaptureSession.Configuration()
         captureView.delegate = self
@@ -53,14 +51,13 @@ class RoomPlanManager: RoomCaptureViewDelegate {
 
 // UIKit 뷰를 SwiftUI에서 보여지도록 UIViewRepresentable 프로토콜을 사용
 struct RoomCaptureViewRepresentable : UIViewRepresentable {
-    //뷰를 생성하고 초기화하는 함수
+    let manager: RoomPlanManager
+    
     func makeUIView(context: Context) -> RoomCaptureView {
-        RoomPlanManager.shared.captureView
+        manager.captureView
     }
     
-    func updateUIView(_ uiView: RoomCaptureView, context: Context) {
-        
-    }
+    func updateUIView(_ uiView: RoomCaptureView, context: Context) { }
 }
 
 struct CameraViewRepresentable: UIViewRepresentable {

@@ -10,7 +10,6 @@ import PhotosUI
 
 struct EssentialInfoView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @Binding var showHomeHuntSheet: Bool
     
     @State private var homeName: String = ""
     @State private var address: String = ""
@@ -36,6 +35,8 @@ struct EssentialInfoView: View {
     
     @State private var moveToChecklistView: Bool = false
     
+    @State private var availableFacilities: [Facility] = []
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -60,6 +61,10 @@ struct EssentialInfoView: View {
                 ZZSMainButton(
                     action: {
                         moveToChecklistView = true
+                        Task {
+                            await searchNearbyFacilities()
+                            print(availableFacilities)
+                        }
                     },
                     text: "다음"
                 )
@@ -74,11 +79,6 @@ struct EssentialInfoView: View {
             .dismissKeyboard()
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    CloseButton
-                }
-            }
         }
     }
 }
@@ -552,16 +552,6 @@ private extension EssentialInfoView {
             .applyZZSFont(zzsFontSet: .bodyBold)
     }
     
-    var CloseButton: some View {
-        Button {
-            showHomeHuntSheet = false
-        } label: {
-            Image(systemName: "xmark")
-                .foregroundStyle(Color.Icon.tertiary)
-                .applyZZSFont(zzsFontSet: .bodyBold)
-        }
-    }
-    
     // MARK: - Computed Values
     
     var basicHouseName: String {
@@ -608,6 +598,25 @@ private extension EssentialInfoView {
             print("Error occurred: \(error)")
         }
     }
+    
+    private func searchNearbyFacilities() async {
+        if let coordinates = selectedCoordinates {
+            do {
+                let location = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
+                let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.rawValue })
+                
+                availableFacilities = Facility.allCases.filter { facility in
+                    results[facility.rawValue] == true
+                }
+            } catch let networkError as NetworkError {
+                networkError.logError()
+            } catch {
+                print("Unexpected error: \(error)")
+            }
+        } else {
+            availableFacilities = []
+        }
+    }
 }
 
 enum EssentialInfoField {
@@ -618,5 +627,5 @@ enum EssentialInfoField {
 
 
 #Preview {
-    EssentialInfoView(showHomeHuntSheet: .constant(true))
+    EssentialInfoView()
 }

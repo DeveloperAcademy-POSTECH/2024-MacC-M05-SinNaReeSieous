@@ -10,12 +10,15 @@ import Vision
 import CoreImage.CIFilterBuiltins
 
 struct DoneScanningView: View {
+    @Environment(\.dismiss) var dismiss
+    @State var showErrorAlert: Bool = false
+    @State var showReScanAlert: Bool = false
     @Binding var capturedView: UIImage?
     @Binding var model: UIImage?
     @Binding var isProcessing: Bool
     @Binding var showResultSheet: Bool
     @Binding var doneScanning: Bool
-    let roomController = RoomPlanManager.shared
+    let roomManager: RoomPlanManager
     
     var body: some View {
         VStack {
@@ -27,6 +30,32 @@ struct DoneScanningView: View {
             }
             .padding(.horizontal, 16)
             .padding(.bottom, 24)
+        }
+        .alert("경고", isPresented: $showReScanAlert) {
+            Button("다시찍기", role: .destructive) {
+                doneScanning = false
+                isProcessing = false
+                dismiss()
+            }
+            
+            Button("취소", role: .cancel) { }
+        } message: {
+            Text("지금까지 저장된 스캔 데이터가 삭제됩니다.\n다시 찍으시겠습니까?")
+                .multilineTextAlignment(.center)
+        }
+        .alert("경고", isPresented: $showErrorAlert) {
+            Button("저장하기", role: .destructive) {
+                // TODO: 집 모델 = nil인 상태로 결과지 띄우기
+            }
+            
+            Button("다시찍기", role: .cancel) {
+                doneScanning = false
+                isProcessing = false
+                dismiss()
+            }
+        } message: {
+            Text("집 모델이 없습니다.\n모델이 없는 상태로 저장하시겠습니까?")
+                .multilineTextAlignment(.center)
         }
     }
 }
@@ -44,8 +73,7 @@ private extension DoneScanningView {
     
     var ReScanButton: some View {
         Button {
-            doneScanning = false
-            roomController.startSession()
+            showReScanAlert = true
         } label: {
             RoundedRectangle(cornerRadius: 16)
                 .foregroundStyle(Color.Button.secondaryBlue)
@@ -108,6 +136,8 @@ private extension DoneScanningView {
                 print("Failed to create mask image")
                 DispatchQueue.main.async {
                 }
+                capturedView = nil
+                showErrorAlert = true
                 return
             }
             let outputImage = apply(mask: maskImage, to: inputImage)

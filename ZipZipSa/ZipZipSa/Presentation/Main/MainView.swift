@@ -14,7 +14,6 @@ struct MainView: View {
     ]  // 데이터 모델을 위한 배열
     @State private var currentTip = ZipZipSaTip.getRandomText()
     @State private var timer: Timer?
-    @State private var showHomeHuntSheet: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -40,9 +39,6 @@ struct MainView: View {
         }
         .accentColor(Color.Button.tertiary)
         .navigationBarBackButtonHidden()
-        .fullScreenCover(isPresented: $showHomeHuntSheet) {
-            EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
-        }
     }
 }
 
@@ -136,9 +132,7 @@ private extension MainView {
     }
     
     var HomeHuntButton: some View {
-        Button {
-            showHomeHuntSheet = true
-        } label: {
+        NavigationLink(destination: EssentialInfoView()){
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.Button.secondaryYellow)
                 .frame(height: ((UIScreen.screenSize.width - 43) / 2) / 166 * 210)

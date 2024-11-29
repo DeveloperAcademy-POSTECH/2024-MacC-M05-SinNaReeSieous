@@ -13,8 +13,6 @@ struct HomeListView: View {
         ViewedHome(image: "mainPic_sample", title: "두 번째 집", address: "서울시 강동구 동남로78길 48 (고덕1동)", rentType: "전세")
     ]  // 데이터 모델을 위한 배열
     
-    @State private var showHomeHuntSheet = false
-    
     var body: some View {
         ZStack{
             Color.Background.primary
@@ -22,8 +20,8 @@ struct HomeListView: View {
             
             VStack {
                 TopBar
-                Spacer().frame(height: UIScreen.screenSize.height/812*48)
                 if homeList.isEmpty {
+                    Spacer().frame(height: UIScreen.screenSize.height/812*48)
                     NoHome
                 } else {
                     ScrollView {
@@ -34,9 +32,6 @@ struct HomeListView: View {
             }
         }
         .accentColor(Color.Button.tertiary)
-        .fullScreenCover(isPresented: $showHomeHuntSheet) {
-            EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
-        }
     }
 }
 
@@ -77,7 +72,7 @@ private extension HomeListView {
     
     var GoHomeHuntButton: some View {
         Button{
-            showHomeHuntSheet = true
+           
         } label: {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.Button.primaryBlue)

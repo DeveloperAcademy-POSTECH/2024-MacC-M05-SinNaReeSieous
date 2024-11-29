@@ -6,11 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CategorySelectView: View {
+    @Environment(\.modelContext) private var modelContext
     @AppStorage("firstLaunch") var firstLaunch: Bool = true
+    
     @State private var totalTime: Int = 10
     @State private var currentMessage: String = ""
+    @State private var selectedCategory: Set<ChecklistCategory> = []
     
     var body: some View {
         NavigationStack{
@@ -21,7 +25,10 @@ struct CategorySelectView: View {
                     ZipZipSaTip
                     RequiredTime
                     Spacer()
-                    CategoryView(totalTime: $totalTime, currentMessage: $currentMessage)
+                    CategoryView(
+                        totalTime: $totalTime,
+                        currentMessage: $currentMessage,
+                        selectedCategories: $selectedCategory)
                     Spacer()
                     BottomButton
                 }
