@@ -17,14 +17,13 @@ struct CategorySelectView: View {
             ZStack {
                 Color.Background.primary
                     .ignoresSafeArea()
-                VStack  {
+                VStack(spacing: 0) {
                     ZipZipSaTip
                     RequiredTime
                     CategoryView(totalTime: $totalTime, currentMessage: $currentMessage)
                     BottomButton
                 }
             }
-            .accentColor(Color.Button.tertiary)
             .navigationBarBackButtonHidden()
         }
     }
@@ -51,7 +50,7 @@ private extension CategorySelectView {
             .applyZZSFont(zzsFontSet: .subheadlineBold)
             .padding(.horizontal, 8)
             .padding(.vertical, 6)
-            .frame(width: UIScreen.screenSize.width / 375 * 255, alignment: .bottomLeading)
+            .frame(width: UIScreen.screenSize.width - 58, alignment: .bottomLeading)
             .background {
                 GeometryReader { geometry in
                     UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(
@@ -62,7 +61,7 @@ private extension CategorySelectView {
                     .stroke(.black, lineWidth: 1)
                     .fill(Color.Layer.first)
                     .frame(
-                        width: UIScreen.screenSize.width / 375 * 255,
+                        width: UIScreen.screenSize.width - 58,
                         height: geometry.size.height
                     )
                 }

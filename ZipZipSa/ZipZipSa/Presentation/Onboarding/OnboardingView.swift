@@ -19,11 +19,9 @@ struct OnboardingView: View {
                 VStack(spacing: 0){
                     MessageBubble
                     GreetingYongboogiImage
-                    Spacer()
                     ContinueAndStartButton
                 }
             }
-            .accentColor(Color.Button.tertiary)
         }
     }
 }
@@ -43,7 +41,7 @@ private extension OnboardingView {
                         .stroke(.black, lineWidth: 1)
                         .frame(width: UIScreen.screenSize.width - 48)
                 }
-                .position(x: geometry.size.width / 2, y: geometry.size.height / 812 * 169) // 중심축 고정
+                .position(x: geometry.size.width / 2, y: geometry.size.height / 812 * 300) // 중심축 고정
         }
         .frame(width: UIScreen.screenSize.width - 32, height: UIScreen.screenSize.height / 812 * 100)
         .accentColor(Color.Button.tertiary)
@@ -52,7 +50,6 @@ private extension OnboardingView {
     
     var GreetingYongboogiImage: some View {
         Image(onboardingImages[currentPage])
-            .padding(.top, 28)
     }
     
     var ContinueAndStartButton: some View {
@@ -60,7 +57,7 @@ private extension OnboardingView {
             VStack {
                 if currentPage == ZipLiteral.Onboarding.onboardingGreetings.count - 1 {
                     NavigationLink(destination: CategorySelectView()) {
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: 16)
                             .fill(Color.Button.primaryBlue)
                             .frame(width: UIScreen.screenSize.width - 32, height: 53)
                             .overlay {
@@ -75,7 +72,7 @@ private extension OnboardingView {
                             currentPage += 1
                         }
                     } label: {
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: 16)
                             .fill(Color.Button.primaryBlue)
                             .frame(width: UIScreen.screenSize.width - 32, height: 53)
                             .overlay {
@@ -86,7 +83,8 @@ private extension OnboardingView {
                     }
                 }
             }
-            .padding(.bottom, 32)
+            .padding(.bottom, 12)
+            .padding(.top, 160)
         }
     }
 }
