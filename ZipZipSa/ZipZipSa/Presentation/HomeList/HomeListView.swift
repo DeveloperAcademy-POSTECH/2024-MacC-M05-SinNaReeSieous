@@ -9,8 +9,8 @@ import SwiftUI
 
 struct HomeListView: View {
     @State private var homeList: [ViewedHome] = [
-                ViewedHome(image: "mainPic_sample", title: "첫 번째 집", address: "부산광역시 강서구 녹산산단 382로 10~29번지 (송정동)"),
-                ViewedHome(image: "mainPic_sample", title: "두 번째 집", address: "서울시 강동구 동남로78길 48 (고덕1동)")
+        ViewedHome(image: "mainPic_sample", title: "첫 번째 집", address: "부산광역시 강서구 녹산산단 382로 10~29번지 (송정동)", rentType: "월세"),
+        ViewedHome(image: "mainPic_sample", title: "두 번째 집", address: "서울시 강동구 동남로78길 48 (고덕1동)", rentType: "전세")
     ]  // 데이터 모델을 위한 배열
     
     var body: some View {
@@ -20,8 +20,8 @@ struct HomeListView: View {
             
             VStack {
                 TopBar
-                
                 if homeList.isEmpty {
+                    Spacer().frame(height: UIScreen.screenSize.height/812*48)
                     NoHome
                 } else {
                     ScrollView {
@@ -41,19 +41,20 @@ private extension HomeListView {
         VStack {
             NoHomeImage
             NoHomeText
-            Spacer()
+            Spacer().frame(height: UIScreen.screenSize.height/812*168)
             GoHomeHuntButton
         }
     }
     
     var TopBar: some View {
         HStack {
-            Text("내가 본 집")
+            Text(ZipLiteral.HomeList.myViewedHome)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .largeTitle)
             Spacer()
         }
         .padding(.leading, 16)
+        .padding(.bottom, 12)
     }
     
     var NoHomeImage: some View {
@@ -62,7 +63,7 @@ private extension HomeListView {
     }
     
     var NoHomeText: some View {
-        Text("아직 내가 둘러본 집이 없어요.\n집을 보러 가서 집을 추가해 보세요.")
+        Text(ZipLiteral.HomeList.noViewedHome)
             .foregroundStyle(Color.Text.tertiary)
             .multilineTextAlignment(.center)
             .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -70,17 +71,19 @@ private extension HomeListView {
     }
     
     var GoHomeHuntButton: some View {
-        NavigationLink(destination: EssentialInfoView()){
-            RoundedRectangle(cornerRadius: 12)
+        Button{
+           
+        } label: {
+            RoundedRectangle(cornerRadius: 16)
                 .fill(Color.Button.primaryBlue)
-                .frame(width:UIScreen.screenSize.width - 32, height: 44)
+                .frame(width:UIScreen.screenSize.width - 32, height: 53)
                 .overlay {
-                    Text("용북이와 함께 집 보러 가기")
+                    Text(ZipLiteral.HomeList.goHomeHuntWithYongboogi)
                         .applyZZSFont(zzsFontSet:.bodyBold)
                         .foregroundStyle(Color.Text.primary)
                 }
         }
-        .padding(.bottom, 32)
+        .padding(.bottom, 12)
     }
     
     var ViewedHomeList: some View {

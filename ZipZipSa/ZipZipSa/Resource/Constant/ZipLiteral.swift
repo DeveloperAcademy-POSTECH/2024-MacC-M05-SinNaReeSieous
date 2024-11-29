@@ -104,6 +104,12 @@ enum ZipLiteral {
         static let done: String = "완료"
     }
     
+    enum HomeList{
+        static let myViewedHome: String = "내가 본 집"
+        static let noViewedHome: String = "아직 내가 둘러본 집이 없어요.\n집을 보러 가서 집을 추가해 보세요."
+        static let goHomeHuntWithYongboogi: String = "용북이와 함께 집 보러 가기"
+    }
+    
     enum Setting{
         static let setting: String = "설정"
         static let categoryChange: String = "카테고리"

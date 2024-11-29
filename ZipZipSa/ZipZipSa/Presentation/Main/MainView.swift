@@ -9,8 +9,8 @@ import SwiftUI
 
 struct MainView: View {
     @State private var homeList: [ViewedHome] = [
-        ViewedHome(image: "mainPic_sample", title: "첫 번째 집", address: "부산광역시 강서구 녹산산단 382로 10~29번지 (송정동)"),
-        ViewedHome(image: "mainPic_sample", title: "두 번째 집", address: "서울시 강동구 동남로78길 48 (고덕1동)")
+        ViewedHome(image: "mainPic_sample", title: "첫 번째 집", address: "부산광역시 강서구 녹산산단 382로 10~29번지 (송정동)", rentType: "월세"),
+        ViewedHome(image: "mainPic_sample", title: "두 번째 집", address: "서울시 강동구 동남로78길 48 (고덕1동)", rentType: "전세")
     ]  // 데이터 모델을 위한 배열
     @State private var currentTip = ZipZipSaTip.getRandomText()
     @State private var timer: Timer?
@@ -193,8 +193,8 @@ private extension MainView {
     
     var RecentlyViewedHomeList: some View {
         LazyHGrid(rows: [GridItem(.fixed(UIScreen.screenSize.height / 812 * 208))], spacing: 20) {
-            ForEach(Array(homeList.suffix(3).enumerated()), id: \.element.id) { index, home in
-                RecentlyViewedHomeCellView(home: $homeList[homeList.count - min(3, homeList.count) + index])
+            ForEach(Array(homeList.suffix(3).reversed().enumerated()), id: \.element.id) { index, home in
+                RecentlyViewedHomeCellView(home: $homeList[homeList.count - 1 - index])
             }
         }
         .frame(height: UIScreen.screenSize.height / 812 * 208)
@@ -217,7 +217,6 @@ private extension MainView {
         .padding(.bottom, 8)
     }
 }
-
 
 #Preview {
     MainView()
