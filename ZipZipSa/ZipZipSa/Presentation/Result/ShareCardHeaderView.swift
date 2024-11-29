@@ -8,37 +8,63 @@
 import SwiftUI
 
 struct ShareCardHeaderView: View {
+    @Binding var mainPicture: UIImage?
+    
     var body: some View {
-        let image = Image(uiImage: UIImage(resource: .mainPicSample))
-            .resizable()
-            .scaledToFill()
-        
-        return image
-            .frame(height: 340)
-            .overlay(Color.black.opacity(0.3))
-            .overlay {
-                VStack(alignment: .leading) {
-                    HStack(alignment: .top) {
-                        RoomNickname
-                        Spacer()
-                        RoomType
-                    }
-                    .padding(.top, 8)
-                    
-                    RoomAddress
-                    
-                    Spacer()
-                    
-                    RoomTags
-                }
-                .padding(8)
-            }
+        content
             .clipShape(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 16, topTrailing: 16)))
+    }
+    
+    @ViewBuilder
+    private var content: some View {
+        if let image = mainPicture {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+                .frame(height: 340)
+                .overlay(Color.black.opacity(0.3))
+                .overlay(contentOverlay)
+        } else {
+            Rectangle()
+                .fill(Color.Button.tertiary)
+                .frame(height: 340)
+                .overlay(contentOverlay)
+        }
     }
 }
 
 private extension ShareCardHeaderView {
     // MARK: - View
+    
+    private var contentOverlay: some View {
+        VStack() {
+            HStack(alignment: .top) {
+                RoomNickname
+                Spacer()
+                RoomType
+            }
+            .padding(.top, 8)
+            
+            HStack {
+                RoomAddress
+                Spacer()
+            }
+            
+            Spacer()
+            
+            if mainPicture == nil {
+                Image(.charResultCard)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 130)
+                    .padding(.top, 14)
+                    .padding(.bottom, 54)
+            }
+            
+            RoomTags
+        }
+        .padding(8)
+    }
     
     var RoomNickname: some View {
         Text("세 번째 집")

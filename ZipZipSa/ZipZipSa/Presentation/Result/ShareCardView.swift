@@ -9,13 +9,15 @@ import SwiftUI
 
 struct ShareCardView: View {
     @Binding var model: UIImage?
+    @Binding var mainPicture: UIImage?
     
     let columnLayout = Array(repeating: GridItem(), count: 3)
     let criticalTags: [String] = ["바퀴위험", "곰팡이 위험", "담배 위험", "사생활 위험", "소음 위험", "누수 위험", "수압 안좋음", "배수 안좋음", "온수 잘 안 나옴"]
+    let availableFacility: [Facility] = []
     
     var body: some View {
         VStack {
-            ShareCardHeaderView()
+            ShareCardHeaderView(mainPicture: $mainPicture)
             
             ChecklistResult
             ZZSSperator()
@@ -67,10 +69,21 @@ private extension ShareCardView {
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
             
-            LazyVGrid(columns: columnLayout) {
-                ForEach(criticalTags, id: \.self) { tag in
-                    ZZSTag(text: tag)
+            if !criticalTags.isEmpty {
+                LazyVGrid(columns: columnLayout) {
+                    ForEach(criticalTags, id: \.self) { tag in
+                        ZZSTag(text: tag)
+                    }
                 }
+            } else {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.Button.secondaryBlue)
+                    .frame(height: 100)
+                    .overlay(alignment: .center) {
+                        Text("우와, 여기는 안전한 곳이에요!")
+                            .foregroundStyle(Color.Text.secondary)
+                            .applyZZSFont(zzsFontSet: .subheadlineRegular)
+                    }
             }
         }
         .padding(16)
@@ -93,9 +106,15 @@ private extension ShareCardView {
                     .scaledToFit()
                     .frame(height: 140)
             } else {
-                Text("모델이 없습니다.")
-                    .font(.headline)
-                    .foregroundColor(.red)
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.Background.disabled)
+                    .frame(height: 140)
+                    .overlay(alignment: .center) {
+                        Text("집 구조 등록으로 내게 꼭 맞는 집을\n더 쉽게 찾아보세요")
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(Color.Text.tertiary)
+                            .applyZZSFont(zzsFontSet: .subheadlineRegular)
+                    }
             }
         }
         .padding(16)
@@ -108,14 +127,25 @@ private extension ShareCardView {
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
             
-            HStack {
-                ForEach(Facility.allCases, id: \.self) { facility in
-                    Image(systemName: facility.icon)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 29, height: 29)
+            if !availableFacility.isEmpty {
+                HStack {
+                    ForEach(availableFacility, id: \.self) { facility in
+                        Image(systemName: facility.icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 29, height: 29)
+                    }
+                    Spacer()
                 }
-                Spacer()
+            } else {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.Background.disabled)
+                    .frame(height: 29)
+                    .overlay(alignment: .center) {
+                        Text("이 집 주변에는 시설이 없어요")
+                            .foregroundStyle(Color.Text.tertiary)
+                            .applyZZSFont(zzsFontSet: .subheadlineRegular)
+                    }
             }
         }
         .padding(16)
