@@ -9,6 +9,9 @@ import SwiftUI
 import PhotosUI
 
 struct EssentialInfoView: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Binding var showHomeHuntSheet: Bool
+    
     @State private var homeName: String = ""
     @State private var address: String = ""
     @State private var imageExist: Bool = false
@@ -33,42 +36,49 @@ struct EssentialInfoView: View {
     @State private var moveToChecklistView: Bool = false
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 0) {
-                NavigationTitle
-                NameSection
-                AddressSection
-                HomePhotoSection
-                HomeCategorySection
-                HomeRentalTypeSection
-                if selectedHomeRentalType != nil {
-                    HomeRentalMoneySection
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    NavigationTitle
+                    NameSection
+                    AddressSection
+                    HomePhotoSection
+                    HomeCategorySection
+                    HomeRentalTypeSection
+                    if selectedHomeRentalType != nil {
+                        HomeRentalMoneySection
+                    }
+                    HomeAreaSection
+                    HomeDirectionSection
                 }
-                HomeAreaSection
-                HomeDirectionSection
+            }
+            .scrollIndicators(.never)
+            .contentMargins(.bottom, 120, for: .scrollContent)
+            .clipped()
+            .overlay(alignment: .bottom) {
+                ZZSMainButton(
+                    action: {
+                        moveToChecklistView = true
+                    },
+                    text: "다음"
+                )
+                .padding([.horizontal, .top], 16)
+                .padding(.bottom, 12)
+                .background(Color.Background.primary)
+            }
+            .navigationDestination(isPresented: $moveToChecklistView, destination: {
+                ChecklistView()
+            })
+            .background(Color.Background.primary)
+            .dismissKeyboard()
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    CloseButton
+                }
             }
         }
-        .scrollIndicators(.never)
-        .contentMargins(.bottom, 120, for: .scrollContent)
-        .clipped()
-        .overlay(alignment: .bottom) {
-            ZZSMainButton(
-                action: {
-                    moveToChecklistView = true
-                },
-                text: "다음"
-            )
-            .padding([.horizontal, .top], 16)
-            .padding(.bottom, 12)
-            .background(Color.Background.primary)
-        }
-        .navigationDestination(isPresented: $moveToChecklistView, destination: {
-            ChecklistView()
-        })
-        .background(Color.Background.primary)
-        .dismissKeyboard()
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.hidden, for: .navigationBar)
     }
 }
 
@@ -539,6 +549,16 @@ private extension EssentialInfoView {
             .applyZZSFont(zzsFontSet: .bodyBold)
     }
     
+    var CloseButton: some View {
+        Button {
+            showHomeHuntSheet = false
+        } label: {
+            Image(systemName: "xmark")
+                .foregroundStyle(Color.Icon.tertiary)
+                .applyZZSFont(zzsFontSet: .bodyBold)
+        }
+    }
+    
     // MARK: - Computed Values
     
     var basicHouseName: String {
@@ -585,5 +605,5 @@ enum EssentialInfoField {
 
 
 #Preview {
-    EssentialInfoView()
+    EssentialInfoView(showHomeHuntSheet: .constant(true))
 }
