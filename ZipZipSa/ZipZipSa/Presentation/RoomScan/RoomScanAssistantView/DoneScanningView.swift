@@ -10,6 +10,8 @@ import Vision
 import CoreImage.CIFilterBuiltins
 
 struct DoneScanningView: View {
+    @Environment(\.dismiss) var dismiss
+    @State var showErrorAlert: Bool = false
     @Binding var capturedView: UIImage?
     @Binding var model: UIImage?
     @Binding var isProcessing: Bool
@@ -27,6 +29,20 @@ struct DoneScanningView: View {
             }
             .padding(.horizontal, 16)
             .padding(.bottom, 24)
+        }
+        .alert("경고", isPresented: $showErrorAlert) {
+            Button("건너뛰기", role: .destructive) {
+                // TODO: 집 모델 = nil인 상태로 결과지 띄우기
+            }
+            
+            Button("다시찍기", role: .cancel) {
+                doneScanning = false
+                isProcessing = false
+                dismiss()
+            }
+        } message: {
+            Text("집 모델이 없습니다.\n모델이 없는 상태로 결과지를 보시려면 건너뛰기를 눌러주세요.")
+                .multilineTextAlignment(.center)
         }
     }
 }
@@ -108,6 +124,8 @@ private extension DoneScanningView {
                 print("Failed to create mask image")
                 DispatchQueue.main.async {
                 }
+                capturedView = nil
+                showErrorAlert = true
                 return
             }
             let outputImage = apply(mask: maskImage, to: inputImage)
