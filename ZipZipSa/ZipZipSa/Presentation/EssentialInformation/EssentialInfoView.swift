@@ -616,17 +616,21 @@ private extension EssentialInfoView {
     }
     
     private func searchNearbyFacilities() async {
-        do {
-            let location = CLLocationCoordinate2D(latitude: selectedCoordinates?.latitude ?? 0.0, longitude: selectedCoordinates?.longitude ?? 0.0)
-            let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.rawValue })
-            
-            availableFacilities = Facility.allCases.filter { facility in
-                results[facility.rawValue] == true
+        if let coordinates = selectedCoordinates {
+            do {
+                let location = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
+                let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.rawValue })
+                
+                availableFacilities = Facility.allCases.filter { facility in
+                    results[facility.rawValue] == true
+                }
+            } catch let networkError as NetworkError {
+                networkError.logError()
+            } catch {
+                print("Unexpected error: \(error)")
             }
-        } catch let networkError as NetworkError {
-            networkError.logError()
-        } catch {
-            print("Unexpected error: \(error)")
+        } else {
+            availableFacilities = []
         }
     }
 }
