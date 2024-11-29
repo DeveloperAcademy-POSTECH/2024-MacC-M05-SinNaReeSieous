@@ -113,7 +113,7 @@ private extension CategoryChangeView {
     // MARK: - Computed Values
     
     var userCategories: [ChecklistCategory] {
-        return users.first?.categories ?? []
+        return users[0].categories
     }
     
     // MARK: - Action
