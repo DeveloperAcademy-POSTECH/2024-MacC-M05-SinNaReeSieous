@@ -122,16 +122,17 @@ private extension EssentialInfoView {
     // AddressSection
     
     var AddressSection: some View {
-        VStack(alignment: .center, spacing: 8) {
+        VStack(alignment: .center, spacing: 0) {
             HStack {
                 SectionTitle(text: "주소")
                 Spacer()
             }
+            .padding(.bottom, 8)
             SearchAddressButton
             GetCurrentAddressButton
         }
         .padding(.horizontal, 16)
-        .padding(.bottom, 24)
+        .padding(.bottom, 16)
         .sheet(isPresented: $showAddressEnterView) {
             AddressEnterView(resultCoordinates: $selectedCoordinates,
                              resultLocationText: $selectedLocationText)
@@ -163,7 +164,6 @@ private extension EssentialInfoView {
                                                                          topTrailing: 16))
                 .fill(Color.Button.enable)
             }
-            .padding(.top, 3)
         }
     }
     
@@ -188,6 +188,8 @@ private extension EssentialInfoView {
                             .frame(height: 0.6)
                     }
             }
+            .padding(8)
+            .padding(.horizontal, 8)
         }
     }
     
