@@ -10,15 +10,15 @@ import SwiftData
 
 @Model
 final class ChecklistCategoryData {
-    var name: String
+    var rawValue: String
     
     init(name: String) {
-        self.name = name
+        self.rawValue = name
     }
 }
 
 extension ChecklistCategoryData {
     var category: ChecklistCategory? {
-        return ChecklistCategory(rawValue: name)
+        return ChecklistCategory(rawValue: rawValue)
     }
 }

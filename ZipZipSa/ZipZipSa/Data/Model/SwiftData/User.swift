@@ -23,7 +23,7 @@ extension User {
         var categories: [ChecklistCategory] = []
         
         for favoriteCategory in favoriteCategories {
-            if let category = ChecklistCategory(rawValue: favoriteCategory.name) {
+            if let category = ChecklistCategory(rawValue: favoriteCategory.rawValue) {
                 categories.append(category)
             }
         }

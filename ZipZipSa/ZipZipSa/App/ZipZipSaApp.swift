@@ -16,7 +16,7 @@ struct ZipZipSaApp: App {
     }
     
     var modelContainer: ModelContainer = {
-           let schema = Schema([User.self])
+        let schema = Schema([User.self, ChecklistCategoryData.self])
            let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
            
            do {
