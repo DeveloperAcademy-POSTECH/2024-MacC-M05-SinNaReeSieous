@@ -28,6 +28,9 @@ final class HomeData {
     var location: LocationData?
     var locationText: String?
     
+    var answer: Data?
+    var scores: Data?
+    
     init(
         homeName: String = "",
         address: String = "",
@@ -85,6 +88,31 @@ extension HomeData {
             return HomeDirection(rawValue: homeDirectionData)
         } else {
             return nil
+        }
+    }
+    
+    // Dictionary를 저장하기 위한 메서드
+    func saveDictionary(dictionary: [UUID: Set<Int>]) -> Data? {
+        do {
+            // Dictionary를 JSON 데이터로 변환
+            let jsonData = try JSONEncoder().encode(dictionary)
+            return jsonData
+        } catch {
+            print("Error serializing dictionary: \(error)")
+            return nil
+        }
+    }
+    
+    // 저장된 데이터를 복원하는 메서드
+    func loadDictionary(data: Data?) -> [UUID: Set<Int>] {
+        guard let data else { return [:] }
+        do {
+            // JSON 데이터를 Dictionary로 변환
+            let dictionary = try JSONDecoder().decode([UUID: Set<Int>].self, from: data)
+            return dictionary
+        } catch {
+            print("Error deserializing dictionary: \(error)")
+            return [:]
         }
     }
 }
