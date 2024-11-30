@@ -622,7 +622,7 @@ private extension EssentialInfoView {
         }
     }
     
-    private func formatAddress(from placemark: CLPlacemark) -> String? {    // ✅
+    private func formatAddress(from placemark: CLPlacemark) -> String? {
         let administrativeArea = placemark.administrativeArea ?? "" // 도/광역시
         let locality = placemark.locality ?? "" // 시/군/구
         let thoroughfare = placemark.thoroughfare ?? "" // 도로명
@@ -632,7 +632,7 @@ private extension EssentialInfoView {
         return address.isEmpty ? nil : address
     }
     
-    private func formatAddress(from placemark: MKPlacemark) -> String? {    // ✅
+    private func formatAddress(from placemark: MKPlacemark) -> String? {
         let administrativeArea = placemark.administrativeArea ?? "" // 도/광역시
         let locality = placemark.locality ?? "" // 시/군/구
         let thoroughfare = placemark.thoroughfare ?? "" // 도로명
@@ -642,11 +642,11 @@ private extension EssentialInfoView {
         return address.isEmpty ? nil : address
     }
     
-    private func searchNearbyFacilities() async {
+    private func searchFacilities() async {
         if let coordinates = homeData.location?.coordinate {
             do {
                 let location = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
-                let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.rawValue })
+                let results = try await FacilityManager.searchFacilities(at: location)
                 
                 homeData.facilitiesData = Facility.allCases.filter { facility in
                     results[facility.rawValue] == true
@@ -664,7 +664,7 @@ private extension EssentialInfoView {
     }
     
     private func endEssentialInfoView() async {
-        await searchNearbyFacilities()
+        await searchFacilities()
         if homeData.homeName.isEmpty {
             homeData.homeName = basicHomeName
         }
