@@ -6,10 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		795DC3602CEDDBCF0053E173 /* GoogleMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 795DC35F2CEDDBCF0053E173 /* GoogleMaps */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
 		393FD8D32CE2045D00B1CEE7 /* ZipZipSa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZipZipSa.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		795DC35C2CEDDB670053E173 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
@@ -41,7 +37,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				795DC3602CEDDBCF0053E173 /* GoogleMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,7 +80,6 @@
 			);
 			name = ZipZipSa;
 			packageProductDependencies = (
-				795DC35F2CEDDBCF0053E173 /* GoogleMaps */,
 			);
 			productName = ZipZipSa;
 			productReference = 393FD8D32CE2045D00B1CEE7 /* ZipZipSa.app */;
@@ -117,7 +111,6 @@
 			mainGroup = 393FD8CA2CE2045D00B1CEE7;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				795DC35E2CEDDBCF0053E173 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 393FD8D42CE2045D00B1CEE7 /* Products */;
@@ -375,25 +368,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		795DC35E2CEDDBCF0053E173 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/googlemaps/ios-maps-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 9.2.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		795DC35F2CEDDBCF0053E173 /* GoogleMaps */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 795DC35E2CEDDBCF0053E173 /* XCRemoteSwiftPackageReference "ios-maps-sdk" */;
-			productName = GoogleMaps;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 393FD8CB2CE2045D00B1CEE7 /* Project object */;
 }
