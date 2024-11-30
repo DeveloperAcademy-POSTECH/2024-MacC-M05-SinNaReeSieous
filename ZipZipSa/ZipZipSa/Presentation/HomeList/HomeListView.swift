@@ -19,7 +19,7 @@ struct HomeListView: View {
             Color.Background.primary
                 .ignoresSafeArea()
             
-            VStack {
+            VStack(spacing: 0) {
                 TopBar
                 if homeList.isEmpty {
                     Spacer().frame(height: UIScreen.screenSize.height/812*48)
@@ -29,6 +29,8 @@ struct HomeListView: View {
                         ViewedHomeList
                             .padding(.horizontal, 16)
                     }
+                    .contentMargins(.bottom, 24, for: .automatic)
+                    .scrollIndicators(.hidden)
                 }
             }
         }
@@ -100,11 +102,11 @@ private extension HomeListView {
     
     var ViewedHomeList: some View {
            LazyVGrid(columns: [GridItem(.flexible())], spacing: 32) {
-               ForEach(homeList.indices, id: \.self) { index in
-                   ViewedHomeCellView(home: $homeList[index])
+               ForEach(Array(homeList.reversed().enumerated()), id: \.element.id) { index, home in
+                   ViewedHomeCellView(home: $homeList[homeList.count - 1 - index])
                }
            }
-           .padding(.top, 36)
+           .padding(.top, 24)
        }
    }
 
