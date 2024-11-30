@@ -14,7 +14,7 @@ struct HomeListView: View {
     @State private var showHomeHuntSheet = false
     @Query var homes: [HomeData]
     @State private var showHomeResultCardSheet = false
-    @State private var selectedHome: HomeData = HomeData()
+    @State private var selectedHomeIndex: Int = 0
     
     var body: some View {
         ZStack{
@@ -36,7 +36,7 @@ struct HomeListView: View {
                 }
             }
             .sheet(isPresented: $showHomeResultCardSheet, content: {
-                ResultCardSheetView(homeData: $selectedHome)
+                ResultCardSheetView(selectedHomeIndex: $selectedHomeIndex)
                     .presentationDragIndicator(.visible)
             })
         }
@@ -112,9 +112,11 @@ private extension HomeListView {
         LazyVGrid(columns: [GridItem(.flexible())], spacing: 32) {
             ForEach(Array(homeList.reversed().enumerated()), id: \.element.id) { index, home in
                 Button {
-                    if let selectedHome = homes.first(where: {$0.id == home.id }) {
-                        self.selectedHome = selectedHome
-                        showHomeResultCardSheet = true
+                    if let selectedHomeIndex = homes.firstIndex(where: {$0.id == home.id }) {
+                        self.selectedHomeIndex = selectedHomeIndex
+                        print(selectedHomeIndex)
+                        print(homes[selectedHomeIndex])
+                            // showHomeResultCardSheet = true
                     }
                 } label: {
                     ViewedHomeCellView(home: $homeList[homeList.count - 1 - index])

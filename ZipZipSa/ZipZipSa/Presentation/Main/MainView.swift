@@ -16,8 +16,8 @@ struct MainView: View {
     @State private var currentTip = ZipZipSaTip.getRandomText()
     @State private var timer: Timer?
     @State private var showHomeHuntSheet: Bool = false
-    @State private var showhomeResultCardSheet = false
-    @State private var selectedHome: HomeData = HomeData()
+    @State private var showHomeResultCardSheet = false
+    @State private var selectedHomeIndex: Int = 0
     
     var body: some View {
         NavigationStack {
@@ -55,8 +55,8 @@ struct MainView: View {
                     rentType: $0.homeRentalType?.text)
             }
         }
-        .sheet(isPresented: $showhomeResultCardSheet, content: {
-            ResultCardSheetView(homeData: $selectedHome)
+        .sheet(isPresented: $showHomeResultCardSheet, content: {
+            ResultCardSheetView(selectedHomeIndex: $selectedHomeIndex)
                 .presentationDragIndicator(.visible)
         })
         .onAppear {
@@ -237,9 +237,11 @@ private extension MainView {
         LazyHGrid(rows: [GridItem(.fixed(UIScreen.screenSize.height / 812 * 208))], spacing: 20) {
             ForEach(Array(homeList.suffix(3).reversed().enumerated()), id: \.element.id) { index, home in
                 Button {
-                    if let selectedHome = homes.first(where: {$0.id == home.id }) {
-                        self.selectedHome = selectedHome
-                        showhomeResultCardSheet = true
+                    if let selectedHomeIndex = homes.firstIndex(where: {$0.id == home.id }) {
+                        self.selectedHomeIndex = selectedHomeIndex
+                        showHomeResultCardSheet = true
+                        print(selectedHomeIndex)
+                        print(homes[selectedHomeIndex].homeName)
                     }
                 } label: {
                     RecentlyViewedHomeCellView(home: $homeList[homeList.count - 1 - index])

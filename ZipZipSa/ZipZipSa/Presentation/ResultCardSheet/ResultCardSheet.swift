@@ -12,9 +12,10 @@ struct ResultCardSheetView: View {
 
     @Environment(\.modelContext) private var modelContext
     
+    @Query var homes: [HomeData]
     @State private var card: UIImage = UIImage()
-    @State private var firstShow = true
-    @Binding var homeData: HomeData
+    @Binding var selectedHomeIndex: Int
+    @State var homeData = HomeData()
     
     var body: some View {
         NavigationStack {
@@ -22,7 +23,7 @@ struct ResultCardSheetView: View {
                 NavigationTitle
                 
                 ScrollView {
-                    ShareCardView(homeData: $homeData)
+                    ShareCardSheet(homeData: $homeData)
                         .background(BackgroundForCapture)
                     
                     ResultDetailViewButton
@@ -32,6 +33,9 @@ struct ResultCardSheetView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.Background.primary)
+            .onAppear {
+                homeData = homes[selectedHomeIndex]
+            }
         }
     }
 }
@@ -58,7 +62,7 @@ private extension ResultCardSheetView {
                 .onAppear {
                     DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
-                        card = ShareCardView(homeData: $homeData)
+                        card = ShareCardSheet(homeData: $homeData)
                             .asUIImage(size: size)
                     }
                 }
@@ -66,13 +70,13 @@ private extension ResultCardSheetView {
     }
     
     var ResultDetailViewButton: some View {
-        Button {
-            // TODO: 상세보기뷰로 이동
-        } label: {
+        NavigationLink(destination: {
+            DetailEssentialInfoView(homeData: $homeData)
+        }, label: {
             Text(ZipLiteral.ResultCard.resultDetailButtonText)
                 .foregroundStyle(.gray)
                 .font(Font.system(size: 16))
-        }
+        })
         .padding(.bottom, 24)
     }
     
