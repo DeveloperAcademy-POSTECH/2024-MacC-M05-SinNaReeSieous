@@ -128,7 +128,7 @@ private extension SettingView {
     // MARK: - Computed Values
     
     var userCategories: [ChecklistCategory] {
-        return users[0].categories
+        return users[0].favoriteCategories
     }
 }
 

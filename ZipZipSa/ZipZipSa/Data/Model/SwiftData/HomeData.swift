@@ -23,7 +23,7 @@ final class HomeData {
     var homeDirectionData: String?
     
     @Relationship(deleteRule: .cascade)
-    var rentalFee: [RentalFeeData]
+    var rentalFeeData: [RentalFeeData]
     
     @Attribute(.externalStorage)
     var imageData: Data?
@@ -33,8 +33,10 @@ final class HomeData {
     
     // MARK: - Checklist
     
-    var answer: Data?
-    var scores: Data?
+    var selectedCategoryData: [ChecklistCategoryData] = []
+    var answerData: Data? = nil
+    var scoreData: Data? = nil
+    var memoData: [MemoData] = [MemoData(), MemoData(), MemoData(), MemoData(), MemoData()]
     
     // MARK: - ResultCard
     
@@ -60,7 +62,7 @@ final class HomeData {
         self.homeAreaPyeong = homeAreaPyeong
         self.homeAreaSquareMeter = homeAreaSquareMeter
         self.homeDirectionData = homeDirectionData
-        self.rentalFee = rentalFee
+        self.rentalFeeData = rentalFee
         self.imageData = imageData
         self.location = location
         self.locationText = locationText
@@ -101,7 +103,7 @@ extension HomeData {
     }
     
     // Dictionary를 저장하기 위한 메서드
-    func saveDictionary(dictionary: [UUID: Set<Int>]) -> Data? {
+    func saveDictionary<T: Encodable>(dictionary: T) -> Data? {
         do {
             // Dictionary를 JSON 데이터로 변환
             let jsonData = try JSONEncoder().encode(dictionary)
@@ -113,16 +115,28 @@ extension HomeData {
     }
     
     // 저장된 데이터를 복원하는 메서드
-    func loadDictionary(data: Data?) -> [UUID: Set<Int>] {
-        guard let data else { return [:] }
+    func loadDictionary<T: Decodable>(data: Data?, type: T.Type) -> T? {
+        guard let data else { return nil }
         do {
             // JSON 데이터를 Dictionary로 변환
-            let dictionary = try JSONDecoder().decode([UUID: Set<Int>].self, from: data)
+            let dictionary = try JSONDecoder().decode(T.self, from: data)
             return dictionary
         } catch {
             print("Error deserializing dictionary: \(error)")
-            return [:]
+            return nil
         }
+    }
+    
+    var selectedCategories: [ChecklistCategory] {
+        var categories: [ChecklistCategory] = []
+        
+        for favoriteCategory in selectedCategoryData {
+            if let category = ChecklistCategory(rawValue: favoriteCategory.rawValue) {
+                categories.append(category)
+            }
+        }
+        
+        return categories
     }
 }
 
@@ -171,5 +185,14 @@ final class FacilityData {
             return facility
         }
         return nil
+    }
+}
+
+@Model
+final class MemoData {
+    var value: String
+    
+    init(value: String = "") {
+        self.value = value
     }
 }

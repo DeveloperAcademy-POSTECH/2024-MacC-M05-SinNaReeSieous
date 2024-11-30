@@ -7,13 +7,20 @@
 
 import SwiftUI
 import RoomPlan
+import SwiftData
 
 struct ChecklistView: View {
-    @State var answers: [ChecklistItem: Set<Int>] = [:]
-    @State var scores: [ChecklistItem: Float] = [:]
-    @State var selectedCategory: [ChecklistCategory] = [.security, .insectproof, .ventilation]
-    @State var selectedSpaceType: SpaceType = .kitchen
-    @State var memoText: [String] = Array(repeating: "", count: SpaceType.allCases.count)
+    @Binding var showHomeHuntSheet: Bool
+    @Binding var homeData: HomeData
+    @Query var users: [User]
+    var user: User { users[0] }
+    
+    @Binding var selectedSpaceType: SpaceType
+    @Binding var firstShow: Bool
+    
+    @State private var answers: [UUID: Set<Int>] = [:]
+    @State private var scores: [UUID: Float] = [:]
+    
     @State private var model: UIImage? = nil
     @State private var moveToRoomScanInfoView: Bool = false
     @State private var moveToUnsupportedDeviceView: Bool = false
@@ -43,7 +50,17 @@ struct ChecklistView: View {
         }
         .onAppear {
             // 오류 해결을 위한 임시방편 코드
-            selectedSpaceType = .livingRoom
+            if firstShow {
+                selectedSpaceType = .livingRoom
+                firstShow = false
+            }
+            
+            // 그 당시의 선택 카테고리 저장
+            applyUserDataToHomeData()
+            applyHomeDataToViewState()
+        }
+        .onDisappear {
+            applyViewStateToHomeData()
         }
         .background(Color.Background.primary)
         .dismissKeyboard()
@@ -69,7 +86,7 @@ private extension ChecklistView {
                     Spacer().frame(height: 18)
                     ForEach(spaceChecklistItems) { checklistItem in
                         ChecklistRowView(
-                            selectedCategory: $selectedCategory,
+                            selectedCategory: user.favoriteCategories,
                             answers: $answers,
                             scores: $scores,
                             checklistItem: checklistItem
@@ -105,12 +122,12 @@ private extension ChecklistView {
             Text(ZipLiteral.Checklist.memoSectionTitle)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .headline)
-            TextEditor(text: $memoText[selectedSpaceType.rawValue])
+            TextEditor(text: $homeData.memoData[selectedSpaceType.rawValue].value)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .bodyRegular)
                 .tint(Color.Text.placeholder)
                 .overlay(alignment: .topLeading) {
-                    if memoText[selectedSpaceType.rawValue].isEmpty {
+                    if homeData.memoData[selectedSpaceType.rawValue].value.isEmpty {
                         Text(ZipLiteral.Checklist.memoPlaceHolder)
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -135,7 +152,7 @@ private extension ChecklistView {
         ChecklistItem.checklistItems.filter {
             let isBasicCheckListItem = $0.checkListType == .basic
             let isSelectedCategoryCheckListItem = $0.checkListType == .advanced
-            && selectedCategory.contains($0.basicCategory)
+            && user.favoriteCategories.contains($0.basicCategory)
             return isBasicCheckListItem || isSelectedCategoryCheckListItem
         }
     }
@@ -173,6 +190,28 @@ private extension ChecklistView {
         }
     }
     
+    func applyUserDataToHomeData() {
+        homeData.selectedCategoryData = user.favoriteCategoryData
+    }
+    
+    func applyViewStateToHomeData() {
+        if let answerData = homeData.saveDictionary(dictionary: answers) {
+            homeData.answerData = answerData
+        }
+        if let scoreData = homeData.saveDictionary(dictionary: scores) {
+            homeData.scoreData = scoreData
+        }
+    }
+    
+    func applyHomeDataToViewState() {
+        if let answers = homeData.loadDictionary(data: homeData.answerData, type: [UUID: Set<Int>].self) {
+            self.answers = answers
+        }
+        if let scores = homeData.loadDictionary(data: homeData.scoreData, type: [UUID: Float].self) {
+            self.scores = scores
+        }
+    }
+    
     // MARK: - Custom Method
     
     func getChecklistResult() {
@@ -192,7 +231,7 @@ private extension ChecklistView {
             
             for category in categories {
                 let isSelectableBasicCategory = checklistItem.basicCategory == category && category.isSelectable
-                if selectedCategory.contains(category) || isSelectableBasicCategory {
+                if user.favoriteCategories.contains(category) || isSelectableBasicCategory {
                     var basicValue: Float = 0.0
                     switch checklistItem.question.answerType {
                     case .multiSelect(let basicScore, _):
@@ -200,7 +239,7 @@ private extension ChecklistView {
                     default:
                         basicValue = 1.0
                     }
-                    categoryScores[category, default: 0.0] += scores[checklistItem] ?? basicValue
+                    categoryScores[category, default: 0.0] += scores[checklistItem.id] ?? basicValue
                 }
             }
         }
@@ -216,7 +255,7 @@ private extension ChecklistView {
             
             for category in categories {
                 let isSelectableBasicCategory = checklistItem.basicCategory == category && category.isSelectable
-                if selectedCategory.contains(category) || isSelectableBasicCategory {
+                if user.favoriteCategories.contains(category) || isSelectableBasicCategory {
                     switch checklistItem.question.answerType {
                     case .multiSelect(let basicScore, let answerDisposition):
                         if answerDisposition == .negative {
@@ -242,7 +281,7 @@ private extension ChecklistView {
             guard let hazard = checklistItem.hazard else {
                 return
             }
-            let hasHazard = answers[checklistItem] == [0]
+            let hasHazard = answers[checklistItem.id] == [0]
             if hasHazard {
                 hazards.append(hazard)
             }
@@ -253,9 +292,9 @@ private extension ChecklistView {
         return hazards
     }
 }
-
-#Preview {
-    NavigationView {
-        ChecklistView()
-    }
-}
+//
+//#Preview {
+//    NavigationView {
+//        ChecklistView()
+//    }
+//}

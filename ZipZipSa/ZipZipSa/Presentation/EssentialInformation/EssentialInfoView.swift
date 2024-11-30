@@ -13,7 +13,6 @@ struct EssentialInfoView: View {
     
     @Query var homes: [HomeData]
     
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var showHomeHuntSheet: Bool
 
     @State private var homeData = HomeData()
@@ -30,6 +29,7 @@ struct EssentialInfoView: View {
     @State private var showAddressEnterView: Bool = false
     
     @State private var moveToChecklistView: Bool = false
+    @State private var selectedSpaceType: SpaceType = .kitchen
     
     var body: some View {
         NavigationStack {
@@ -65,7 +65,11 @@ struct EssentialInfoView: View {
                 .background(Color.Background.primary)
             }
             .navigationDestination(isPresented: $moveToChecklistView, destination: {
-                ChecklistView()
+                ChecklistView(
+                    showHomeHuntSheet: $showHomeHuntSheet,
+                    homeData: $homeData,
+                    selectedSpaceType: $selectedSpaceType,
+                    firstShow: $firstShow)
             })
             .background(Color.Background.primary)
             .dismissKeyboard()
@@ -78,11 +82,8 @@ struct EssentialInfoView: View {
             }
             .onAppear {
                 if firstShow {
-                    firstShow = false
+                    homeData = HomeData()
                 }
-            }
-            .onChange(of: firstShow) { oldValue, newValue in
-                homeData = HomeData()
             }
         }
     }
@@ -344,7 +345,7 @@ private extension EssentialInfoView {
         HStack(spacing: 16) {
             if moneyType == .deposit {
                 HStack(spacing: 6) {
-                    TextField(text: $homeData.rentalFee[moneyType.index[1]].value) {
+                    TextField(text: $homeData.rentalFeeData[moneyType.index[1]].value) {
                         Text("000")
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -368,7 +369,7 @@ private extension EssentialInfoView {
             }
             
             HStack(spacing: 6) {
-                TextField(text: $homeData.rentalFee[moneyType.index[0]].value) {
+                TextField(text: $homeData.rentalFeeData[moneyType.index[0]].value) {
                     Text("000")
                         .foregroundStyle(Color.Text.placeholder)
                         .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -392,7 +393,7 @@ private extension EssentialInfoView {
             
             if moneyType != .deposit {
                 HStack(spacing: 6) {
-                    TextField(text: $homeData.rentalFee[moneyType.index[0]].value) {
+                    TextField(text: $homeData.rentalFeeData[moneyType.index[0]].value) {
                         Text("000")
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -639,9 +640,7 @@ private extension EssentialInfoView {
         if homeData.homeName.isEmpty {
             homeData.homeName = basicHomeName
         }
-
         await searchNearbyFacilities()
-        print(homeData.facilitiesData)
         moveToChecklistView = true
     }
 }

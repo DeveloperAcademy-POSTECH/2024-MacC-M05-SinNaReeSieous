@@ -113,7 +113,7 @@ private extension CategoryChangeView {
     // MARK: - Computed Values
     
     var userCategories: [ChecklistCategory] {
-        return users[0].categories
+        return users[0].favoriteCategories
     }
     
     // MARK: - Action
@@ -123,8 +123,11 @@ private extension CategoryChangeView {
             ChecklistCategoryData(rawValue: $0.rawValue)
         }
         let user = users[0]
-        user.favoriteCategories = checklistCategoryData
+        user.favoriteCategoryData = checklistCategoryData
         modelContext.insert(user)
+        guard let _ = try? modelContext.save() else {
+            return
+        }
         presentationMode.wrappedValue.dismiss()
     }
 }

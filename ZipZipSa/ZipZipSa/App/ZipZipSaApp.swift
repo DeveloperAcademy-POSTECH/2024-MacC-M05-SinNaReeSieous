@@ -16,7 +16,7 @@ struct ZipZipSaApp: App {
     }
     
     var modelContainer: ModelContainer = {
-        let schema = Schema([User.self, ChecklistCategoryData.self, HomeData.self, RentalFeeData.self, LocationData.self])
+        let schema = Schema([User.self, ChecklistCategoryData.self, HomeData.self, RentalFeeData.self, LocationData.self, FacilityData.self, MemoData.self])
            let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
            
            do {
@@ -29,7 +29,7 @@ struct ZipZipSaApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .modelContainer(modelContainer)
+                .modelContainer(for: [User.self, ChecklistCategoryData.self, HomeData.self, RentalFeeData.self, LocationData.self, FacilityData.self, MemoData.self], isAutosaveEnabled: false)
         }
     }
 }
