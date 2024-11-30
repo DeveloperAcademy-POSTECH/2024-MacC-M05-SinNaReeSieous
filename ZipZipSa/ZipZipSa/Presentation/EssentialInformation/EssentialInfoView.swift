@@ -88,6 +88,11 @@ struct EssentialInfoView: View {
                     homeData.homeName = ""
                 }
             }
+            .onChange(of: homeData.rentalFeeData[0].value) { oldValue, newValue in
+                if homeData.rentalFeeData[0].value.count > 4 {
+                    homeData.rentalFeeData[0].value.removeLast()
+                }
+            }
         }
     }
 }
