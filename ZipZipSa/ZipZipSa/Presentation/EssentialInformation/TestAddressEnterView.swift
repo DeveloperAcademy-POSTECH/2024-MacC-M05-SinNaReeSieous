@@ -216,6 +216,9 @@
 //            return
 //        }
 //        
+//        isLoading = true
+//        errorMessage = nil
+//        
 //        let request = MKLocalSearch.Request()
 //        request.naturalLanguageQuery = query
 //        
