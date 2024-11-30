@@ -7,36 +7,29 @@
 
 import SwiftUI
 import PhotosUI
+import SwiftData
 
 struct EssentialInfoView: View {
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @Binding var showHomeHuntSheet: Bool
     
-    @State private var homeName: String = ""
-    @State private var address: String = ""
+    @Query var homes: [HomeData]
+    
+    @Binding var showHomeHuntSheet: Bool
+
+    @State private var homeData = HomeData()
+    @State private var firstShow: Bool = true
+    
     @State private var isGettingAddress: Bool = false
-    @State private var imageExist: Bool = false
-    @State private var selectedHomeCategory: HomeCategory? = nil
-    @State private var selectedHomeRentalType: HomeRentalType? = nil
     @FocusState private var focusField: EssentialInfoField?
-    @State private var homeAreaPyeong: String = ""
-    @State private var homeAreaSquareMeter: String = ""
-    @State private var selectedHomeDirection: HomeDirection? = nil
-    @State private var rentalFee: [String] = ["", "", "", ""]
     
     @State private var showPhotoTypeSelectSheet: Bool = false
     @State private var showImagePicker: Bool = false
     @State private var useCamera: Bool = false
-    @State private var selectedImageData: Data? = nil
     
     @StateObject private var locationManager = LocationManager()
-    @State private var selectedCoordinates: CLLocationCoordinate2D?
-    @State private var selectedLocationText: String? = nil
     @State private var showAddressEnterView: Bool = false
     
     @State private var moveToChecklistView: Bool = false
-    
-    @State private var availableFacilities: [Facility] = []
+    @State private var selectedSpaceType: SpaceType = .kitchen
     
     var body: some View {
         NavigationStack {
@@ -48,7 +41,7 @@ struct EssentialInfoView: View {
                     HomePhotoSection
                     HomeCategorySection
                     HomeRentalTypeSection
-                    if selectedHomeRentalType != nil {
+                    if homeData.homeRentalType != nil {
                         HomeRentalMoneySection
                     }
                     HomeAreaSection
@@ -61,10 +54,8 @@ struct EssentialInfoView: View {
             .overlay(alignment: .bottom) {
                 ZZSMainButton(
                     action: {
-                        moveToChecklistView = true
                         Task {
-                            await searchNearbyFacilities()
-                            print(availableFacilities)
+                            await endEssentialInfoView()
                         }
                     },
                     text: "다음"
@@ -74,7 +65,11 @@ struct EssentialInfoView: View {
                 .background(Color.Background.primary)
             }
             .navigationDestination(isPresented: $moveToChecklistView, destination: {
-                ChecklistView()
+                ChecklistView(
+                    showHomeHuntSheet: $showHomeHuntSheet,
+                    homeData: $homeData,
+                    selectedSpaceType: $selectedSpaceType,
+                    firstShow: $firstShow)
             })
             .background(Color.Background.primary)
             .dismissKeyboard()
@@ -83,6 +78,19 @@ struct EssentialInfoView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     CloseButton
+                }
+            }
+            .onAppear {
+                if firstShow {
+                    homeData = HomeData()
+                }
+                if homeData.homeName == basicHomeName {
+                    homeData.homeName = ""
+                }
+            }
+            .onChange(of: homeData.rentalFeeData[0].value) { oldValue, newValue in
+                if homeData.rentalFeeData[0].value.count > 4 {
+                    homeData.rentalFeeData[0].value.removeLast()
                 }
             }
         }
@@ -106,8 +114,8 @@ private extension EssentialInfoView {
     var NameSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionTitle(text: "집 별명")
-            TextField(text: $homeName) {
-                Text(basicHouseName)
+            TextField(text: $homeData.homeName) {
+                Text(basicHomeName)
                     .foregroundStyle(Color.Text.placeholder)
                     .applyZZSFont(zzsFontSet: .bodyRegular)
             }
@@ -141,9 +149,9 @@ private extension EssentialInfoView {
         .padding(.horizontal, 16)
         .padding(.bottom, 16)
         .sheet(isPresented: $showAddressEnterView) {
-            AddressEnterView(resultCoordinates: $selectedCoordinates,
-                             resultLocationText: $selectedLocationText)
-                .presentationDragIndicator(.visible)
+            AddressEnterView(resultCoordinates: $homeData.location,
+                             resultLocationText: $homeData.locationText)
+            .presentationDragIndicator(.visible)
         }
     }
     
@@ -152,7 +160,7 @@ private extension EssentialInfoView {
             showAddressEnterView = true
         } label: {
             HStack {
-                if let selectedLocationText {
+                if let selectedLocationText = homeData.locationText {
                     Text(selectedLocationText)
                         .foregroundStyle(Color.Text.primary)
                         .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -220,7 +228,7 @@ private extension EssentialInfoView {
             }
         }
         .fullScreenCover(isPresented: $showImagePicker) {
-            ImagePicker(imageData: $selectedImageData, useCamera: $useCamera)
+            ImagePicker(imageData: $homeData.imageData, useCamera: $useCamera)
                 .ignoresSafeArea()
         }
     }
@@ -229,7 +237,7 @@ private extension EssentialInfoView {
         Button {
             showPhotoTypeSelectSheet = true
         } label: {
-            if let selectedImageData {
+            if let selectedImageData = homeData.imageData {
                 Image(uiImage: UIImage(data: selectedImageData)!)
                     .resizable()
                     .scaledToFill()
@@ -268,12 +276,12 @@ private extension EssentialInfoView {
             ForEach(HomeCategory.allCases.indices, id: \.self) { index in
                 let category = HomeCategory.allCases[index]
                 Button {
-                    selectedHomeCategory = selectedHomeCategory == category ? nil : category
+                    homeData.homeCategoryData = homeData.homeCategoryType == category ? nil : category.rawValue
                 } label: {
                     UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
                                                                              bottomTrailing: 16,
                                                                              topTrailing: 16))
-                    .fill(selectedHomeCategory == category ? Color.Button.secondaryYellow : Color.Button.enable)
+                    .fill(homeData.homeCategoryType == category ? Color.Button.secondaryYellow : Color.Button.enable)
                     .frame(height: 40)
                     .overlay {
                         Text(category.text)
@@ -301,12 +309,12 @@ private extension EssentialInfoView {
             ForEach(HomeRentalType.allCases.indices, id: \.self) { index in
                 let rentalType = HomeRentalType.allCases[index]
                 Button {
-                    selectedHomeRentalType = selectedHomeRentalType == rentalType ? nil : rentalType
+                    homeData.homeRentalTypeData = homeData.homeRentalType == rentalType ? nil : rentalType.rawValue
                 } label: {
                     UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
                                                                              bottomTrailing: 16,
                                                                              topTrailing: 16))
-                    .fill(selectedHomeRentalType == rentalType ? Color.Button.secondaryYellow : Color.Button.enable)
+                    .fill(homeData.homeRentalType == rentalType ? Color.Button.secondaryYellow : Color.Button.enable)
                     .frame(height: 40)
                     .overlay {
                         Text(rentalType.text)
@@ -322,7 +330,7 @@ private extension EssentialInfoView {
     
     var HomeRentalMoneySection: some View {
         VStack(alignment: .leading, spacing: 24) {
-            if let selectedHomeRentalType {
+            if let selectedHomeRentalType = homeData.homeRentalType {
                 ForEach(selectedHomeRentalType.moneyTypes.indices, id: \.self) { index in
                     let moneyType = selectedHomeRentalType.moneyTypes[index]
                     HomeRentalMoneyTextFieldSection(moneyType: moneyType)
@@ -345,7 +353,7 @@ private extension EssentialInfoView {
         HStack(spacing: 16) {
             if moneyType == .deposit {
                 HStack(spacing: 6) {
-                    TextField(text: $rentalFee[moneyType.index[1]]) {
+                    TextField(text: $homeData.rentalFeeData[moneyType.index[1]].value) {
                         Text("000")
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -369,7 +377,7 @@ private extension EssentialInfoView {
             }
             
             HStack(spacing: 6) {
-                TextField(text: $rentalFee[moneyType.index[0]]) {
+                TextField(text: $homeData.rentalFeeData[moneyType.index[0]].value) {
                     Text("000")
                         .foregroundStyle(Color.Text.placeholder)
                         .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -393,7 +401,7 @@ private extension EssentialInfoView {
             
             if moneyType != .deposit {
                 HStack(spacing: 6) {
-                    TextField(text: $rentalFee[moneyType.index[0]]) {
+                    TextField(text: $homeData.rentalFeeData[moneyType.index[0]].value) {
                         Text("000")
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -442,7 +450,7 @@ private extension EssentialInfoView {
     
     var PyeongTextField: some View {
         HStack(spacing: 6) {
-            TextField(text: $homeAreaPyeong) {
+            TextField(text: $homeData.homeAreaPyeong) {
                 Text("000")
                     .foregroundStyle(Color.Text.placeholder)
                     .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -464,25 +472,25 @@ private extension EssentialInfoView {
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .bodyRegular)
         }
-        .onChange(of: homeAreaPyeong) { oldValue, newValue in
+        .onChange(of: homeData.homeAreaPyeong) { oldValue, newValue in
             guard focusField == .areaPyeong else {
                 return
             }
             
-            if homeAreaPyeong.isEmpty {
-                homeAreaSquareMeter = ""
+            if homeData.homeAreaPyeong.isEmpty {
+                homeData.homeAreaSquareMeter = ""
             } else {
-                let pyeong = Float(homeAreaPyeong) ?? 0.0
+                let pyeong = Float(homeData.homeAreaPyeong) ?? 0.0
                 let squareMeter = pyeong * 3.306
                 let formattedValue = String(format: "%.2f", squareMeter)
-                homeAreaSquareMeter = formattedValue
+                homeData.homeAreaSquareMeter = formattedValue
             }
         }
     }
     
     var SquareMeterTextField: some View {
         HStack {
-            TextField(text: $homeAreaSquareMeter) {
+            TextField(text: $homeData.homeAreaSquareMeter) {
                 Text("000")
                     .foregroundStyle(Color.Text.placeholder)
                     .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -504,18 +512,18 @@ private extension EssentialInfoView {
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .bodyRegular)
         }
-        .onChange(of: homeAreaSquareMeter) { oldValue, newValue in
+        .onChange(of: homeData.homeAreaSquareMeter) { oldValue, newValue in
             guard focusField == .areaSquareMeter else {
                 return
             }
             
-            if homeAreaSquareMeter.isEmpty {
-                homeAreaPyeong = ""
+            if homeData.homeAreaSquareMeter.isEmpty {
+                homeData.homeAreaPyeong = ""
             } else {
-                let squareMeter = Float(homeAreaSquareMeter) ?? 0.0
+                let squareMeter = Float( homeData.homeAreaSquareMeter) ?? 0.0
                 let pyeong = squareMeter / 3.306
                 let formattedValue = String(format: "%.2f", pyeong)
-                homeAreaPyeong = formattedValue
+                homeData.homeAreaPyeong = formattedValue
             }
         }
     }
@@ -535,12 +543,12 @@ private extension EssentialInfoView {
             ForEach(HomeDirection.allCases.indices, id: \.self) { index in
                 let direction = HomeDirection.allCases[index]
                 Button {
-                    selectedHomeDirection = selectedHomeDirection == direction ? nil : direction
+                    homeData.homeDirectionData = homeData.homeDirectionType == direction ? nil : direction.rawValue
                 } label: {
                     UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
                                                                              bottomTrailing: 16,
                                                                              topTrailing: 16))
-                    .fill(selectedHomeDirection == direction ? Color.Button.secondaryYellow : Color.Button.enable)
+                    .fill(homeData.homeDirectionType == direction ? Color.Button.secondaryYellow : Color.Button.enable)
                     .frame(height: 40)
                     .overlay {
                         Text(direction.text)
@@ -570,8 +578,8 @@ private extension EssentialInfoView {
     
     // MARK: - Computed Values
     
-    var basicHouseName: String {
-        "1번째 집"
+    var basicHomeName: String {
+        "\(homes.count+1)번째 집"
     }
     
     var addressPlaceHolder: String {
@@ -588,7 +596,7 @@ private extension EssentialInfoView {
         isGettingAddress = true
         locationManager.requestLocationAuthorization()
         if let location = locationManager.userLocation {
-            selectedCoordinates = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
+            homeData.location = LocationData(latitude: location.latitude, longitude: location.longitude)
             await reverseGeocode()
         } else {
             print("현재 위치를 가져올 수 없습니다.")
@@ -597,7 +605,7 @@ private extension EssentialInfoView {
     }
     
     private func reverseGeocode() async {
-        guard let coordinates = selectedCoordinates else {
+        guard let coordinates = homeData.location?.coordinate else {
             print("좌표가 선택되지 않았습니다.")
             return
         }
@@ -608,7 +616,7 @@ private extension EssentialInfoView {
                 longitude: coordinates.longitude
             )
             
-            selectedLocationText = address
+            homeData.locationText = address
         } catch {
             print("주소 변환 실패: \(error.localizedDescription)")
             print("Error occurred: \(error)")
@@ -616,13 +624,15 @@ private extension EssentialInfoView {
     }
     
     private func searchNearbyFacilities() async {
-        if let coordinates = selectedCoordinates {
+        if let coordinates = homeData.location?.coordinate {
             do {
                 let location = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
                 let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.rawValue })
                 
-                availableFacilities = Facility.allCases.filter { facility in
+                homeData.facilitiesData = Facility.allCases.filter { facility in
                     results[facility.rawValue] == true
+                }.map { facility in
+                    FacilityData(rawValue: facility.rawValue)
                 }
             } catch let networkError as NetworkError {
                 networkError.logError()
@@ -630,8 +640,16 @@ private extension EssentialInfoView {
                 print("Unexpected error: \(error)")
             }
         } else {
-            availableFacilities = []
+            homeData.facilitiesData = []
         }
+    }
+    
+    private func endEssentialInfoView() async {
+        await searchNearbyFacilities()
+        if homeData.homeName.isEmpty {
+            homeData.homeName = basicHomeName
+        }
+        moveToChecklistView = true
     }
 }
 
@@ -641,7 +659,7 @@ enum EssentialInfoField {
     case areaSquareMeter
 }
 
-
-#Preview {
-    EssentialInfoView(showHomeHuntSheet: .constant(true))
-}
+//
+//#Preview {
+//    EssentialInfoView(homeCount: .constant(1), showHomeHuntSheet: .constant(true))
+//}

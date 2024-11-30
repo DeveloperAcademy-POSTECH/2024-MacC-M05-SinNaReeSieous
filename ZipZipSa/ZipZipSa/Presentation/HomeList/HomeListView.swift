@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomeListView: View {
     @State private var homeList: [ViewedHome] = [
@@ -14,6 +15,7 @@ struct HomeListView: View {
     ]  // 데이터 모델을 위한 배열
         
     @State private var showHomeHuntSheet = false
+    @Query var homes: [HomeData]
 
     var body: some View {
         ZStack{

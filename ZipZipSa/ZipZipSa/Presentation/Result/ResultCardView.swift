@@ -6,29 +6,44 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ResultCardView: View {
-    @State var homeCategory: HomeCategory? = .villa
-    @State var homeDirection: HomeDirection? = .south
+
+    @Environment(\.modelContext) private var modelContext
+    
     @State private var card: UIImage = UIImage()
     @State private var mainPicture: UIImage? = UIImage(resource: .mainPicSample)
     @State private var hazardTags: [Hazard] = [.cigaretteSmell, .cockroach, .mold]
     @Binding var model: UIImage?
+    @Binding var homeData: HomeData
+    @Binding var showHomeHuntSheet: Bool
     
     var body: some View {
-        VStack {
-            NavigationTitle
-            
-            ScrollView {
-                ShareCardView(homeCategory: $homeCategory, homeDirection: $homeDirection, hazardTags: $hazardTags, model: $model, mainPicture: $mainPicture)
-                    .background(BackgroundForCapture)
+        NavigationStack {
+            VStack(spacing: 0) {
+                NavigationTitle
                 
-                ResultDetailViewButton
-                ShareButton
+                ScrollView {
+                    ShareCardView(homeData: $homeData)
+                        .background(BackgroundForCapture)
+                    
+                    ResultDetailViewButton
+                    ShareButton
+                }
+                .scrollIndicators(.never)
             }
-            .scrollIndicators(.never)
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color.Background.primary)
+            .onAppear {
+                saveHomeModel()
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    CloseButton
+                }
+            }
         }
-        .background(Color.Background.primary)
     }
 }
 
@@ -43,9 +58,18 @@ private extension ResultCardView {
             
             Spacer()
         }
-        .padding(.top, 14)
         .padding(.horizontal, 16)
-        .padding(.bottom, 34)
+        .padding(.bottom, 16)
+    }
+    
+    var CloseButton: some View {
+        Button {
+            showHomeHuntSheet = false
+        } label: {
+            Text("완료")
+                .foregroundStyle(Color.Icon.tertiary)
+                .applyZZSFont(zzsFontSet: .bodyBold)
+        }
     }
     
     var BackgroundForCapture: some View {
@@ -54,7 +78,7 @@ private extension ResultCardView {
                 .onAppear {
                     DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
-                        card = ShareCardView(homeCategory: $homeCategory, homeDirection: $homeDirection, hazardTags: $hazardTags, model: $model, mainPicture: $mainPicture)
+                        card = ShareCardView(homeData: $homeData)
                             .asUIImage(size: size)
                     }
                 }
@@ -84,5 +108,17 @@ private extension ResultCardView {
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 24)
+    }
+    
+    func saveHomeModel() {
+        print(homeData.homeName)
+        if let modelImageData = model?.pngData() {
+            homeData.modelImageData = modelImageData
+        }
+        modelContext.insert(homeData)
+        guard let _ = try? modelContext.save() else  {
+            return
+        }
+        print("저장됨!")
     }
 }

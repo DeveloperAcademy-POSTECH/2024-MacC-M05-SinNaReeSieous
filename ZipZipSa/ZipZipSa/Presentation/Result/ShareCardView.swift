@@ -8,18 +8,33 @@
 import SwiftUI
 
 struct ShareCardView: View {
-    @Binding var homeCategory: HomeCategory?
-    @Binding var homeDirection: HomeDirection?
-    @Binding var hazardTags: [Hazard]
-    @Binding var model: UIImage?
-    @Binding var mainPicture: UIImage?
+
+    @Binding var homeData: HomeData
     
-    let columnLayout = Array(repeating: GridItem(), count: 3)
-    let availableFacility: [Facility] = []
+    let columnLayout = Array(repeating: GridItem(.flexible()), count: 3)
+    var hazardTags: [String] {
+        return homeData.hazards.map { $0.text }
+    }
     
+    var availableFacility: [Facility] {
+        return homeData.facilities
+    }
+    
+    var resultMaxScores: [String: Float] {
+      homeData.loadDictionary(data: homeData.resultMaxScoreData,
+                              type: [String: Float].self) ?? [:]
+    }
+    
+    var resultScores: [String: Float] {
+        homeData.loadDictionary(data: homeData.resultScoreData,
+                              type: [String: Float].self) ?? [:]
+    }
+    
+    let categoryOrders = ["insectproof", "cleanliness", "security", "ventilation", "soundproof", "sunlight"]
+
     var body: some View {
         VStack {
-            ShareCardHeaderView(mainPicture: $mainPicture, homeCategory: $homeCategory, homeDirection: $homeDirection)
+            ShareCardHeaderView(homeData: $homeData)
             
             ChecklistResult
             ZZSSperator()
@@ -52,12 +67,14 @@ private extension ShareCardView {
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
             
-            ScoreGraph(category: ChecklistCategory.insectproof.text, maxScore: 30, currentScore: 5)
-            ScoreGraph(category: ChecklistCategory.cleanliness.text, maxScore: 100, currentScore: 80)
-            ScoreGraph(category: ChecklistCategory.security.text, maxScore: 70, currentScore: 70)
-            ScoreGraph(category: ChecklistCategory.ventilation.text, maxScore: 40, currentScore: 30)
-            ScoreGraph(category: ChecklistCategory.soundproof.text, maxScore: 30, currentScore: 16)
-            ScoreGraph(category: ChecklistCategory.sunlight.text, maxScore: 30, currentScore: 25)
+            ForEach(categoryOrders.indices, id: \.self) { index in
+                let categoryRawValue = categoryOrders[index]
+                if let maxScore = resultMaxScores[categoryRawValue],
+                   let score = resultScores[categoryRawValue],
+                   let category = ChecklistCategory(rawValue: categoryRawValue) {
+                    ScoreGraph(category: category.text, maxScore: maxScore, currentScore: score)
+                }
+            }
         }
         .padding(.horizontal, 16)
         .padding(.top, 24)
@@ -74,7 +91,7 @@ private extension ShareCardView {
             if !hazardTags.isEmpty {
                 LazyVGrid(columns: columnLayout) {
                     ForEach(hazardTags, id: \.self) { tag in
-                        ZZSTag(text: tag.text)
+                        ZZSTag(text: tag)
                     }
                 }
             } else {
@@ -102,8 +119,8 @@ private extension ShareCardView {
             }
             .padding(.bottom, 12)
             
-            if let modelData = model {
-                Image(uiImage: modelData)
+            if let modelImage = homeData.modelImage {
+                Image(uiImage: modelImage)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 140)

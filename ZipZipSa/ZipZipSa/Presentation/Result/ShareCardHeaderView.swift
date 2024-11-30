@@ -8,18 +8,11 @@
 import SwiftUI
 
 struct ShareCardHeaderView: View {
-    @Binding var mainPicture: UIImage?
-    @Binding var homeCategory: HomeCategory?
-    @Binding var homeDirection: HomeDirection?
-    @State var homeAreaPyeong: String? = "16"
-    @State var homeAreaSquareMeter: String? = "52.89"
-    @State var diposit: String? = "5000만원"
-    @State var rentalFee: String? = "30만원"
-    @State var maintenceFee: String? = "10만원"
-    @State var homeNikcname: String = "세 번째 집"
-    @State var homeAddress: String = "부산광역시 강서구 녹산산단 382로 14번가길 10~29번지 (송정동)"
+    @Binding var homeData: HomeData
     
-    let columnLayout = Array(repeating: GridItem(), count: 3)
+    var mainPicture: UIImage? {
+        homeData.homeImage
+    }
     
     var body: some View {
         content
@@ -70,7 +63,7 @@ private extension ShareCardHeaderView {
     
     var HomeNickname: some View {
         HStack {
-            Text(homeNikcname)
+            Text(homeData.homeName)
                 .foregroundStyle(Color.Tag.colorWhite)
                 .applyZZSFont(zzsFontSet: .subheadlineBold)
                 .padding(.horizontal, 8)
@@ -87,7 +80,7 @@ private extension ShareCardHeaderView {
     
     var HomeAddress: some View {
         HStack {
-            Text(homeAddress)
+            Text(homeData.locationText ?? "")
                 .foregroundStyle(Color.Text.onColorPrimary)
                 .applyZZSFont(zzsFontSet: .caption1Bold)
             Spacer()
@@ -95,19 +88,30 @@ private extension ShareCardHeaderView {
     }
     
     var HomeTags: some View {
-        LazyVGrid(columns: columnLayout) {
-            if let category = homeCategory?.text {
-                ZZSTag(text: category)
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
+                if let category = homeData.homeCategoryType?.text{
+                    ZZSTag(text: category)
+                }
+                if let direction = homeData.homeDirectionType?.text  {
+                    ZZSTag(text: direction)
+                }
+                if homeData.homeAreaPyeong != "" && homeData.homeAreaSquareMeter != "" {
+                    ZZSTag(text: "\(homeData.homeAreaPyeong)평/\(homeData.homeAreaSquareMeter)m²")
+                }
             }
-            if let direction = homeDirection?.text {
-                ZZSTag(text: direction)
+            
+            HStack(spacing: 6) {
+                ZZSTag(text: "보증금 \(rentalFeeStrings[0])")
+                ZZSTag(text: "월세 \(rentalFeeStrings[2])")
+                ZZSTag(text: "관리비 \(rentalFeeStrings[3])")
             }
-            if let pyeong = homeAreaPyeong, let squareMeter = homeAreaSquareMeter {
-                ZZSTag(text: "\(pyeong)평/\(squareMeter)m²")
-            }
-            ZZSTag(text: "보증금 \(diposit ?? "없음")")
-            ZZSTag(text: "월세 \(rentalFee ?? "없음")")
-            ZZSTag(text: "관리비 \(maintenceFee ?? "없음")")
+        }
+    }
+    
+    var rentalFeeStrings: [String] {
+        return homeData.rentalFeeData.map { rentalFee in
+            return rentalFee.value.isEmpty ? "없음" : "\(rentalFee.value)만원"
         }
     }
 }

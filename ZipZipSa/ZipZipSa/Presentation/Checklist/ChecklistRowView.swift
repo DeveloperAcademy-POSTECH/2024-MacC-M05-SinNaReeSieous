@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ChecklistRowView: View {
-    @Binding var selectedCategory: [ChecklistCategory]
-    @Binding var answers: [ChecklistItem: Set<Int>]
-    @Binding var scores: [ChecklistItem: Float]
+    let selectedCategory: [ChecklistCategory]
+    @Binding var answers: [UUID: Set<Int>]
+    @Binding var scores: [UUID: Float]
     let checklistItem: ChecklistItem
     
     var body: some View {
@@ -137,6 +137,6 @@ enum CaptionType {
 }
 
 
-#Preview {
-    ChecklistRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checklistItem: ChecklistItem.checklistItems[0])
-}
+//#Preview {
+//    ChecklistRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checklistItem: ChecklistItem.checklistItems[0])
+//}

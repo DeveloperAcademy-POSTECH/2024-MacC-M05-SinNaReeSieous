@@ -17,7 +17,7 @@ struct AddressEnterView: View {
     @State private var errorMessage: String? = nil
     @State private var searchResults: [(description: String, placeID: String)] = []
     @FocusState private var focusedTextField: AddressEnterFocusField?
-    @Binding var resultCoordinates: CLLocationCoordinate2D?
+    @Binding var resultCoordinates: LocationData?
     @Binding var resultLocationText: String?
     
     var body: some View {
@@ -158,7 +158,7 @@ private extension AddressEnterView {
     func applySearchResult() {
         self.presentationMode.wrappedValue.dismiss()
         if selectedCoordinates != nil && !searchText.isEmpty {
-            self.resultCoordinates = selectedCoordinates
+            self.resultCoordinates = LocationData(coordinate: selectedCoordinates)
             self.resultLocationText = searchText
         }
     }
