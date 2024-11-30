@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ResultCardView: View {
+    @State var homeCategory: HomeCategory = .villa
+    @State var homeDirection: HomeDirection = .south
     @State private var card: UIImage = UIImage()
     @State private var mainPicture: UIImage? = UIImage(resource: .mainPicSample)
     @Binding var model: UIImage?
@@ -17,7 +19,7 @@ struct ResultCardView: View {
             NavigationTitle
             
             ScrollView {
-                ShareCardView(model: $model, mainPicture: $mainPicture)
+                ShareCardView(homeCategory: $homeCategory, homeDirection: $homeDirection, model: $model, mainPicture: $mainPicture)
                     .background(BackgroundForCapture)
                 
                 ResultDetailViewButton
@@ -50,7 +52,7 @@ private extension ResultCardView {
                 .onAppear {
                     DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
-                        card = ShareCardView(model: $model, mainPicture: $mainPicture)
+                        card = ShareCardView(homeCategory: $homeCategory, homeDirection: $homeDirection, model: $model, mainPicture: $mainPicture)
                             .asUIImage(size: size)
                     }
                 }

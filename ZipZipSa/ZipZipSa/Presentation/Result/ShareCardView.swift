@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ShareCardView: View {
+    @Binding var homeCategory: HomeCategory
+    @Binding var homeDirection: HomeDirection
     @Binding var model: UIImage?
     @Binding var mainPicture: UIImage?
     
@@ -17,7 +19,7 @@ struct ShareCardView: View {
     
     var body: some View {
         VStack {
-            ShareCardHeaderView(mainPicture: $mainPicture)
+            ShareCardHeaderView(mainPicture: $mainPicture, homeCategory: $homeCategory, homeDirection: $homeDirection)
             
             ChecklistResult
             ZZSSperator()
