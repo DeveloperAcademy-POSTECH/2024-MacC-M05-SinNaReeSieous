@@ -12,6 +12,7 @@ struct ResultCardView: View {
     @State var homeDirection: HomeDirection = .south
     @State private var card: UIImage = UIImage()
     @State private var mainPicture: UIImage? = UIImage(resource: .mainPicSample)
+    @State private var hazaedTags: [Hazard] = [.cigaretteSmell, .cockroach, .mold]
     @Binding var model: UIImage?
     
     var body: some View {
@@ -19,7 +20,7 @@ struct ResultCardView: View {
             NavigationTitle
             
             ScrollView {
-                ShareCardView(homeCategory: $homeCategory, homeDirection: $homeDirection, model: $model, mainPicture: $mainPicture)
+                ShareCardView(homeCategory: $homeCategory, homeDirection: $homeDirection, hazaedTags: $hazaedTags, model: $model, mainPicture: $mainPicture)
                     .background(BackgroundForCapture)
                 
                 ResultDetailViewButton
@@ -52,7 +53,7 @@ private extension ResultCardView {
                 .onAppear {
                     DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
-                        card = ShareCardView(homeCategory: $homeCategory, homeDirection: $homeDirection, model: $model, mainPicture: $mainPicture)
+                        card = ShareCardView(homeCategory: $homeCategory, homeDirection: $homeDirection, hazaedTags: $hazaedTags, model: $model, mainPicture: $mainPicture)
                             .asUIImage(size: size)
                     }
                 }

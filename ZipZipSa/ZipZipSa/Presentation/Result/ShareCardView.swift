@@ -10,11 +10,11 @@ import SwiftUI
 struct ShareCardView: View {
     @Binding var homeCategory: HomeCategory
     @Binding var homeDirection: HomeDirection
+    @Binding var hazaedTags: [Hazard]
     @Binding var model: UIImage?
     @Binding var mainPicture: UIImage?
     
     let columnLayout = Array(repeating: GridItem(), count: 3)
-    let criticalTags: [String] = ["바퀴위험", "곰팡이 위험", "담배 위험", "사생활 위험", "소음 위험", "누수 위험", "수압 안좋음", "배수 안좋음", "온수 잘 안 나옴"]
     let availableFacility: [Facility] = []
     
     var body: some View {
@@ -52,12 +52,12 @@ private extension ShareCardView {
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
             
-            ScoreGraph(category: "방충", maxScore: 30, currentScore: 5)
-            ScoreGraph(category: "청결", maxScore: 100, currentScore: 80)
-            ScoreGraph(category: "치안", maxScore: 70, currentScore: 70)
-            ScoreGraph(category: "환기", maxScore: 40, currentScore: 30)
-            ScoreGraph(category: "방음", maxScore: 30, currentScore: 16)
-            ScoreGraph(category: "채광", maxScore: 30, currentScore: 25)
+            ScoreGraph(category: ChecklistCategory.insectproof.text, maxScore: 30, currentScore: 5)
+            ScoreGraph(category: ChecklistCategory.cleanliness.text, maxScore: 100, currentScore: 80)
+            ScoreGraph(category: ChecklistCategory.security.text, maxScore: 70, currentScore: 70)
+            ScoreGraph(category: ChecklistCategory.ventilation.text, maxScore: 40, currentScore: 30)
+            ScoreGraph(category: ChecklistCategory.soundproof.text, maxScore: 30, currentScore: 16)
+            ScoreGraph(category: ChecklistCategory.sunlight.text, maxScore: 30, currentScore: 25)
         }
         .padding(.horizontal, 16)
         .padding(.top, 24)
@@ -71,10 +71,10 @@ private extension ShareCardView {
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
             
-            if !criticalTags.isEmpty {
+            if !hazaedTags.isEmpty {
                 LazyVGrid(columns: columnLayout) {
-                    ForEach(criticalTags, id: \.self) { tag in
-                        ZZSTag(text: tag)
+                    ForEach(hazaedTags, id: \.self) { tag in
+                        ZZSTag(text: tag.text)
                     }
                 }
             } else {
