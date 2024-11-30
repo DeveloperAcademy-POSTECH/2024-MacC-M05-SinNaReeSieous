@@ -15,6 +15,8 @@ struct RoomScanView: View {
     @Binding var model: UIImage?
     @State private var showResultSheet: Bool = false
     @State private var isProcessing: Bool = false
+    @Binding var homeData: HomeData
+    @Binding var showHomeHuntSheet: Bool
     
     var body: some View {
         RoomCaptureView
@@ -25,7 +27,7 @@ struct RoomScanView: View {
                 }
             }
             .sheet(isPresented: $showResultSheet) {
-                ResultCardView(model: $model)
+                ResultCardView(model: $model, homeData: $homeData, showHomeHuntSheet: $showHomeHuntSheet)
                     .presentationDragIndicator(.visible)
             }
     }

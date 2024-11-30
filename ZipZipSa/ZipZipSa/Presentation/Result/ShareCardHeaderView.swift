@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct ShareCardHeaderView: View {
-    @Binding var mainPicture: UIImage?
+    @Binding var homeData: HomeData
+    var mainPicture: UIImage? {
+        homeData.homeImage
+    }
     
     var body: some View {
         content
@@ -67,7 +70,7 @@ private extension ShareCardHeaderView {
     }
     
     var RoomNickname: some View {
-        Text("세 번째 집")
+        Text(homeData.homeName)
             .foregroundStyle(Color.Tag.colorGray)
             .applyZZSFont(zzsFontSet: .subheadlineBold)
             .padding(.horizontal, 8)
@@ -91,7 +94,7 @@ private extension ShareCardHeaderView {
     }
     
     var RoomAddress: some View {
-        Text("부산광역시 강서구 녹산산단 382로 14번가길 10~29번지 (송정동)")
+        Text(homeData.locationText ?? "")
             .foregroundStyle(Color.Text.onColorPrimary)
             .applyZZSFont(zzsFontSet: .caption1Bold)
     }

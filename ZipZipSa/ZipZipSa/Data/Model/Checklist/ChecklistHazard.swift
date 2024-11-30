@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Hazard: Hashable {
+enum Hazard: String, Hashable {
     case waterLeak
     case waterPressure
     case waterCold

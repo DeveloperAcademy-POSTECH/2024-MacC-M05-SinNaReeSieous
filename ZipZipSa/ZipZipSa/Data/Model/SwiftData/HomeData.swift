@@ -15,7 +15,6 @@ final class HomeData {
     // MARK: - Essential
     
     var homeName: String
-    var address: String
     var homeCategoryData: String?
     var homeRentalTypeData: String?
     var homeAreaPyeong: String
@@ -36,15 +35,18 @@ final class HomeData {
     var selectedCategoryData: [ChecklistCategoryData] = []
     var answerData: Data? = nil
     var scoreData: Data? = nil
+    var resultMaxScoreData: Data? = nil
+    var resultScoreData: Data? = nil
+    var resultHazardData: [HazardData] = []
     var memoData: [MemoData] = [MemoData(), MemoData(), MemoData(), MemoData(), MemoData()]
     
     // MARK: - ResultCard
     
     var facilitiesData: [FacilityData] = []
+    var modelImageData: Data? = nil
     
     init(
         homeName: String = "",
-        address: String = "",
         homeCategory: String? = nil,
         homeRentalTypeData: String? = nil,
         homeAreaPyeong: String = "",
@@ -56,7 +58,6 @@ final class HomeData {
         locationText: String? = nil
     ) {
         self.homeName = homeName
-        self.address = address
         self.homeCategoryData = homeCategory
         self.homeRentalTypeData = homeRentalTypeData
         self.homeAreaPyeong = homeAreaPyeong
@@ -138,6 +139,38 @@ extension HomeData {
         
         return categories
     }
+    
+    var modelImage: UIImage? {
+        if let data = modelImageData,
+           let image = UIImage(data: data) {
+            return image
+        }
+        return nil
+    }
+    
+    var facilities: [Facility] {
+        var facilites: [Facility] = []
+        
+        for facilityData in facilitiesData {
+            if let facility = Facility(rawValue: facilityData.rawValue) {
+                facilites.append(facility)
+            }
+        }
+        
+        return facilites
+    }
+    
+    var hazards: [Hazard] {
+        var hazards: [Hazard] = []
+        
+        for hazard in resultHazardData {
+            if let hazard = Hazard(rawValue: hazard.rawValue) {
+                hazards.append(hazard)
+            }
+        }
+        
+        return hazards
+    }
 }
 
 @Model
@@ -196,3 +229,13 @@ final class MemoData {
         self.value = value
     }
 }
+
+@Model
+final class HazardData {
+    var rawValue: String
+    
+    init(rawValue: String = "") {
+        self.rawValue = rawValue
+    }
+}
+

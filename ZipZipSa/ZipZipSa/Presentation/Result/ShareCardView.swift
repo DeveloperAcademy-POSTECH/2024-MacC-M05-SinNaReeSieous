@@ -8,16 +8,32 @@
 import SwiftUI
 
 struct ShareCardView: View {
-    @Binding var model: UIImage?
-    @Binding var mainPicture: UIImage?
+    @Binding var homeData: HomeData
     
-    let columnLayout = Array(repeating: GridItem(), count: 3)
-    let criticalTags: [String] = ["바퀴위험", "곰팡이 위험", "담배 위험", "사생활 위험", "소음 위험", "누수 위험", "수압 안좋음", "배수 안좋음", "온수 잘 안 나옴"]
-    let availableFacility: [Facility] = []
+    let columnLayout = Array(repeating: GridItem(.flexible()), count: 3)
+    var criticalTags: [String] {
+        return homeData.hazards.map { $0.text }
+    }
     
+    var availableFacility: [Facility] {
+        return homeData.facilities
+    }
+    
+    var resultMaxScores: [String: Float] {
+      homeData.loadDictionary(data: homeData.resultMaxScoreData,
+                              type: [String: Float].self) ?? [:]
+    }
+    
+    var resultScores: [String: Float] {
+        homeData.loadDictionary(data: homeData.resultScoreData,
+                              type: [String: Float].self) ?? [:]
+    }
+    
+    let categoryOrders = ["insectproof", "cleanliness", "security", "ventilation", "soundproof", "sunlight"]
+
     var body: some View {
         VStack {
-            ShareCardHeaderView(mainPicture: $mainPicture)
+            ShareCardHeaderView(homeData: $homeData)
             
             ChecklistResult
             ZZSSperator()
@@ -50,12 +66,20 @@ private extension ShareCardView {
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
             
-            ScoreGraph(category: "방충", maxScore: 30, currentScore: 5)
-            ScoreGraph(category: "청결", maxScore: 100, currentScore: 80)
-            ScoreGraph(category: "치안", maxScore: 70, currentScore: 70)
-            ScoreGraph(category: "환기", maxScore: 40, currentScore: 30)
-            ScoreGraph(category: "방음", maxScore: 30, currentScore: 16)
-            ScoreGraph(category: "채광", maxScore: 30, currentScore: 25)
+            ForEach(categoryOrders.indices, id: \.self) { index in
+                let categoryRawValue = categoryOrders[index]
+                if let maxScore = resultMaxScores[categoryRawValue],
+                   let score = resultScores[categoryRawValue],
+                   let category = ChecklistCategory(rawValue: categoryRawValue) {
+                    ScoreGraph(category: category.text, maxScore: maxScore, currentScore: score)
+                }
+            }
+//            ScoreGraph(category: "방충", maxScore: 30, currentScore: 5)
+//            ScoreGraph(category: "청결", maxScore: 100, currentScore: 80)
+//            ScoreGraph(category: "치안", maxScore: 70, currentScore: 70)
+//            ScoreGraph(category: "환기", maxScore: 40, currentScore: 30)
+//            ScoreGraph(category: "방음", maxScore: 30, currentScore: 16)
+//            ScoreGraph(category: "채광", maxScore: 30, currentScore: 25)
         }
         .padding(.horizontal, 16)
         .padding(.top, 24)
@@ -100,8 +124,8 @@ private extension ShareCardView {
             }
             .padding(.bottom, 12)
             
-            if let modelData = model {
-                Image(uiImage: modelData)
+            if let modelImage = homeData.modelImage {
+                Image(uiImage: modelImage)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 140)

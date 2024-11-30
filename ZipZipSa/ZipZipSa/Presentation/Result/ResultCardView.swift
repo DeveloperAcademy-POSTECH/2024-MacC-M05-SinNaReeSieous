@@ -6,18 +6,23 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ResultCardView: View {
+    @Environment(\.modelContext) private var modelContext
+    
     @State private var card: UIImage = UIImage()
     @State private var mainPicture: UIImage? = UIImage(resource: .mainPicSample)
     @Binding var model: UIImage?
+    @Binding var homeData: HomeData
+    @Binding var showHomeHuntSheet: Bool
     
     var body: some View {
         VStack {
             NavigationTitle
             
             ScrollView {
-                ShareCardView(model: $model, mainPicture: $mainPicture)
+                ShareCardView(homeData: $homeData)
                     .background(BackgroundForCapture)
                 
                 ResultDetailViewButton
@@ -25,6 +30,9 @@ struct ResultCardView: View {
             }
         }
         .background(Color.Background.primary)
+        .onAppear {
+            saveHomeModel()
+        }
     }
 }
 
@@ -50,7 +58,7 @@ private extension ResultCardView {
                 .onAppear {
                     DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
-                        card = ShareCardView(model: $model, mainPicture: $mainPicture)
+                        card = ShareCardView(homeData: $homeData)
                             .asUIImage(size: size)
                     }
                 }
@@ -80,5 +88,17 @@ private extension ResultCardView {
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 24)
+    }
+    
+    func saveHomeModel() {
+        print(homeData.homeName)
+        if let modelImageData = model?.pngData() {
+            homeData.modelImageData = modelImageData
+        }
+        modelContext.insert(homeData)
+        guard let _ = try? modelContext.save() else  {
+            return
+        }
+        print("저장됨!")
     }
 }

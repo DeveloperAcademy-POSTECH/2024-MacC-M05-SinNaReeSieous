@@ -70,10 +70,10 @@ struct ChecklistView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
         .navigationDestination(isPresented: $moveToRoomScanInfoView) {
-            RoomScanInfoView(model: $model)
+            RoomScanInfoView(model: $model, homeData: $homeData, showHomeHuntSheet: $showHomeHuntSheet)
         }
         .navigationDestination(isPresented: $moveToUnsupportedDeviceView) {
-            UnsupportedDeviceView(model: $model)
+            UnsupportedDeviceView(model: $model, homeData: $homeData, showHomeHuntSheet: $showHomeHuntSheet)
         }
     }
 }
@@ -179,7 +179,7 @@ private extension ChecklistView {
     
     func moveNextStep() {
         if selectedSpaceType.rawValue == 4 {
-            getChecklistResult()
+            applyChecklistResult()
             if RoomCaptureSession.isSupported {
                 moveToRoomScanInfoView = true
             } else {
@@ -217,7 +217,10 @@ private extension ChecklistView {
     
     // MARK: - Custom Method
     
-    func getChecklistResult() {
+    func applyChecklistResult() {
+        homeData.resultScoreData = homeData.saveDictionary(dictionary: calculateCategoryScoreResult())
+        homeData.resultMaxScoreData = homeData.saveDictionary(dictionary: calculateMaxCategoryScoreResult())
+        homeData.resultHazardData = getHazardResult().map { HazardData(rawValue: $0.rawValue) }
         print("현재 점수")
         print(calculateCategoryScoreResult())
         print("최대 점수")
@@ -226,8 +229,8 @@ private extension ChecklistView {
         print(getHazardResult())
     }
     
-    func calculateCategoryScoreResult() -> [ChecklistCategory: Float] {
-        var categoryScores: [ChecklistCategory: Float] = [:]
+    func calculateCategoryScoreResult() -> [String: Float] {
+        var categoryScores: [String: Float] = [:]
         
         filteredChecklistItems.forEach { checklistItem in
             let categories = [checklistItem.basicCategory] + checklistItem.crossTip.keys
@@ -242,7 +245,7 @@ private extension ChecklistView {
                     default:
                         basicValue = 1.0
                     }
-                    categoryScores[category, default: 0.0] += scores[checklistItem.id] ?? basicValue
+                    categoryScores[category.rawValue, default: 0.0] += scores[checklistItem.id] ?? basicValue
                 }
             }
         }
@@ -250,8 +253,8 @@ private extension ChecklistView {
         return categoryScores
     }
     
-    func calculateMaxCategoryScoreResult() -> [ChecklistCategory: Float] {
-        var categoryScores: [ChecklistCategory: Float] = [:]
+    func calculateMaxCategoryScoreResult() -> [String: Float] {
+        var categoryScores: [String: Float] = [:]
         
         filteredChecklistItems.forEach { checklistItem in
             let categories = [checklistItem.basicCategory] + checklistItem.crossTip.keys
@@ -262,13 +265,13 @@ private extension ChecklistView {
                     switch checklistItem.question.answerType {
                     case .multiSelect(let basicScore, let answerDisposition):
                         if answerDisposition == .negative {
-                            categoryScores[category, default: 0.0] += basicScore
+                            categoryScores[category.rawValue, default: 0.0] += basicScore
                         } else if answerDisposition == .positive {
                             let maxScore: Float = Float(checklistItem.question.answerOptions.count) * 0.5
-                            categoryScores[category, default: 0.0] += maxScore
+                            categoryScores[category.rawValue, default: 0.0] += maxScore
                         }
                     default:
-                        categoryScores[category, default: 0.0] += 2.0
+                        categoryScores[category.rawValue, default: 0.0] += 2.0
                     }
                 }
             }
@@ -285,7 +288,7 @@ private extension ChecklistView {
                 return
             }
             let hasHazard = answers[checklistItem.id] == [0]
-            if hasHazard {
+            if hasHazard && !hazards.contains(hazard) {
                 hazards.append(hazard)
             }
         }
