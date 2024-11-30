@@ -25,7 +25,7 @@ struct UnsupportedDeviceView: View {
                 ShowResultCardButton
             }
         }
-        .sheet(isPresented: $showResultCard) {
+        .fullScreenCover(isPresented: $showResultCard) {
             ResultCardView(model: $model, homeData: $homeData, showHomeHuntSheet: $showHomeHuntSheet)
         }
     }

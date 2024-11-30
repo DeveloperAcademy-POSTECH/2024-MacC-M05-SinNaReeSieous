@@ -9,29 +9,40 @@ import SwiftUI
 import SwiftData
 
 struct ResultCardView: View {
+
     @Environment(\.modelContext) private var modelContext
     
     @State private var card: UIImage = UIImage()
     @State private var mainPicture: UIImage? = UIImage(resource: .mainPicSample)
+    @State private var hazardTags: [Hazard] = [.cigaretteSmell, .cockroach, .mold]
     @Binding var model: UIImage?
     @Binding var homeData: HomeData
     @Binding var showHomeHuntSheet: Bool
     
     var body: some View {
-        VStack {
-            NavigationTitle
-            
-            ScrollView {
-                ShareCardView(homeData: $homeData)
-                    .background(BackgroundForCapture)
+        NavigationStack {
+            VStack {
+                NavigationTitle
                 
-                ResultDetailViewButton
-                ShareButton
+                ScrollView {
+                    ShareCardView(homeData: $homeData)
+                        .background(BackgroundForCapture)
+                    
+                    ResultDetailViewButton
+                    ShareButton
+                }
+                .scrollIndicators(.never)
             }
-        }
-        .background(Color.Background.primary)
-        .onAppear {
-            saveHomeModel()
+            .navigationBarTitleDisplayMode(.inline)
+            .background(Color.Background.primary)
+            .onAppear {
+                saveHomeModel()
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    CloseButton
+                }
+            }
         }
     }
 }
@@ -41,7 +52,7 @@ private extension ResultCardView {
     
     var NavigationTitle: some View {
         HStack {
-            Text("집 요약 카드예요")
+            Text(ZipLiteral.ResultCard.navigationTitleText)
                 .applyZZSFont(zzsFontSet: .title2)
                 .foregroundStyle(Color.Text.primary)
             
@@ -49,7 +60,17 @@ private extension ResultCardView {
         }
         .padding(.top, 14)
         .padding(.horizontal, 16)
-        .padding(.bottom, 34)
+        .padding(.bottom, 16)
+    }
+    
+    var CloseButton: some View {
+        Button {
+            showHomeHuntSheet = false
+        } label: {
+            Text("완료")
+                .foregroundStyle(Color.Icon.tertiary)
+                .applyZZSFont(zzsFontSet: .bodyBold)
+        }
     }
     
     var BackgroundForCapture: some View {
@@ -69,7 +90,7 @@ private extension ResultCardView {
         Button {
             // TODO: 상세보기뷰로 이동
         } label: {
-            Text("상세보기")
+            Text(ZipLiteral.ResultCard.resultDetailButtonText)
                 .foregroundStyle(.gray)
                 .font(Font.system(size: 16))
         }
@@ -77,12 +98,12 @@ private extension ResultCardView {
     }
     
     var ShareButton: some View {
-        ShareLink(item: Image(uiImage: card), preview: SharePreview("집 요약 카드 공유", icon: "AppIcon")) {
+        ShareLink(item: Image(uiImage: card), preview: SharePreview(ZipLiteral.ResultCard.sharePreviewText, icon: ZipLiteral.ResultCard.sharePreviewIcon)) {
             RoundedRectangle(cornerRadius: 15)
                 .foregroundStyle(.primary)
                 .frame(height: 53)
                 .overlay(
-                    Text("공유하기")
+                    Text(ZipLiteral.ResultCard.shareButtonText)
                         .foregroundStyle(Color.white)
                 )
         }

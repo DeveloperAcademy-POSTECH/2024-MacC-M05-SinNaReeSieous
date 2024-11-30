@@ -38,7 +38,7 @@ struct RoomScanInfoView: View {
             Text(ZipLiteral.Alert.skipAlertMessage)
                 .multilineTextAlignment(.center)
         }
-        .sheet(isPresented: $showResultCard) {
+        .fullScreenCover(isPresented: $showResultCard) {
             ResultCardView(model: $model, homeData: $homeData, showHomeHuntSheet: $showHomeHuntSheet)
         }
     }

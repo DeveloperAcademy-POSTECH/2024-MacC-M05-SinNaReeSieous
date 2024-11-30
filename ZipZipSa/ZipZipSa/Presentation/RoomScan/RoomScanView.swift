@@ -26,7 +26,7 @@ struct RoomScanView: View {
                     isProcessing = false
                 }
             }
-            .sheet(isPresented: $showResultSheet) {
+            .fullScreenCover(isPresented: $showResultSheet) {
                 ResultCardView(model: $model, homeData: $homeData, showHomeHuntSheet: $showHomeHuntSheet)
                     .presentationDragIndicator(.visible)
             }
