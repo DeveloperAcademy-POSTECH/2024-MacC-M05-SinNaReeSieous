@@ -9,6 +9,17 @@ import SwiftUI
 
 struct ShareCardHeaderView: View {
     @Binding var mainPicture: UIImage?
+    @Binding var homeCategory: HomeCategory
+    @Binding var homeDirection: HomeDirection
+    @State var homeAreaPyeong: String = "16"
+    @State var homeAreaSquareMeter: String = "52.89"
+    @State var diposit: String = "5000"
+    @State var rentalFee: String = "30"
+    @State var maintenceFee: String = "10"
+    @State var homeNikcname: String = "세 번째 집"
+    @State var homeAddress: String = "부산광역시 강서구 녹산산단 382로 14번가길 10~29번지 (송정동)"
+    
+    let columnLayout = Array(repeating: GridItem(), count: 3)
     
     var body: some View {
         content
@@ -37,18 +48,9 @@ private extension ShareCardHeaderView {
     // MARK: - View
     
     private var contentOverlay: some View {
-        VStack() {
-            HStack(alignment: .top) {
-                RoomNickname
-                Spacer()
-                RoomType
-            }
-            .padding(.top, 8)
-            
-            HStack {
-                RoomAddress
-                Spacer()
-            }
+        VStack {
+            HomeNickname
+            HomeAddress
             
             Spacer()
             
@@ -61,46 +63,45 @@ private extension ShareCardHeaderView {
                     .padding(.bottom, 54)
             }
             
-            RoomTags
+            HomeTags
         }
         .padding(8)
     }
     
-    var RoomNickname: some View {
-        Text("세 번째 집")
-            .foregroundStyle(Color.Tag.colorGray)
-            .applyZZSFont(zzsFontSet: .subheadlineBold)
-            .padding(.horizontal, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.Tag.backgroundGray)
-                    .frame(height: 32)
-            )
+    var HomeNickname: some View {
+        HStack {
+            Text(homeNikcname)
+                .foregroundStyle(Color.Tag.colorWhite)
+                .applyZZSFont(zzsFontSet: .subheadlineBold)
+                .padding(.horizontal, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.Tag.backgroundWhite)
+                        .frame(height: 32)
+                )
+            Spacer()
+        }
+        .padding(.top, 8)
+        .padding(.bottom, 6)
     }
     
-    var RoomType: some View {
-        Text("빌라")
-            .foregroundStyle(Color.Text.onColorSecondary)
-            .applyZZSFont(zzsFontSet: .caption1Bold)
-            .padding(.horizontal, 6)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.Text.onColorSecondary, lineWidth: 1)
-                    .frame(height: 22)
-            )
+    var HomeAddress: some View {
+        HStack {
+            Text(homeAddress)
+                .foregroundStyle(Color.Text.onColorPrimary)
+                .applyZZSFont(zzsFontSet: .caption1Bold)
+            Spacer()
+        }
     }
     
-    var RoomAddress: some View {
-        Text("부산광역시 강서구 녹산산단 382로 14번가길 10~29번지 (송정동)")
-            .foregroundStyle(Color.Text.onColorPrimary)
-            .applyZZSFont(zzsFontSet: .caption1Bold)
-    }
-    
-    var RoomTags: some View {
-        HStack(spacing: 6) {
-            ZZSTag(text: "보증금 0000만원")
-            ZZSTag(text: "보증금 0000만원")
-            ZZSTag(text: "보증금 0000만원")
+    var HomeTags: some View {
+        LazyVGrid(columns: columnLayout) {
+            ZZSTag(text: homeCategory.text)
+            ZZSTag(text: homeDirection.text)
+            ZZSTag(text: "\(homeAreaPyeong)평/\(homeAreaSquareMeter)m²")
+            ZZSTag(text: "보증금 \(diposit)만원")
+            ZZSTag(text: "월세 \(rentalFee)만원")
+            ZZSTag(text: "관리비 \(maintenceFee)만원")
         }
     }
 }
