@@ -16,12 +16,12 @@
 //    @State private var selectedCoordinates: CLLocationCoordinate2D?
 //    @State private var isLoading: Bool = false
 //    @State private var errorMessage: String? = nil
-//    @State private var searchResults: [(description: String, placeID: String)] = [] // ❎
+//    /*@State private var searchResults: [(description: String, placeID: String)] = []*/ // ❌
 //    @FocusState private var focusedTextField: AddressEnterFocusField?
 //    @Binding var resultCoordinates: CLLocationCoordinate2D?
 //    @Binding var resultLocationText: String?
 //    
-//    @State private var testSearchResults: [MKMapItem] = []  // ✅
+//    @State private var searchResults: [MKMapItem] = []  // ✅
 //    
 //    var body: some View {
 //        NavigationStack {
@@ -103,7 +103,7 @@
 //    var SearchResultList: some View {
 //        ScrollView {
 //            VStack(spacing: 0) {
-//                ForEach(testSearchResults, id: \.self) { result in  // ✅
+//                ForEach(searchResults, id: \.self) { result in  // ✅
 //                    Button {
 //                        print("Taaped")
 //                        if let coordinate = result.placemark.location?.coordinate { // ✅
@@ -177,34 +177,34 @@
 //    
 //    // MARK: - Custom Method
 //    
-//    private func fetchSearchResults(for query: String) async {
-//        isLoading = true
-//        errorMessage = nil
-//        
-//        do {
-//            let results = try await AddressSearchManager.shared.fetchAutocompleteResults(for: query)
-//            searchResults = results
-//            isLoading = false
-//            if results.isEmpty {
-//                errorMessage = "검색 결과가 없어요\n이름을 다시 확인해주세요"
-//            }
-//        } catch {
-//            errorMessage = "검색 실패: \(error.localizedDescription)"
-//            isLoading = false
-//        }
-//    }
+////    private func fetchSearchResults(for query: String) async { ❌
+////        isLoading = true
+////        errorMessage = nil
+////        
+////        do {
+////            let results = try await AddressSearchManager.shared.fetchAutocompleteResults(for: query)
+////            searchResults = results
+////            isLoading = false
+////            if results.isEmpty {
+////                errorMessage = "검색 결과가 없어요\n이름을 다시 확인해주세요"
+////            }
+////        } catch {
+////            errorMessage = "검색 실패: \(error.localizedDescription)"
+////            isLoading = false
+////        }
+////    }
 //    
-//    private func selectAddress(_ result: (description: String, placeID: String)) async {
-//        errorMessage = nil
-//        
-//        do {
-//            let coordinates = try await AddressSearchManager.shared.fetchCoordinates(for: result.placeID)
-//            selectedCoordinates = coordinates
-//            searchText = result.description
-//        } catch {
-//            errorMessage = "위치 정보를 가져올 수 없습니다."
-//        }
-//    }
+////    private func selectAddress(_ result: (description: String, placeID: String)) async { ❌
+////        errorMessage = nil
+////        
+////        do {
+////            let coordinates = try await AddressSearchManager.shared.fetchCoordinates(for: result.placeID)
+////            selectedCoordinates = coordinates
+////            searchText = result.description
+////        } catch {
+////            errorMessage = "위치 정보를 가져올 수 없습니다."
+////        }
+////    }
 //    
 //    // MARK: - Test ✅
 //    
@@ -223,7 +223,7 @@
 //        do {
 //            let response = try await search.start()
 //            await MainActor.run {
-//                self.testSearchResults = response.mapItems.uniqued()
+//                self.searchResults = response.mapItems.uniqued()
 //            }
 //        } catch {
 //            print("주소 검색 실패: \(error.localizedDescription)")
@@ -251,6 +251,8 @@
 //    case searchBar
 //}
 //
-//#Preview {
-//    TestAddressEnterView()
-//}
+//
+//
+////#Preview {
+////    TestAddressEnterView()
+////}

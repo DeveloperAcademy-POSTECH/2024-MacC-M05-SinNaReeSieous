@@ -7,58 +7,79 @@
 
 import CoreLocation
 
-class TestLocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+class TestLocationManager: NSObject, ObservableObject {
     @Published var userLocation: CLLocationCoordinate2D?
     private var locationManager = CLLocationManager()
-
+    private var locationUpdateHandler: ((Result<CLLocationCoordinate2D, Error>) -> Void)?
+    private var authorizationChangeHandler: ((CLAuthorizationStatus) -> Void)?
+    
     override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
-
-    func requestLocationAuthorization() {
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.requestWhenInUseAuthorization()
-        } else {
-            print("위치 서비스가 비활성화되어 있습니다.")
+    
+    func requestLocationAuthorization() async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            if CLLocationManager.locationServicesEnabled() {
+                locationManager.requestWhenInUseAuthorization()
+                authorizationChangeHandler = { status in
+                    switch status {
+                    case .authorizedWhenInUse, .authorizedAlways:
+                        continuation.resume()
+                    case .denied, .restricted:
+                        continuation.resume(throwing: NSError(domain: "LocationAccessDenied", code: 1, userInfo: nil))
+                    default:
+                        continuation.resume(throwing: NSError(domain: "UnknownAuthorizationStatus", code: 1, userInfo: nil))
+                    }
+                }
+            } else {
+                continuation.resume(throwing: NSError(domain: "LocationServicesDisabled", code: 1, userInfo: nil))
+            }
         }
     }
-
-    func fetchCurrentLocation(completion: @escaping (Result<CLLocationCoordinate2D, Error>) -> Void) {
+    
+    func fetchCurrentLocation() async throws -> CLLocationCoordinate2D {
         guard CLLocationManager.locationServicesEnabled() else {
-            completion(.failure(NSError(domain: "LocationServicesDisabled", code: 1, userInfo: nil)))
-            return
+            throw NSError(domain: "LocationServicesDisabled", code: 1, userInfo: nil)
         }
-
+        
         switch locationManager.authorizationStatus {
         case .authorizedWhenInUse, .authorizedAlways:
-            locationManager.startUpdatingLocation()
+            break
         case .notDetermined:
-            requestLocationAuthorization()
+            try await requestLocationAuthorization()
         case .denied, .restricted:
-            completion(.failure(NSError(domain: "LocationAccessDenied", code: 1, userInfo: nil)))
+            throw NSError(domain: "LocationAccessDenied", code: 1, userInfo: nil)
         @unknown default:
-            completion(.failure(NSError(domain: "UnknownAuthorizationStatus", code: 1, userInfo: nil)))
+            throw NSError(domain: "UnknownAuthorizationStatus", code: 1, userInfo: nil)
         }
-
-        locationManager.delegate = self
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            locationUpdateHandler = { result in
+                continuation.resume(with: result)
+            }
+            locationManager.startUpdatingLocation()
+        }
     }
+}
 
+extension TestLocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             userLocation = location.coordinate
             locationManager.stopUpdatingLocation()
+            locationUpdateHandler?(.success(location.coordinate))
+            locationUpdateHandler = nil
         }
     }
-
+    
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
-            print("위치 권한 승인됨")
-        }
+        authorizationChangeHandler?(manager.authorizationStatus)
     }
-
+    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("위치 정보 가져오기 실패: \(error.localizedDescription)")
+        locationUpdateHandler?(.failure(error))
+        locationUpdateHandler = nil
     }
 }

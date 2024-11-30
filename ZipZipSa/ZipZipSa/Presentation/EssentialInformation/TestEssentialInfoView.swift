@@ -30,7 +30,7 @@
 //    @State private var useCamera: Bool = false
 //    @State private var selectedImageData: Data? = nil
 //    
-//    @StateObject private var locationManager = LocationManager()
+//    @StateObject private var locationManager = TestLocationManager()
 //    @State private var selectedCoordinates: CLLocationCoordinate2D?
 //    @State private var selectedLocationText: String? = nil
 //    @State private var showAddressEnterView: Bool = false
@@ -64,7 +64,7 @@
 //                    action: {
 //                        moveToChecklistView = true
 //                        Task {
-//                            await searchNearbyFacilities()
+//                            await searchFacilities()
 //                            print(availableFacilities)
 //                        }
 //                    },
@@ -585,34 +585,32 @@
 //    
 //    // MARK: - Custom Method
 //    
-//    private func fetchCurrentLocation() async {
-//        isGettingAddress = true
-//        locationManager.requestLocationAuthorization()
-//        if let location = locationManager.userLocation {
-//            selectedCoordinates = CLLocationCoordinate2D(latitude: location.latitude, longitude: location.longitude)
-//            await reverseGeocode()
-//        } else {
-//            print("현재 위치를 가져올 수 없습니다.")
+//    private func fetchCurrentLocation() async { // ✅
+//        do {
+//            let coordinate = try await locationManager.fetchCurrentLocation()
+//            selectedCoordinates = coordinate
+//            if let address = await reverseGeocode(coordinate) {
+//                selectedLocationText = address
+//            } else {
+//                selectedLocationText = "현재 위치를 가져올 수 없습니다."
+//            }
+//            print("현재위치 좌표: \(coordinate.latitude), \(coordinate.longitude)")
+//        } catch {
+//            print("현재위치 가져오기 실패: \(error.localizedDescription)")
+//            selectedLocationText = "위치 가져오기 실패"
 //        }
-//        isGettingAddress = false
 //    }
-//    
-//    private func reverseGeocode() async {
-//        guard let coordinates = selectedCoordinates else {
-//            print("좌표가 선택되지 않았습니다.")
-//            return
-//        }
+//
+//    private func reverseGeocode(_ coordinate: CLLocationCoordinate2D) async -> String? {    // ✅
+//        let geocoder = CLGeocoder()
+//        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
 //        
 //        do {
-//            let address = try await AddressSearchManager.shared.getAddressForLatLng(
-//                latitude: coordinates.latitude,
-//                longitude: coordinates.longitude
-//            )
-//            
-//            selectedLocationText = address
+//            let placemarks = try await geocoder.reverseGeocodeLocation(location)
+//            return placemarks.first.flatMap { formatAddress(from: $0) }
 //        } catch {
-//            print("주소 변환 실패: \(error.localizedDescription)")
-//            print("Error occurred: \(error)")
+//            print("역지오코딩 실패: \(error.localizedDescription)")
+//            return nil
 //        }
 //    }
 //    
@@ -636,11 +634,30 @@
 //        return address.isEmpty ? nil : address
 //    }
 //    
-//    private func searchNearbyFacilities() async {
+////    private func searchNearbyFacilities() async { // ❌
+////        if let coordinates = selectedCoordinates {
+////            do {
+////                let location = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
+////                let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.rawValue })
+////                
+////                availableFacilities = Facility.allCases.filter { facility in
+////                    results[facility.rawValue] == true
+////                }
+////            } catch let networkError as NetworkError {
+////                networkError.logError()
+////            } catch {
+////                print("Unexpected error: \(error)")
+////            }
+////        } else {
+////            availableFacilities = []
+////        }
+////    }
+//    
+//    private func searchFacilities() async { //✅
 //        if let coordinates = selectedCoordinates {
 //            do {
 //                let location = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
-//                let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.rawValue })
+//                let results = try await FacilityManager.searchFacilities(at: location)
 //                
 //                availableFacilities = Facility.allCases.filter { facility in
 //                    results[facility.rawValue] == true
