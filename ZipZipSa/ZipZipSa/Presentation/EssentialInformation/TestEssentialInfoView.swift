@@ -30,7 +30,7 @@
 //    @State private var useCamera: Bool = false
 //    @State private var selectedImageData: Data? = nil
 //    
-//    @StateObject private var locationManager = TestLocationManager()
+//    @StateObject private var locationManager = LocationManager() // ✅
 //    @State private var selectedCoordinates: CLLocationCoordinate2D?
 //    @State private var selectedLocationText: String? = nil
 //    @State private var showAddressEnterView: Bool = false
@@ -587,17 +587,18 @@
 //    
 //    private func fetchCurrentLocation() async { // ✅
 //        do {
+//            isGettingAddress = true
 //            let coordinate = try await locationManager.fetchCurrentLocation()
 //            selectedCoordinates = coordinate
+//            homeData.location = LocationData(coordinate: coordinate)
 //            if let address = await reverseGeocode(coordinate) {
-//                selectedLocationText = address
+//                homeData.locationText = address
 //            } else {
-//                selectedLocationText = "현재 위치를 가져올 수 없습니다."
+//                print("현재 위치를 가져올 수 없습니다.")
 //            }
 //            print("현재위치 좌표: \(coordinate.latitude), \(coordinate.longitude)")
 //        } catch {
 //            print("현재위치 가져오기 실패: \(error.localizedDescription)")
-//            selectedLocationText = "위치 가져오기 실패"
 //        }
 //    }
 //

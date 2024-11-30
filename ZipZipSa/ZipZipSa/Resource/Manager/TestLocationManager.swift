@@ -7,7 +7,7 @@
 
 import CoreLocation
 
-class TestLocationManager: NSObject, ObservableObject {
+class LocationManager: NSObject, ObservableObject {
     @Published var userLocation: CLLocationCoordinate2D?
     private var locationManager = CLLocationManager()
     private var locationUpdateHandler: ((Result<CLLocationCoordinate2D, Error>) -> Void)?
@@ -64,7 +64,7 @@ class TestLocationManager: NSObject, ObservableObject {
     }
 }
 
-extension TestLocationManager: CLLocationManagerDelegate {
+extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             userLocation = location.coordinate

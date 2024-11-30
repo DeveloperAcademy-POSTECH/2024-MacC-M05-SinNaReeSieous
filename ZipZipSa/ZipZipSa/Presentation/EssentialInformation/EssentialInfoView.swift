@@ -8,6 +8,7 @@
 import SwiftUI
 import PhotosUI
 import SwiftData
+import MapKit
 
 struct EssentialInfoView: View {
     
@@ -593,34 +594,52 @@ private extension EssentialInfoView {
     // MARK: - Custom Method
     
     private func fetchCurrentLocation() async {
-        isGettingAddress = true
-        locationManager.requestLocationAuthorization()
-        if let location = locationManager.userLocation {
-            homeData.location = LocationData(latitude: location.latitude, longitude: location.longitude)
-            await reverseGeocode()
-        } else {
-            print("현재 위치를 가져올 수 없습니다.")
+        do {
+            isGettingAddress = true
+            let coordinate = try await locationManager.fetchCurrentLocation()
+            homeData.location = LocationData(coordinate: coordinate)
+            if let address = await reverseGeocode(coordinate) {
+                homeData.locationText = address
+            } else {
+                print("현재 위치를 가져올 수 없습니다.")
+            }
+            print("현재위치 좌표: \(coordinate.latitude), \(coordinate.longitude)")
+        } catch {
+            print("현재위치 가져오기 실패: \(error.localizedDescription)")
         }
-        isGettingAddress = false
     }
-    
-    private func reverseGeocode() async {
-        guard let coordinates = homeData.location?.coordinate else {
-            print("좌표가 선택되지 않았습니다.")
-            return
-        }
+
+    private func reverseGeocode(_ coordinate: CLLocationCoordinate2D) async -> String? {
+        let geocoder = CLGeocoder()
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         
         do {
-            let address = try await AddressSearchManager.shared.getAddressForLatLng(
-                latitude: coordinates.latitude,
-                longitude: coordinates.longitude
-            )
-            
-            homeData.locationText = address
+            let placemarks = try await geocoder.reverseGeocodeLocation(location)
+            return placemarks.first.flatMap { formatAddress(from: $0) }
         } catch {
-            print("주소 변환 실패: \(error.localizedDescription)")
-            print("Error occurred: \(error)")
+            print("역지오코딩 실패: \(error.localizedDescription)")
+            return nil
         }
+    }
+    
+    private func formatAddress(from placemark: CLPlacemark) -> String? {    // ✅
+        let administrativeArea = placemark.administrativeArea ?? "" // 도/광역시
+        let locality = placemark.locality ?? "" // 시/군/구
+        let thoroughfare = placemark.thoroughfare ?? "" // 도로명
+        let subThoroughfare = placemark.subThoroughfare ?? "" // 도로번호
+        let address = "\(administrativeArea) \(locality) \(thoroughfare) \(subThoroughfare)"
+            .trimmingCharacters(in: .whitespaces)
+        return address.isEmpty ? nil : address
+    }
+    
+    private func formatAddress(from placemark: MKPlacemark) -> String? {    // ✅
+        let administrativeArea = placemark.administrativeArea ?? "" // 도/광역시
+        let locality = placemark.locality ?? "" // 시/군/구
+        let thoroughfare = placemark.thoroughfare ?? "" // 도로명
+        let subThoroughfare = placemark.subThoroughfare ?? "" // 도로번호
+        let address = "\(administrativeArea) \(locality) \(thoroughfare) \(subThoroughfare)"
+            .trimmingCharacters(in: .whitespaces)
+        return address.isEmpty ? nil : address
     }
     
     private func searchNearbyFacilities() async {
