@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum HomeRentalType: CaseIterable {
+enum HomeRentalType: String, CaseIterable {
     case monthlyRent
     case fullDeposit
     case semiDeposit

@@ -11,6 +11,8 @@ struct RoomScanInfoView: View {
     @State var showAlert: Bool = false
     @State var showResultCard: Bool = false
     @Binding var model: UIImage?
+    @Binding var homeData: HomeData
+    @Binding var showHomeHuntSheet: Bool
     
     var body: some View {
         ZStack {
@@ -36,8 +38,8 @@ struct RoomScanInfoView: View {
             Text(ZipLiteral.Alert.skipAlertMessage)
                 .multilineTextAlignment(.center)
         }
-        .sheet(isPresented: $showResultCard) {
-            ResultCardView(model: $model)
+        .fullScreenCover(isPresented: $showResultCard) {
+            ResultCardView(model: $model, homeData: $homeData, showHomeHuntSheet: $showHomeHuntSheet)
         }
     }
 }
@@ -78,7 +80,7 @@ private extension RoomScanInfoView {
     }
     
     var StartScanButton: some View {
-        NavigationLink(destination: RoomScanView(model: $model)) {
+        NavigationLink(destination: RoomScanView(model: $model, homeData: $homeData, showHomeHuntSheet: $showHomeHuntSheet)) {
             withAnimation(.easeOut(duration: 1)) {
                 RoundedRectangle(cornerRadius: 16)
                     .foregroundStyle(Color.Button.primaryBlue)

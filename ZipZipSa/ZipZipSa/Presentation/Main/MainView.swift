@@ -6,8 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MainView: View {
+    @Query var users: [User]
+    @Query var homes: [HomeData]
+    
     @State private var homeList: [ViewedHome] = [
         ViewedHome(image: "mainPic_sample", title: "첫 번째 집", address: "부산광역시 강서구 녹산산단 382로 10~29번지 (송정동)", rentType: "월세"),
         ViewedHome(image: "mainPic_sample", title: "두 번째 집", address: "서울시 강동구 동남로78길 48 (고덕1동)", rentType: "전세")
@@ -41,6 +45,19 @@ struct MainView: View {
         .navigationBarBackButtonHidden()
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
             EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
+        }
+        .onAppear {
+//            let checklistCategoryData = [ChecklistCategory.cleanliness].map {
+//                ChecklistCategoryData(name: $0.text)
+//            }
+//            print(checklistCategoryData.map {$0.name})
+//            let user = User(favoriteCategories: checklistCategoryData)
+//            modelContext.insert(user)
+//            print(user.categories.map{$0.text})
+            print(users.count)
+            print(users.first?.favoriteCategories.map{$0.text})
+            print(homes.count)
+            print(homes.last?.homeName)
         }
     }
 }

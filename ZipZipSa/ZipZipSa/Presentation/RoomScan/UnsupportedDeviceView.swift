@@ -10,6 +10,8 @@ import SwiftUI
 struct UnsupportedDeviceView: View {
     @State var showResultCard: Bool = false
     @Binding var model: UIImage?
+    @Binding var homeData: HomeData
+    @Binding var showHomeHuntSheet: Bool
     
     var body: some View {
         ZStack {
@@ -23,8 +25,8 @@ struct UnsupportedDeviceView: View {
                 ShowResultCardButton
             }
         }
-        .sheet(isPresented: $showResultCard) {
-            ResultCardView(model: $model)
+        .fullScreenCover(isPresented: $showResultCard) {
+            ResultCardView(model: $model, homeData: $homeData, showHomeHuntSheet: $showHomeHuntSheet)
         }
     }
 }

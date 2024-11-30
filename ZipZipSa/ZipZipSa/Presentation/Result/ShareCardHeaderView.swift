@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct ShareCardHeaderView: View {
-    @Binding var mainPicture: UIImage?
+    @Binding var homeData: HomeData
+    
+    var mainPicture: UIImage? {
+        homeData.homeImage
+    }
     
     var body: some View {
         content
@@ -37,18 +41,9 @@ private extension ShareCardHeaderView {
     // MARK: - View
     
     private var contentOverlay: some View {
-        VStack() {
-            HStack(alignment: .top) {
-                RoomNickname
-                Spacer()
-                RoomType
-            }
-            .padding(.top, 8)
-            
-            HStack {
-                RoomAddress
-                Spacer()
-            }
+        VStack {
+            HomeNickname
+            HomeAddress
             
             Spacer()
             
@@ -61,46 +56,62 @@ private extension ShareCardHeaderView {
                     .padding(.bottom, 54)
             }
             
-            RoomTags
+            HomeTags
         }
         .padding(8)
     }
     
-    var RoomNickname: some View {
-        Text("세 번째 집")
-            .foregroundStyle(Color.Tag.colorGray)
-            .applyZZSFont(zzsFontSet: .subheadlineBold)
-            .padding(.horizontal, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.Tag.backgroundGray)
-                    .frame(height: 32)
-            )
+    var HomeNickname: some View {
+        HStack {
+            Text(homeData.homeName)
+                .foregroundStyle(Color.Tag.colorWhite)
+                .applyZZSFont(zzsFontSet: .subheadlineBold)
+                .padding(.horizontal, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.Tag.backgroundWhite)
+                        .frame(height: 32)
+                )
+            Spacer()
+        }
+        .padding(.top, 8)
+        .padding(.bottom, 6)
     }
     
-    var RoomType: some View {
-        Text("빌라")
-            .foregroundStyle(Color.Text.onColorSecondary)
-            .applyZZSFont(zzsFontSet: .caption1Bold)
-            .padding(.horizontal, 6)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.Text.onColorSecondary, lineWidth: 1)
-                    .frame(height: 22)
-            )
+    var HomeAddress: some View {
+        HStack {
+            Text(homeData.locationText ?? "")
+                .foregroundStyle(Color.Text.onColorPrimary)
+                .applyZZSFont(zzsFontSet: .caption1Bold)
+            Spacer()
+        }
     }
     
-    var RoomAddress: some View {
-        Text("부산광역시 강서구 녹산산단 382로 14번가길 10~29번지 (송정동)")
-            .foregroundStyle(Color.Text.onColorPrimary)
-            .applyZZSFont(zzsFontSet: .caption1Bold)
+    var HomeTags: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
+                if let category = homeData.homeCategoryType?.text{
+                    ZZSTag(text: category)
+                }
+                if let direction = homeData.homeDirectionType?.text  {
+                    ZZSTag(text: direction)
+                }
+                if homeData.homeAreaPyeong != "" && homeData.homeAreaSquareMeter != "" {
+                    ZZSTag(text: "\(homeData.homeAreaPyeong)평/\(homeData.homeAreaSquareMeter)m²")
+                }
+            }
+            
+            HStack(spacing: 6) {
+                ZZSTag(text: "보증금 \(rentalFeeStrings[0])")
+                ZZSTag(text: "월세 \(rentalFeeStrings[2])")
+                ZZSTag(text: "관리비 \(rentalFeeStrings[3])")
+            }
+        }
     }
     
-    var RoomTags: some View {
-        HStack(spacing: 6) {
-            ZZSTag(text: "보증금 0000만원")
-            ZZSTag(text: "보증금 0000만원")
-            ZZSTag(text: "보증금 0000만원")
+    var rentalFeeStrings: [String] {
+        return homeData.rentalFeeData.map { rentalFee in
+            return rentalFee.value.isEmpty ? "없음" : "\(rentalFee.value)만원"
         }
     }
 }

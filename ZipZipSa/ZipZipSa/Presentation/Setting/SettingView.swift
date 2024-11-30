@@ -6,21 +6,25 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SettingView: View {
+    
+    @Query var users: [User]
     
     var body: some View {
         NavigationStack{
             ZStack {
                 Color.Background.primary
                     .ignoresSafeArea()
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 0) {
                     NavigationTitle
                     CategoryChange
                     CustomDivider
                     PrivacyPolicy
                     Support
                     Spacer()
+                    AppVersion
                 }
             }
         }
@@ -28,12 +32,13 @@ struct SettingView: View {
 }
 
 private extension SettingView {
+    // MARK: - View
     
     var NavigationTitle: some View {
         Text(ZipLiteral.Setting.setting)
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .largeTitle)
-            .padding(.bottom, 12)
+            .padding(.bottom, 27)
             .padding(.horizontal, 16)
     }
     
@@ -45,7 +50,7 @@ private extension SettingView {
     
     var CategoryChange: some View {
         NavigationLink(destination: CategoryChangeView()) {
-            VStack(alignment:.leading, spacing:12) {
+            VStack(alignment: .leading, spacing: 0) {
                 HStack{
                     Text(ZipLiteral.Setting.categoryChange)
                         .foregroundStyle(Color.Text.tertiary)
@@ -57,25 +62,27 @@ private extension SettingView {
                         .foregroundStyle(Color.Button.tertiary)
                         .applyZZSFont(zzsFontSet: .iconBody)
                 }
+                .padding(.bottom, 14)
                 
                 CategoryCellList
             }
             .padding(.horizontal, 16)
-            .padding(.top, 13)
-            .padding(.bottom, 20)
+            .padding(.bottom, 19)
         }
     }
     
     var CategoryCellList: some View {
         HStack (spacing: 12) {
-            ForEach(OnboardingCategory.categories, id: \.categoryElement) { category in
-                CategoryCell(for: category)
+            ForEach(userCategories.indices, id: \.self) { index in
+                if let category = userCategories[safe: index] {
+                    CategoryCell(for: category)
+                }
             }
         }
     }
     
-    func CategoryCell(for category: OnboardingCategory) -> some View {
-        Text(categoryDisplayName(for: category.categoryElement))
+    func CategoryCell(for category: ChecklistCategory) -> some View {
+        Text(category.text)
             .applyZZSFont(zzsFontSet: .caption1Regular)
             .foregroundStyle(Color.Text.primary)
             .padding(.horizontal, 12)
@@ -86,20 +93,8 @@ private extension SettingView {
             }
     }
     
-    func categoryDisplayName(for element: String) -> String {
-        switch element {
-        case "InsectProof": return "방충"
-        case "Cleenliness": return "청결"
-        case "Security": return "보안"
-        case "Ventilation": return "환기"
-        case "Soundproof": return "방음"
-        case "Lighted": return "채광"
-        default: return ""
-        }
-    }
-    
     var PrivacyPolicy: some View {
-        NavigationLink(destination: PrivacyPolicyView()) {
+        Link(destination: URL(string: "https://jinthelemon.notion.site/14e90636549f80ecb267dd7a429dd9a4")!, label: {
             HStack{
                 Text(ZipLiteral.Setting.privacyPolicy)
                     .foregroundStyle(Color.Text.tertiary)
@@ -112,7 +107,7 @@ private extension SettingView {
                     .applyZZSFont(zzsFontSet: .iconBody)
             }
             .padding()
-        }
+        })
     }
     
     var Support: some View {
@@ -130,6 +125,29 @@ private extension SettingView {
             }
             .padding()
         })
+    }
+    
+    // MARK: - Computed Values
+    
+    var userCategories: [ChecklistCategory] {
+        return users[0].favoriteCategories
+    }
+    
+    var AppVersion: some View {
+        HStack {
+            Spacer()
+            Text(appVersion)
+                .applyZZSFont(zzsFontSet: .footnote)
+                .foregroundStyle(Color.Text.placeholder)
+                .padding()
+            Spacer()
+        }
+    }
+    
+    // MARK: - Computed Value
+    private var appVersion: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        return "현재 버전: \(version)"
     }
 }
 

@@ -11,30 +11,28 @@ import SwiftData
 struct CategorySelectView: View {
     @Environment(\.modelContext) private var modelContext
     @AppStorage("firstLaunch") var firstLaunch: Bool = true
-    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var totalTime: Int = 10
     @State private var currentMessage: String = ""
     @State private var selectedCategory: Set<ChecklistCategory> = []
     
     var body: some View {
-        NavigationStack{
-            ZStack {
-                Color.Background.primary
-                    .ignoresSafeArea()
-                VStack(spacing: 0) {
-                    ZipZipSaTip
-                    RequiredTime
-                    Spacer()
-                    CategoryView(
-                        totalTime: $totalTime,
-                        currentMessage: $currentMessage,
-                        selectedCategories: $selectedCategory)
-                    Spacer()
-                    BottomButton
-                }
+        ZStack {
+            Color.Background.primary
+                .ignoresSafeArea()
+            VStack(spacing: 0) {
+                ZipZipSaTip
+                RequiredTime
+                Spacer()
+                CategoryView(
+                    totalTime: $totalTime,
+                    currentMessage: $currentMessage,
+                    selectedCategories: $selectedCategory)
+                Spacer()
+                BottomButton
             }
-            .navigationBarBackButtonHidden()
         }
+        .navigationBarBackButtonHidden()
     }
 }
 
@@ -96,7 +94,7 @@ private extension CategorySelectView {
     
     var BottomButton: some View {
         Button {
-            firstLaunch = false
+            endOnboarding()
         } label: {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.Button.primaryBlue)
@@ -108,6 +106,18 @@ private extension CategorySelectView {
                 }
         }
         .padding(.bottom, 12)
+    }
+    
+    // MARK: - Action
+    
+    func endOnboarding() {
+        let checklistCategoryData = selectedCategory.map {
+            ChecklistCategoryData(rawValue: $0.rawValue)
+        }
+        let user = User(favoriteCategoryData: checklistCategoryData)
+        print(user.favoriteCategories)
+        modelContext.insert(user)
+        firstLaunch = false
     }
 }
 
