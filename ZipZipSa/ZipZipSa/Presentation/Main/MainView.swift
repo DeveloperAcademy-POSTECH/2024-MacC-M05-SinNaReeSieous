@@ -16,6 +16,8 @@ struct MainView: View {
     @State private var currentTip = ZipZipSaTip.getRandomText()
     @State private var timer: Timer?
     @State private var showHomeHuntSheet: Bool = false
+    @State private var showhomeResultCardSheet = false
+    @State private var selectedHome: HomeData = HomeData()
     
     var body: some View {
         NavigationStack {
@@ -45,27 +47,28 @@ struct MainView: View {
         }
         .onChange(of: homes) { oldValue, newValue in
             homeList = homes.map {
-                return ViewedHome(image: $0.homeImage,
-                           title: $0.homeName,
-                           address: $0.locationText,
-                           rentType: $0.homeRentalType?.text)
+                return ViewedHome(
+                    id: $0.id,
+                    image: $0.homeImage,
+                    title: $0.homeName,
+                    address: $0.locationText,
+                    rentType: $0.homeRentalType?.text)
             }
         }
+        .sheet(isPresented: $showhomeResultCardSheet, content: {
+            ResultCardSheetView(homeData: $selectedHome)
+                .presentationDragIndicator(.visible)
+        })
         .onAppear {
             homeList = homes.map {
-                return ViewedHome(image: $0.homeImage,
-                           title: $0.homeName,
-                           address: $0.locationText,
-                           rentType: $0.homeRentalType?.text)
+                return ViewedHome(
+                    id: $0.id,
+                    image: $0.homeImage,
+                    title: $0.homeName,
+                    address: $0.locationText,
+                    rentType: $0.homeRentalType?.text)
             }
             
-//            let checklistCategoryData = [ChecklistCategory.cleanliness].map {
-//                ChecklistCategoryData(name: $0.text)
-//            }
-//            print(checklistCategoryData.map {$0.name})
-//            let user = User(favoriteCategories: checklistCategoryData)
-//            modelContext.insert(user)
-//            print(user.categories.map{$0.text})
             print(users.count)
             print(users.first?.favoriteCategories.map{$0.text})
             print(homes.count)
@@ -233,7 +236,14 @@ private extension MainView {
     var RecentlyViewedHomeList: some View {
         LazyHGrid(rows: [GridItem(.fixed(UIScreen.screenSize.height / 812 * 208))], spacing: 20) {
             ForEach(Array(homeList.suffix(3).reversed().enumerated()), id: \.element.id) { index, home in
-                RecentlyViewedHomeCellView(home: $homeList[homeList.count - 1 - index])
+                Button {
+                    if let selectedHome = homes.first(where: {$0.id == home.id }) {
+                        self.selectedHome = selectedHome
+                        showhomeResultCardSheet = true
+                    }
+                } label: {
+                    RecentlyViewedHomeCellView(home: $homeList[homeList.count - 1 - index])
+                }
             }
         }
         .frame(height: UIScreen.screenSize.height / 812 * 208)

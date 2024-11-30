@@ -10,10 +10,12 @@ import SwiftData
 
 struct HomeListView: View {
     @State private var homeList: [ViewedHome] = []  // 데이터 모델을 위한 배열
-        
+    
     @State private var showHomeHuntSheet = false
     @Query var homes: [HomeData]
-
+    @State private var showHomeResultCardSheet = false
+    @State private var selectedHome: HomeData = HomeData()
+    
     var body: some View {
         ZStack{
             Color.Background.primary
@@ -33,6 +35,10 @@ struct HomeListView: View {
                     .scrollIndicators(.hidden)
                 }
             }
+            .sheet(isPresented: $showHomeResultCardSheet, content: {
+                ResultCardSheetView(homeData: $selectedHome)
+                    .presentationDragIndicator(.visible)
+            })
         }
         .accentColor(Color.Button.tertiary)
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
@@ -40,10 +46,12 @@ struct HomeListView: View {
         }
         .onAppear {
             homeList = homes.map {
-                return ViewedHome(image: $0.homeImage,
-                           title: $0.homeName,
-                           address: $0.locationText,
-                           rentType: $0.homeRentalType?.text)
+                return ViewedHome(
+                    id: $0.id,
+                    image: $0.homeImage,
+                    title: $0.homeName,
+                    address: $0.locationText,
+                    rentType: $0.homeRentalType?.text)
             }
         }
     }
@@ -101,14 +109,21 @@ private extension HomeListView {
     }
     
     var ViewedHomeList: some View {
-           LazyVGrid(columns: [GridItem(.flexible())], spacing: 32) {
-               ForEach(Array(homeList.reversed().enumerated()), id: \.element.id) { index, home in
-                   ViewedHomeCellView(home: $homeList[homeList.count - 1 - index])
-               }
-           }
-           .padding(.top, 24)
-       }
-   }
+        LazyVGrid(columns: [GridItem(.flexible())], spacing: 32) {
+            ForEach(Array(homeList.reversed().enumerated()), id: \.element.id) { index, home in
+                Button {
+                    if let selectedHome = homes.first(where: {$0.id == home.id }) {
+                        self.selectedHome = selectedHome
+                        showHomeResultCardSheet = true
+                    }
+                } label: {
+                    ViewedHomeCellView(home: $homeList[homeList.count - 1 - index])
+                }
+            }
+        }
+        .padding(.top, 24)
+    }
+}
 
 #Preview {
     HomeListView()

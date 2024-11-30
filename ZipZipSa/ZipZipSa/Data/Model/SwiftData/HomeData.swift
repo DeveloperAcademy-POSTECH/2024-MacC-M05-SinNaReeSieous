@@ -12,6 +12,9 @@ import SwiftData
 @Model
 final class HomeData {
     
+    @Attribute(.unique)
+    var id: UUID = UUID()
+    
     // MARK: - Essential
     
     var homeName: String
