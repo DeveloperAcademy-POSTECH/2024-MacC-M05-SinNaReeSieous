@@ -10,7 +10,7 @@ import SwiftUI
 struct ShareCardView: View {
     @Binding var homeCategory: HomeCategory?
     @Binding var homeDirection: HomeDirection?
-    @Binding var hazaedTags: [Hazard]
+    @Binding var hazardTags: [Hazard]
     @Binding var model: UIImage?
     @Binding var mainPicture: UIImage?
     
@@ -47,7 +47,7 @@ private extension ShareCardView {
     
     var ChecklistResult: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("카테고리")
+            Text(ZipLiteral.ResultCard.categorySectionTitle)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
@@ -66,14 +66,14 @@ private extension ShareCardView {
     
     var CriticalTags: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("필수체크")
+            Text(ZipLiteral.ResultCard.hazardSectionTitle)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
             
-            if !hazaedTags.isEmpty {
+            if !hazardTags.isEmpty {
                 LazyVGrid(columns: columnLayout) {
-                    ForEach(hazaedTags, id: \.self) { tag in
+                    ForEach(hazardTags, id: \.self) { tag in
                         ZZSTag(text: tag.text)
                     }
                 }
@@ -82,7 +82,7 @@ private extension ShareCardView {
                     .fill(Color.Button.secondaryBlue)
                     .frame(height: 100)
                     .overlay(alignment: .center) {
-                        Text("우와, 여기는 안전한 곳이에요!")
+                        Text(ZipLiteral.ResultCard.hazardSectioinEmptyText)
                             .foregroundStyle(Color.Text.secondary)
                             .applyZZSFont(zzsFontSet: .subheadlineRegular)
                     }
@@ -94,7 +94,7 @@ private extension ShareCardView {
     var RoomModel: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("집 구조")
+                Text(ZipLiteral.ResultCard.roomModelSectionTitle)
                     .foregroundStyle(Color.Text.primary)
                     .applyZZSFont(zzsFontSet: .bodyBold)
                 
@@ -112,7 +112,7 @@ private extension ShareCardView {
                     .fill(Color.Background.disabled)
                     .frame(height: 140)
                     .overlay(alignment: .center) {
-                        Text("집 구조 등록으로 내게 꼭 맞는 집을\n더 쉽게 찾아보세요")
+                        Text(ZipLiteral.ResultCard.roomModelSectionEmptyText)
                             .multilineTextAlignment(.center)
                             .foregroundStyle(Color.Text.tertiary)
                             .applyZZSFont(zzsFontSet: .subheadlineRegular)
@@ -124,7 +124,7 @@ private extension ShareCardView {
     
     var NearbyFacilities: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("주변 시설")
+            Text(ZipLiteral.ResultCard.nearbySectionTitle)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
@@ -144,7 +144,7 @@ private extension ShareCardView {
                     .fill(Color.Background.disabled)
                     .frame(height: 29)
                     .overlay(alignment: .center) {
-                        Text("이 집 주변에는 시설이 없어요")
+                        Text(ZipLiteral.ResultCard.nearbySectionEmptyText)
                             .foregroundStyle(Color.Text.tertiary)
                             .applyZZSFont(zzsFontSet: .subheadlineRegular)
                     }
