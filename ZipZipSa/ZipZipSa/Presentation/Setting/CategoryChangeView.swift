@@ -123,8 +123,9 @@ private extension CategoryChangeView {
             ChecklistCategoryData(rawValue: $0.rawValue)
         }
         let user = users[0]
+        user.favoriteCategoryData.removeAll()
         user.favoriteCategoryData = checklistCategoryData
-        modelContext.insert(user)
+        try? modelContext.save()
         presentationMode.wrappedValue.dismiss()
     }
 }

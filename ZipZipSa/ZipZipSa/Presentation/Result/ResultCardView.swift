@@ -15,6 +15,7 @@ struct ResultCardView: View {
     @State private var card: UIImage = UIImage()
     @State private var mainPicture: UIImage? = UIImage(resource: .mainPicSample)
     @State private var hazardTags: [Hazard] = [.cigaretteSmell, .cockroach, .mold]
+    @State private var firstShow = true
     @Binding var model: UIImage?
     @Binding var homeData: HomeData
     @Binding var showHomeHuntSheet: Bool
@@ -36,7 +37,10 @@ struct ResultCardView: View {
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.Background.primary)
             .onAppear {
-                saveHomeModel()
+                if firstShow {
+                    saveHomeModel()
+                    firstShow = false
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -66,7 +70,7 @@ private extension ResultCardView {
         Button {
             showHomeHuntSheet = false
         } label: {
-            Text("완료")
+            Text("저장")
                 .foregroundStyle(Color.Icon.tertiary)
                 .applyZZSFont(zzsFontSet: .bodyBold)
         }
@@ -111,7 +115,6 @@ private extension ResultCardView {
     }
     
     func saveHomeModel() {
-        print(homeData.homeName)
         if let modelImageData = model?.pngData() {
             homeData.modelImageData = modelImageData
         }
