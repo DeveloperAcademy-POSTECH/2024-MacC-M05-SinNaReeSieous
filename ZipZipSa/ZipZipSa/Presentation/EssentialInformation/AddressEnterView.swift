@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreLocation
+import MapKit
 
 struct AddressEnterView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -15,7 +16,7 @@ struct AddressEnterView: View {
     @State private var selectedCoordinates: CLLocationCoordinate2D?
     @State private var isLoading: Bool = false
     @State private var errorMessage: String? = nil
-    @State private var searchResults: [(description: String, placeID: String)] = []
+    @State private var searchResults: [MKMapItem] = []
     @FocusState private var focusedTextField: AddressEnterFocusField?
     @Binding var resultCoordinates: LocationData?
     @Binding var resultLocationText: String?
@@ -68,7 +69,7 @@ private extension AddressEnterView {
             .focused($focusedTextField, equals: .searchBar)
             .onSubmit {
                 Task {
-                    await fetchSearchResults(for: searchText)
+                    await searchAddress(searchText)
                     print(searchResults)
                 }
             }
@@ -76,7 +77,7 @@ private extension AddressEnterView {
             Button {
                 print("Search")
                 Task {
-                    await fetchSearchResults(for: searchText)
+                    await searchAddress(searchText)
                     print(searchResults)
                 }
             } label: {
@@ -100,20 +101,24 @@ private extension AddressEnterView {
     var SearchResultList: some View {
         ScrollView {
             VStack(spacing: 0) {
-                ForEach(searchResults, id: \.placeID) { result in
+                ForEach(searchResults, id: \.self) { result in
                     Button {
                         print("Taaped")
-                        Task {
-                            await selectAddress(result)
+                        if let coordinate = result.placemark.location?.coordinate {
+                            selectedCoordinates = coordinate
+                            searchText = formatAddress(from: result.placemark) ?? "선택된 주소"
+                            print("선택된 좌표: \(coordinate.latitude), \(coordinate.longitude)")
                         }
                     } label: {
                         VStack(alignment: .leading, spacing: 0) {
-                            Text(result.description)
-                                .foregroundStyle(Color.Text.primary)
-                                .applyZZSFont(zzsFontSet: .bodyRegular)
-                                .multilineTextAlignment(.leading)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 12)
+                            if let addressLine = formatAddress(from: result.placemark) {
+                                Text(addressLine)
+                                    .foregroundStyle(Color.Text.primary)
+                                    .applyZZSFont(zzsFontSet: .bodyRegular)
+                                    .multilineTextAlignment(.leading)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 12)
+                            }
                             Rectangle()
                                 .fill(Color.Additional.seperator)
                                 .frame(height: 1)
@@ -170,33 +175,47 @@ private extension AddressEnterView {
     
     // MARK: - Custom Method
     
-    private func fetchSearchResults(for query: String) async {
+    private func searchAddress(_ query: String) async {
+        guard !query.isEmpty else {
+            await MainActor.run {
+                searchResults = []
+            }
+            return
+        }
+        
         isLoading = true
         errorMessage = nil
         
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = query
+        
+        let search = MKLocalSearch(request: request)
         do {
-            let results = try await AddressSearchManager.shared.fetchAutocompleteResults(for: query)
-            searchResults = results
-            isLoading = false
-            if results.isEmpty {
-                errorMessage = "검색 결과가 없어요\n이름을 다시 확인해주세요"
+            let response = try await search.start()
+            await MainActor.run {
+                self.searchResults = response.mapItems.uniqued()
+                isLoading = false
             }
         } catch {
-            errorMessage = "검색 실패: \(error.localizedDescription)"
+            print("주소 검색 실패: \(error.localizedDescription)")
             isLoading = false
         }
     }
     
-    private func selectAddress(_ result: (description: String, placeID: String)) async {
-        errorMessage = nil
+    private func formatAddress(from placemark: MKPlacemark) -> String? {
+        let administrativeArea = placemark.administrativeArea ?? "" // 도/광역시
+        let locality = placemark.locality ?? "" // 시/군/구
+        let thoroughfare = placemark.thoroughfare ?? "" // 도로명
+        let subThoroughfare = placemark.subThoroughfare ?? "" // 도로번호
         
-        do {
-            let coordinates = try await AddressSearchManager.shared.fetchCoordinates(for: result.placeID)
-            selectedCoordinates = coordinates
-            searchText = result.description
-        } catch {
-            errorMessage = "위치 정보를 가져올 수 없습니다."
-        }
+        let formattedLocality = locality == administrativeArea ? "" : locality
+        
+        let components = [administrativeArea, formattedLocality, thoroughfare, subThoroughfare]
+        let address = components
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+        
+        return address.isEmpty ? nil : address
     }
 }
 

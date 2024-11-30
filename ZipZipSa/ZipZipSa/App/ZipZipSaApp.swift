@@ -7,14 +7,9 @@
 
 import SwiftUI
 import SwiftData
-import GoogleMaps
 
 @main
 struct ZipZipSaApp: App {
-    init() {
-        GMSServices.provideAPIKey(Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? "")
-    }
-    
     var modelContainer: ModelContainer = {
         let schema = Schema([User.self, ChecklistCategoryData.self, HomeData.self, RentalFeeData.self, LocationData.self, FacilityData.self, MemoData.self])
            let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
