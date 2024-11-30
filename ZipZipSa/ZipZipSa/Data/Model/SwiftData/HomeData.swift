@@ -11,6 +11,9 @@ import SwiftData
 
 @Model
 final class HomeData {
+    
+    // MARK: - Essential
+    
     var homeName: String
     var address: String
     var homeCategoryData: String?
@@ -28,8 +31,14 @@ final class HomeData {
     var location: LocationData?
     var locationText: String?
     
+    // MARK: - Checklist
+    
     var answer: Data?
     var scores: Data?
+    
+    // MARK: - ResultCard
+    
+    var facilitiesData: [FacilityData] = []
     
     init(
         homeName: String = "",
@@ -146,5 +155,21 @@ extension LocationData {
     // CLLocationCoordinate2D를 반환하는 계산 속성
     var coordinate: CLLocationCoordinate2D {
         return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+}
+
+@Model
+final class FacilityData {
+    var rawValue: String
+    
+    init(rawValue: String = "") {
+        self.rawValue = rawValue
+    }
+    
+    var facility: Facility? {
+        if let facility = Facility(rawValue: rawValue) {
+            return facility
+        }
+        return nil
     }
 }

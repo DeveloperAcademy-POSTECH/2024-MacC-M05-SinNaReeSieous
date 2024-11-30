@@ -7,12 +7,17 @@
 
 import SwiftUI
 import PhotosUI
+import SwiftData
 
 struct EssentialInfoView: View {
+    
+    @Query var homes: [HomeData]
+    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var showHomeHuntSheet: Bool
-    
+
     @State private var homeData = HomeData()
+    @State private var firstShow: Bool = true
     
     @State private var isGettingAddress: Bool = false
     @FocusState private var focusField: EssentialInfoField?
@@ -25,9 +30,6 @@ struct EssentialInfoView: View {
     @State private var showAddressEnterView: Bool = false
     
     @State private var moveToChecklistView: Bool = false
-    @State private var firstShow: Bool = true
-    
-    @State private var availableFacilities: [Facility] = []
     
     var body: some View {
         NavigationStack {
@@ -104,7 +106,7 @@ private extension EssentialInfoView {
         VStack(alignment: .leading, spacing: 8) {
             SectionTitle(text: "집 별명")
             TextField(text: $homeData.homeName) {
-                Text(basicHouseName)
+                Text(basicHomeName)
                     .foregroundStyle(Color.Text.placeholder)
                     .applyZZSFont(zzsFontSet: .bodyRegular)
             }
@@ -567,8 +569,8 @@ private extension EssentialInfoView {
     
     // MARK: - Computed Values
     
-    var basicHouseName: String {
-        "1번째 집"
+    var basicHomeName: String {
+        "\(homes.count+1)번째 집"
     }
     
     var addressPlaceHolder: String {
@@ -618,8 +620,10 @@ private extension EssentialInfoView {
                 let location = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
                 let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.rawValue })
                 
-                availableFacilities = Facility.allCases.filter { facility in
+                homeData.facilitiesData = Facility.allCases.filter { facility in
                     results[facility.rawValue] == true
+                }.map { facility in
+                    FacilityData(rawValue: facility.rawValue)
                 }
             } catch let networkError as NetworkError {
                 networkError.logError()
@@ -627,14 +631,18 @@ private extension EssentialInfoView {
                 print("Unexpected error: \(error)")
             }
         } else {
-            availableFacilities = []
+            homeData.facilitiesData = []
         }
     }
     
     private func endEssentialInfoView() async {
-        moveToChecklistView = true
+        if homeData.homeName.isEmpty {
+            homeData.homeName = basicHomeName
+        }
+
         await searchNearbyFacilities()
-        print(availableFacilities)
+        print(homeData.facilitiesData)
+        moveToChecklistView = true
     }
 }
 
