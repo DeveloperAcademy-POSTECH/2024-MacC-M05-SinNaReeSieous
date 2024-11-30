@@ -5,13 +5,13 @@
 //  Created by JIN LEE on 11/28/24.
 //
 
-import Foundation
+import UIKit
 
 struct ViewedHome: Identifiable {
     let id = UUID()
-    let image: String
+    let image: UIImage?
     let title: String
-    let address: String
-    let rentType: String
+    let address: String?
+    let rentType: String?
 }
 

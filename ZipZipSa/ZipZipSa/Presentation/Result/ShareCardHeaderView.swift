@@ -44,21 +44,18 @@ private extension ShareCardHeaderView {
         VStack {
             HomeNickname
             HomeAddress
-            
             Spacer()
-            
             if mainPicture == nil {
                 Image(.charResultCard)
                     .resizable()
                     .scaledToFit()
                     .frame(height: 130)
-                    .padding(.top, 14)
-                    .padding(.bottom, 54)
             }
-            
+            Spacer()
             HomeTags
         }
         .padding(8)
+        .frame(height: 340)
     }
     
     var HomeNickname: some View {
@@ -88,7 +85,7 @@ private extension ShareCardHeaderView {
     }
     
     var HomeTags: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(spacing: 6) {
             HStack(spacing: 6) {
                 if let category = homeData.homeCategoryType?.text{
                     ZZSTag(text: category)
@@ -98,6 +95,11 @@ private extension ShareCardHeaderView {
                 }
                 if homeData.homeAreaPyeong != "" && homeData.homeAreaSquareMeter != "" {
                     ZZSTag(text: "\(homeData.homeAreaPyeong)평/\(homeData.homeAreaSquareMeter)m²")
+                }
+                
+                ForEach(0..<spaceCount) { _ in
+                    Rectangle().fill(Color.clear)
+                        .frame(height: 28)
                 }
             }
             
@@ -113,5 +115,19 @@ private extension ShareCardHeaderView {
         return homeData.rentalFeeData.map { rentalFee in
             return rentalFee.value.isEmpty ? "없음" : "\(rentalFee.value)만원"
         }
+    }
+    
+    var spaceCount: Int {
+        var count = 3
+        if let _ = homeData.homeCategoryType?.text {
+            count -= 1
+        }
+        if let _ = homeData.homeDirectionType?.text  {
+            count -= 1
+        }
+        if homeData.homeAreaPyeong != "" && homeData.homeAreaSquareMeter != "" {
+            count -= 1
+        }
+        return count
     }
 }
