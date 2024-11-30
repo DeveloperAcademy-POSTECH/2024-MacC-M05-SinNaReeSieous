@@ -99,7 +99,7 @@ private extension SettingView {
     }
     
     var PrivacyPolicy: some View {
-        NavigationLink(destination: PrivacyPolicyView()) {
+        Link(destination: URL(string: "https://jinthelemon.notion.site/14e90636549f80ecb267dd7a429dd9a4")!, label: {
             HStack{
                 Text(ZipLiteral.Setting.privacyPolicy)
                     .foregroundStyle(Color.Text.tertiary)
@@ -112,7 +112,7 @@ private extension SettingView {
                     .applyZZSFont(zzsFontSet: .iconBody)
             }
             .padding()
-        }
+        })
     }
     
     var Support: some View {
