@@ -43,6 +43,14 @@ struct MainView: View {
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
             EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
         }
+        .onChange(of: homes) { oldValue, newValue in
+            homeList = homes.map {
+                return ViewedHome(image: $0.homeImage,
+                           title: $0.homeName,
+                           address: $0.locationText,
+                           rentType: $0.homeRentalType?.text)
+            }
+        }
         .onAppear {
             homeList = homes.map {
                 return ViewedHome(image: $0.homeImage,
