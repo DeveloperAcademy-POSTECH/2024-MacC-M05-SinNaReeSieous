@@ -9,13 +9,13 @@ import SwiftUI
 
 struct ShareCardHeaderView: View {
     @Binding var mainPicture: UIImage?
-    @Binding var homeCategory: HomeCategory
-    @Binding var homeDirection: HomeDirection
-    @State var homeAreaPyeong: String = "16"
-    @State var homeAreaSquareMeter: String = "52.89"
-    @State var diposit: String = "5000"
-    @State var rentalFee: String = "30"
-    @State var maintenceFee: String = "10"
+    @Binding var homeCategory: HomeCategory?
+    @Binding var homeDirection: HomeDirection?
+    @State var homeAreaPyeong: String? = "16"
+    @State var homeAreaSquareMeter: String? = "52.89"
+    @State var diposit: String? = "5000만원"
+    @State var rentalFee: String? = "30만원"
+    @State var maintenceFee: String? = "10만원"
     @State var homeNikcname: String = "세 번째 집"
     @State var homeAddress: String = "부산광역시 강서구 녹산산단 382로 14번가길 10~29번지 (송정동)"
     
@@ -96,12 +96,18 @@ private extension ShareCardHeaderView {
     
     var HomeTags: some View {
         LazyVGrid(columns: columnLayout) {
-            ZZSTag(text: homeCategory.text)
-            ZZSTag(text: homeDirection.text)
-            ZZSTag(text: "\(homeAreaPyeong)평/\(homeAreaSquareMeter)m²")
-            ZZSTag(text: "보증금 \(diposit)만원")
-            ZZSTag(text: "월세 \(rentalFee)만원")
-            ZZSTag(text: "관리비 \(maintenceFee)만원")
+            if let category = homeCategory?.text {
+                ZZSTag(text: category)
+            }
+            if let direction = homeDirection?.text {
+                ZZSTag(text: direction)
+            }
+            if let pyeong = homeAreaPyeong, let squareMeter = homeAreaSquareMeter {
+                ZZSTag(text: "\(pyeong)평/\(squareMeter)m²")
+            }
+            ZZSTag(text: "보증금 \(diposit ?? "없음")")
+            ZZSTag(text: "월세 \(rentalFee ?? "없음")")
+            ZZSTag(text: "관리비 \(maintenceFee ?? "없음")")
         }
     }
 }

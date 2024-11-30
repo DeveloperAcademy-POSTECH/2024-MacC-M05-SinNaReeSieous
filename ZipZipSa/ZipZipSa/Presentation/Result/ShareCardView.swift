@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ShareCardView: View {
-    @Binding var homeCategory: HomeCategory
-    @Binding var homeDirection: HomeDirection
+    @Binding var homeCategory: HomeCategory?
+    @Binding var homeDirection: HomeDirection?
     @Binding var hazaedTags: [Hazard]
     @Binding var model: UIImage?
     @Binding var mainPicture: UIImage?

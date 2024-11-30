@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ResultCardView: View {
-    @State var homeCategory: HomeCategory = .villa
-    @State var homeDirection: HomeDirection = .south
+    @State var homeCategory: HomeCategory? = .villa
+    @State var homeDirection: HomeDirection? = .south
     @State private var card: UIImage = UIImage()
     @State private var mainPicture: UIImage? = UIImage(resource: .mainPicSample)
     @State private var hazaedTags: [Hazard] = [.cigaretteSmell, .cockroach, .mold]
