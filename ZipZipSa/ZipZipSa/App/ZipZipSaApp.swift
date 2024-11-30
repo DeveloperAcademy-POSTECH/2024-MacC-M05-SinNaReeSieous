@@ -29,7 +29,7 @@ struct ZipZipSaApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .modelContainer(for: [User.self, ChecklistCategoryData.self, HomeData.self, RentalFeeData.self, LocationData.self, FacilityData.self, MemoData.self], isAutosaveEnabled: false)
+                .modelContainer(for: [User.self, ChecklistCategoryData.self, HomeData.self, RentalFeeData.self, LocationData.self, FacilityData.self, MemoData.self], isAutosaveEnabled: true)
         }
     }
 }

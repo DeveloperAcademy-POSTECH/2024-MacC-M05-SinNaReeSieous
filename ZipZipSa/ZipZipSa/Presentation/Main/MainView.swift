@@ -58,7 +58,6 @@ struct MainView: View {
             print(users.first?.favoriteCategories.map{$0.text})
             print(homes.count)
             print(homes.last?.homeName)
-            
         }
     }
 }

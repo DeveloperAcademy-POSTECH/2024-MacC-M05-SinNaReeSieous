@@ -125,9 +125,6 @@ private extension CategoryChangeView {
         let user = users[0]
         user.favoriteCategoryData = checklistCategoryData
         modelContext.insert(user)
-        guard let _ = try? modelContext.save() else {
-            return
-        }
         presentationMode.wrappedValue.dismiss()
     }
 }

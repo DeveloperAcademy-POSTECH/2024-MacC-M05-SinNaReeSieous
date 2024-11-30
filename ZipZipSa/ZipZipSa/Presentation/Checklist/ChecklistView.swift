@@ -14,6 +14,9 @@ struct ChecklistView: View {
     @Binding var homeData: HomeData
     @Query var users: [User]
     var user: User { users[0] }
+    var userFavoriteCategoryData: [ChecklistCategory] {
+        user.favoriteCategories
+    }
     
     @Binding var selectedSpaceType: SpaceType
     @Binding var firstShow: Bool
@@ -191,7 +194,7 @@ private extension ChecklistView {
     }
     
     func applyUserDataToHomeData() {
-        homeData.selectedCategoryData = user.favoriteCategoryData
+        homeData.selectedCategoryData = userFavoriteCategoryData.map { ChecklistCategoryData(rawValue: $0.rawValue) }
     }
     
     func applyViewStateToHomeData() {

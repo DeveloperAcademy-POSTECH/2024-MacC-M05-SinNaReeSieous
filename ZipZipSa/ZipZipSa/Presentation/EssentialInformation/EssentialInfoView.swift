@@ -84,6 +84,9 @@ struct EssentialInfoView: View {
                 if firstShow {
                     homeData = HomeData()
                 }
+                if homeData.homeName == basicHomeName {
+                    homeData.homeName = ""
+                }
             }
         }
     }
@@ -637,10 +640,10 @@ private extension EssentialInfoView {
     }
     
     private func endEssentialInfoView() async {
+        await searchNearbyFacilities()
         if homeData.homeName.isEmpty {
             homeData.homeName = basicHomeName
         }
-        await searchNearbyFacilities()
         moveToChecklistView = true
     }
 }
@@ -651,7 +654,7 @@ enum EssentialInfoField {
     case areaSquareMeter
 }
 
-
-#Preview {
-    EssentialInfoView(showHomeHuntSheet: .constant(true))
-}
+//
+//#Preview {
+//    EssentialInfoView(homeCount: .constant(1), showHomeHuntSheet: .constant(true))
+//}

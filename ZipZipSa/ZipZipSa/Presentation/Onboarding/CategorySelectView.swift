@@ -117,10 +117,6 @@ private extension CategorySelectView {
         let user = User(favoriteCategoryData: checklistCategoryData)
         print(user.favoriteCategories)
         modelContext.insert(user)
-        guard let _ = try? modelContext.save() else {
-            presentationMode.wrappedValue.dismiss()
-            return
-        }
         firstLaunch = false
     }
 }
