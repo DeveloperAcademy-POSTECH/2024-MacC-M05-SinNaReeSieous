@@ -21,7 +21,7 @@ struct ResultCardView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 0) {
                 NavigationTitle
                 
                 ScrollView {
@@ -58,7 +58,6 @@ private extension ResultCardView {
             
             Spacer()
         }
-        .padding(.top, 14)
         .padding(.horizontal, 16)
         .padding(.bottom, 16)
     }
