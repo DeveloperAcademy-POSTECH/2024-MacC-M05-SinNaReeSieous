@@ -20,12 +20,13 @@ struct ResultCardView: View {
             NavigationTitle
             
             ScrollView {
-                ShareCardView(homeCategory: $homeCategory, homeDirection: $homeDirection, hazaedTags: $hazaedTags, model: $model, mainPicture: $mainPicture)
+                ShareCardView(homeCategory: $homeCategory, homeDirection: $homeDirection, hazardTags: $hazaedTags, model: $model, mainPicture: $mainPicture)
                     .background(BackgroundForCapture)
                 
                 ResultDetailViewButton
                 ShareButton
             }
+            .scrollIndicators(.never)
         }
         .background(Color.Background.primary)
     }
@@ -36,7 +37,7 @@ private extension ResultCardView {
     
     var NavigationTitle: some View {
         HStack {
-            Text("집 요약 카드예요")
+            Text(ZipLiteral.ResultCard.navigationTitleText)
                 .applyZZSFont(zzsFontSet: .title2)
                 .foregroundStyle(Color.Text.primary)
             
@@ -53,7 +54,7 @@ private extension ResultCardView {
                 .onAppear {
                     DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
-                        card = ShareCardView(homeCategory: $homeCategory, homeDirection: $homeDirection, hazaedTags: $hazaedTags, model: $model, mainPicture: $mainPicture)
+                        card = ShareCardView(homeCategory: $homeCategory, homeDirection: $homeDirection, hazardTags: $hazaedTags, model: $model, mainPicture: $mainPicture)
                             .asUIImage(size: size)
                     }
                 }
@@ -64,7 +65,7 @@ private extension ResultCardView {
         Button {
             // TODO: 상세보기뷰로 이동
         } label: {
-            Text("상세보기")
+            Text(ZipLiteral.ResultCard.resultDetailButtonText)
                 .foregroundStyle(.gray)
                 .font(Font.system(size: 16))
         }
@@ -72,12 +73,12 @@ private extension ResultCardView {
     }
     
     var ShareButton: some View {
-        ShareLink(item: Image(uiImage: card), preview: SharePreview("집 요약 카드 공유", icon: "AppIcon")) {
+        ShareLink(item: Image(uiImage: card), preview: SharePreview(ZipLiteral.ResultCard.sharePreviewText, icon: ZipLiteral.ResultCard.sharePreviewIcon)) {
             RoundedRectangle(cornerRadius: 15)
                 .foregroundStyle(.primary)
                 .frame(height: 53)
                 .overlay(
-                    Text("공유하기")
+                    Text(ZipLiteral.ResultCard.shareButtonText)
                         .foregroundStyle(Color.white)
                 )
         }
