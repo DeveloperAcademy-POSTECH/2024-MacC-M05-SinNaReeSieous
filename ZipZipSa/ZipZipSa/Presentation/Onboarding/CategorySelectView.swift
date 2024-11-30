@@ -33,7 +33,6 @@ struct CategorySelectView: View {
                     BottomButton
                 }
             }
-            .accentColor(Color.Button.tertiary)
             .navigationBarBackButtonHidden()
         }
     }
@@ -42,11 +41,12 @@ struct CategorySelectView: View {
 private extension CategorySelectView {
     
     var ZipZipSaTip: some View {
-        HStack(alignment: .bottom, spacing: 16) {
-            Image("basicYongboogiHeadColor")
+        HStack(alignment: .bottom, spacing: 0) {
+            Image("basicYongboogiBowtieHeadColor")
                 .resizable()
-                .scaledToFit()
                 .frame(width: 62, height: 62)
+                .padding(.leading, 8)
+                .padding(.trailing, 18)
             
             Group {
                 if currentMessage.isEmpty {
@@ -59,7 +59,7 @@ private extension CategorySelectView {
             .applyZZSFont(zzsFontSet: .subheadlineBold)
             .padding(.horizontal, 8)
             .padding(.vertical, 6)
-            .frame(width: UIScreen.screenSize.width / 375 * 255, alignment: .bottomLeading)
+            .frame(width: UIScreen.screenSize.width - 120, alignment: .bottomLeading)
             .background {
                 GeometryReader { geometry in
                     UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(
@@ -69,16 +69,12 @@ private extension CategorySelectView {
                     ))
                     .stroke(.black, lineWidth: 1)
                     .fill(Color.Layer.first)
-                    .frame(
-                        width: UIScreen.screenSize.width / 375 * 255,
-                        height: geometry.size.height
-                    )
+                    .frame(width: UIScreen.screenSize.width - 120)
                 }
             }
         }
         .frame(width: UIScreen.screenSize.width - 32, height: UIScreen.screenSize.height / 812 * 116, alignment: .bottom)
         .padding(.bottom, 24)
-        .padding(.top, 24)
     }
     
     var RequiredTime: some View {
@@ -89,20 +85,28 @@ private extension CategorySelectView {
                 HStack(alignment: .center) {
                     Text(ZipLiteral.CategorySelect.requiredTime)
                         .foregroundStyle(Color.Text.primary)
-                        .font(Font.system (size: 13, weight: .medium))
+                        .applyZZSFont(zzsFontSet: .footnote)
                     
                     Text("약 \(totalTime)분")
                         .foregroundStyle(Color.Text.primary)
-                        .font(Font.system (size: 16, weight: .semibold))
+                        .applyZZSFont(zzsFontSet: .bodyBold)
                 }
             }
-            .padding(.bottom, 32)
     }
     
     var BottomButton: some View {
-        ZZSMainButton(action: { endOnboarding() },
-                      text: ZipLiteral.CategorySelect.done)
-        .padding(.horizontal, 16)
+        Button {
+            firstLaunch = false
+        } label: {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color.Button.primaryBlue)
+                .frame(width:UIScreen.screenSize.width - 32, height: 53)
+                .overlay {
+                    Text(ZipLiteral.CategorySelect.done)
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet:.bodyBold)
+                }
+        }
         .padding(.bottom, 12)
     }
     

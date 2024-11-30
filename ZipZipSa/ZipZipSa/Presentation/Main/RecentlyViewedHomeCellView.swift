@@ -18,19 +18,29 @@ struct RecentlyViewedHomeCellView: View {
             .overlay {
                 ZStack {
                     Color.Additional.seperator.opacity(0.3)
-                    LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black.opacity(0.4)]),
-                                   startPoint: .top, endPoint: .bottom)
+                    Color.black.opacity(0.4)
                     VStack(alignment: .leading) {
-                        Text(home.title)
-                            .applyZZSFont(zzsFontSet: .subheadlineBold)
-                            .foregroundStyle(Color.Tag.colorGray)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 6)
-                            .background {
-                                Rectangle()
-                                    .fill(Color.Tag.backgroundGray)
-                                    .cornerRadius(8)
-                            }
+                        HStack(alignment: .top, spacing:0) {
+                            Text(home.title)
+                                .foregroundStyle(Color.Tag.backgroundGray)
+                                .applyZZSFont(zzsFontSet: .subheadlineBold)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 6)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.Tag.backgroundWhite)
+                                }
+                            Spacer()
+                            Text(home.rentType)
+                                .foregroundStyle(Color.Text.onColorSecondary)
+                                .applyZZSFont(zzsFontSet: .caption1Bold)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 4)
+                                .background {
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.Text.onColorSecondary, lineWidth: 1)
+                                }
+                        }
                         
                         Spacer()
                         
@@ -40,7 +50,6 @@ struct RecentlyViewedHomeCellView: View {
                             .frame(maxWidth: 168, alignment: .leading)
                             .lineLimit(2)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(8)
                 }
             }

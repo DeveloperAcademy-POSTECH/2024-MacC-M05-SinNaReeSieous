@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct UnsupportedDeviceView: View {
+    @State var showResultCard: Bool = false
+    @Binding var model: UIImage?
+    
     var body: some View {
         ZStack {
             CameraView
@@ -19,6 +22,9 @@ struct UnsupportedDeviceView: View {
                 Spacer()
                 ShowResultCardButton
             }
+        }
+        .sheet(isPresented: $showResultCard) {
+            ResultCardView(model: $model)
         }
     }
 }
@@ -61,7 +67,7 @@ private extension UnsupportedDeviceView {
     
     var ShowResultCardButton: some View {
         Button {
-            // TODO: 모델 이미지가 없는 상태로 결과지 시트 띄우기
+            showResultCard = true
         } label: {
             RoundedRectangle(cornerRadius: 16)
                 .foregroundStyle(Color.Button.primaryBlue)
@@ -75,8 +81,4 @@ private extension UnsupportedDeviceView {
         .padding(.horizontal, 16)
         .padding(.bottom, 35)
     }
-}
-
-#Preview {
-    UnsupportedDeviceView()
 }

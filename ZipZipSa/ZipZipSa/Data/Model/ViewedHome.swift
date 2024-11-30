@@ -12,5 +12,6 @@ struct ViewedHome: Identifiable {
     let image: String
     let title: String
     let address: String
+    let rentType: String
 }
 

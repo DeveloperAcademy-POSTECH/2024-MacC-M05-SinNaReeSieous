@@ -12,8 +12,8 @@ import SwiftData
 struct MainView: View {
     @Query var users: [User]
     @State private var homeList: [ViewedHome] = [
-        ViewedHome(image: "mainPic_sample", title: "첫 번째 집", address: "부산광역시 강서구 녹산산단 382로 10~29번지 (송정동)"),
-        ViewedHome(image: "mainPic_sample", title: "두 번째 집", address: "서울시 강동구 동남로78길 48 (고덕1동)")
+        ViewedHome(image: "mainPic_sample", title: "첫 번째 집", address: "부산광역시 강서구 녹산산단 382로 10~29번지 (송정동)", rentType: "월세"),
+        ViewedHome(image: "mainPic_sample", title: "두 번째 집", address: "서울시 강동구 동남로78길 48 (고덕1동)", rentType: "전세")
     ]  // 데이터 모델을 위한 배열
     @State private var currentTip = ZipZipSaTip.getRandomText()
     @State private var timer: Timer?
@@ -38,7 +38,6 @@ struct MainView: View {
                         }
                     }
                 }
-                .padding(.horizontal, 16)
             }
         }
         .accentColor(Color.Button.tertiary)
@@ -70,6 +69,7 @@ private extension MainView {
         }
         .padding(.top, 12)
         .padding(.bottom, 32)
+        .padding(.horizontal, 16)
     }
     
     var NavigationTitle: some View {
@@ -108,6 +108,7 @@ private extension MainView {
                 .padding(.leading, 12)
                 .padding(.trailing, 8)
             })
+            .padding(.horizontal, 16)
             .onAppear {
                 // 기존 타이머가 있다면 무효화
                 timer?.invalidate()
@@ -146,7 +147,8 @@ private extension MainView {
             ViewedHomeButton
         }
         .padding(.top, 24)
-        .padding(.bottom, 64)
+        .padding(.bottom, UIScreen.isSe ? 12 : 64)
+        .padding(.horizontal, 16)
     }
     
     var HomeHuntButton: some View {
@@ -209,16 +211,18 @@ private extension MainView {
                 .font(Font.system (size: 24, weight: .bold))
                 .padding(.bottom, 24)
         }
+        .padding(.horizontal, 16)
     }
     
     var RecentlyViewedHomeList: some View {
         LazyHGrid(rows: [GridItem(.fixed(UIScreen.screenSize.height / 812 * 208))], spacing: 20) {
-            ForEach(Array(homeList.suffix(3).enumerated()), id: \.element.id) { index, home in
-                RecentlyViewedHomeCellView(home: $homeList[homeList.count - min(3, homeList.count) + index])
+            ForEach(Array(homeList.suffix(3).reversed().enumerated()), id: \.element.id) { index, home in
+                RecentlyViewedHomeCellView(home: $homeList[homeList.count - 1 - index])
             }
         }
         .frame(height: UIScreen.screenSize.height / 812 * 208)
         .padding(.bottom, 8)
+        .padding(.horizontal, 16)
     }
     
     var EmptyRecentlyViewedHome: some View {
@@ -235,9 +239,9 @@ private extension MainView {
                 })
         }
         .padding(.bottom, 8)
+        .padding(.horizontal, 16)
     }
 }
-
 
 #Preview {
     MainView()

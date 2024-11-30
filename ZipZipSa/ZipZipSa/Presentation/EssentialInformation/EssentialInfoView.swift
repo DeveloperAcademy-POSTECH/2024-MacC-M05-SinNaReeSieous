@@ -27,6 +27,8 @@ struct EssentialInfoView: View {
     @State private var moveToChecklistView: Bool = false
     @State private var firstShow: Bool = true
     
+    @State private var availableFacilities: [Facility] = []
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -50,7 +52,9 @@ struct EssentialInfoView: View {
             .overlay(alignment: .bottom) {
                 ZZSMainButton(
                     action: {
-                        endEssentialInfoView()
+                        Task {
+                            await endEssentialInfoView()
+                        }
                     },
                     text: "다음"
                 )
@@ -608,8 +612,29 @@ private extension EssentialInfoView {
         }
     }
     
-    private func endEssentialInfoView() {
+    private func searchNearbyFacilities() async {
+        if let coordinates = homeData.location?.coordinate {
+            do {
+                let location = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
+                let results = try await FacilityChecker.shared.checkFacilities(at: location, for: Facility.allCases.map { $0.rawValue })
+                
+                availableFacilities = Facility.allCases.filter { facility in
+                    results[facility.rawValue] == true
+                }
+            } catch let networkError as NetworkError {
+                networkError.logError()
+            } catch {
+                print("Unexpected error: \(error)")
+            }
+        } else {
+            availableFacilities = []
+        }
+    }
+    
+    private func endEssentialInfoView() async {
         moveToChecklistView = true
+        await searchNearbyFacilities()
+        print(availableFacilities)
     }
 }
 
