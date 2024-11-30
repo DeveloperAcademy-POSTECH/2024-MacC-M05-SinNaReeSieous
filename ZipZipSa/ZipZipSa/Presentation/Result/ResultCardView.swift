@@ -26,6 +26,7 @@ struct ResultCardView: View {
                 ResultDetailViewButton
                 ShareButton
             }
+            .scrollIndicators(.never)
         }
         .background(Color.Background.primary)
     }
