@@ -21,6 +21,7 @@ struct SettingView: View {
                     PrivacyPolicy
                     Support
                     Spacer()
+                    AppVersion
                 }
             }
         }
@@ -28,6 +29,7 @@ struct SettingView: View {
 }
 
 private extension SettingView {
+    // MARK: - View
     
     var NavigationTitle: some View {
         Text(ZipLiteral.Setting.setting)
@@ -130,6 +132,23 @@ private extension SettingView {
             }
             .padding()
         })
+    }
+    
+    var AppVersion: some View {
+        HStack {
+            Spacer()
+            Text(appVersion)
+                .applyZZSFont(zzsFontSet: .footnote)
+                .foregroundStyle(Color.Text.placeholder)
+                .padding()
+            Spacer()
+        }
+    }
+    
+    // MARK: - Computed Value
+    private var appVersion: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        return "현재 버전: \(version)"
     }
 }
 
