@@ -66,7 +66,7 @@ struct MainView: View {
                     image: $0.homeImage,
                     title: $0.homeName,
                     address: $0.locationText,
-                    rentType: $0.homeRentalType?.text)
+                    rentType: $0.homeCategoryType?.text)
             }
             
             print(users.count)

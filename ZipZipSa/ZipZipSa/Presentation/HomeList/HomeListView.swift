@@ -51,7 +51,7 @@ struct HomeListView: View {
                     image: $0.homeImage,
                     title: $0.homeName,
                     address: $0.locationText,
-                    rentType: $0.homeRentalType?.text)
+                    rentType: $0.homeCategoryType?.text)
             }
         }
     }
@@ -114,9 +114,9 @@ private extension HomeListView {
                 Button {
                     if let selectedHomeIndex = homes.firstIndex(where: {$0.id == home.id }) {
                         self.selectedHomeIndex = selectedHomeIndex
+                        showHomeResultCardSheet = true
                         print(selectedHomeIndex)
                         print(homes[selectedHomeIndex])
-                            // showHomeResultCardSheet = true
                     }
                 } label: {
                     ViewedHomeCellView(home: $homeList[homeList.count - 1 - index])
