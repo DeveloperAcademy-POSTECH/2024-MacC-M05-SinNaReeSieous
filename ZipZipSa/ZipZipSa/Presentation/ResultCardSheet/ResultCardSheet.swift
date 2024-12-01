@@ -9,13 +9,9 @@ import SwiftUI
 import SwiftData
 
 struct ResultCardSheetView: View {
-
-    @Environment(\.modelContext) private var modelContext
-    
     @Query var homes: [HomeData]
     @State private var card: UIImage = UIImage()
-    @Binding var selectedHomeIndex: Int
-    @State var homeData = HomeData()
+    @Binding var homeData: HomeData
     
     var body: some View {
         NavigationStack {
@@ -33,9 +29,6 @@ struct ResultCardSheetView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.Background.primary)
-            .onAppear {
-                homeData = homes[selectedHomeIndex]
-            }
         }
     }
 }
@@ -71,7 +64,7 @@ private extension ResultCardSheetView {
     
     var ResultDetailViewButton: some View {
         NavigationLink(destination: {
-           
+            DetailEssentialInfoView(homeData: $homeData)
         }, label: {
             Text(ZipLiteral.ResultCard.resultDetailButtonText)
                 .foregroundStyle(.gray)

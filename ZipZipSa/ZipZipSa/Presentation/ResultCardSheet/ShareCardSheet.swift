@@ -9,8 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct ShareCardSheet: View {
-
-    @Query var homes: [HomeData]
     @Binding var homeData: HomeData
     
     

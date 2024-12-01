@@ -10,9 +10,9 @@ import SwiftUI
 struct ShareCardHeaderView: View {
     @Binding var homeData: HomeData
     
-    var mainPicture: UIImage? {
-        homeData.homeImage
-    }
+//    var mainPicture: UIImage? {
+//        homeData.homeImage
+//    }
     
     var body: some View {
         content
@@ -21,7 +21,7 @@ struct ShareCardHeaderView: View {
     
     @ViewBuilder
     private var content: some View {
-        if let image = mainPicture {
+        if let image = homeData.homeImage {
             Image(uiImage: image)
                 .resizable()
                 .scaledToFill()

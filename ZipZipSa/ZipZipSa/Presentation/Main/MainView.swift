@@ -17,7 +17,7 @@ struct MainView: View {
     @State private var timer: Timer?
     @State private var showHomeHuntSheet: Bool = false
     @State private var showHomeResultCardSheet = false
-    @State private var selectedHomeIndex: Int = 0
+    @State private var selectedHome: HomeData = HomeData()
     
     var body: some View {
         NavigationStack {
@@ -56,9 +56,21 @@ struct MainView: View {
             }
         }
         .sheet(isPresented: $showHomeResultCardSheet, content: {
-            ResultCardSheetView(selectedHomeIndex: $selectedHomeIndex)
+            ResultCardSheetView(homeData: $selectedHome)
                 .presentationDragIndicator(.visible)
         })
+        .onChange(of: showHomeResultCardSheet) { oldValue, newValue in
+            if !showHomeResultCardSheet {
+                homeList = homes.map {
+                    return ViewedHome(
+                        id: $0.id,
+                        image: $0.homeImage,
+                        title: $0.homeName,
+                        address: $0.locationText,
+                        rentType: $0.homeCategoryType?.text)
+                }
+            }
+        }
         .onAppear {
             homeList = homes.map {
                 return ViewedHome(
@@ -75,6 +87,7 @@ struct MainView: View {
             print(homes.last?.homeName)
             print(users[0].favoriteCategories)
         }
+       
     }
 }
 
@@ -238,7 +251,7 @@ private extension MainView {
             ForEach(Array(homeList.suffix(3).reversed().enumerated()), id: \.element.id) { index, home in
                 Button {
                     if let selectedHomeIndex = homes.firstIndex(where: {$0.id == home.id }) {
-                        self.selectedHomeIndex = selectedHomeIndex
+                        self.selectedHome = homes[selectedHomeIndex]
                         showHomeResultCardSheet = true
                         print(selectedHomeIndex)
                         print(homes[selectedHomeIndex].homeName)

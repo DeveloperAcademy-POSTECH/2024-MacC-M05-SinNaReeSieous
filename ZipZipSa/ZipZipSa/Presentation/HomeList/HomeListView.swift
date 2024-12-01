@@ -36,8 +36,8 @@ struct HomeListView: View {
                 }
             }
             .sheet(isPresented: $showHomeResultCardSheet, content: {
-                ResultCardSheetView(selectedHomeIndex: $selectedHomeIndex)
-                    .presentationDragIndicator(.visible)
+                //ResultCardSheetView(selectedHomeIndex: $selectedHomeIndex)
+                //    .presentationDragIndicator(.visible)
             })
         }
         .accentColor(Color.Button.tertiary)
