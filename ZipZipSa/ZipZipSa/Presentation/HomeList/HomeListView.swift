@@ -9,12 +9,12 @@ import SwiftUI
 import SwiftData
 
 struct HomeListView: View {
+    @Query var homes: [HomeData]
     @State private var homeList: [ViewedHome] = []  // 데이터 모델을 위한 배열
     
     @State private var showHomeHuntSheet = false
-    @Query var homes: [HomeData]
     @State private var showHomeResultCardSheet = false
-    @State private var selectedHomeIndex: Int = 0
+    @State private var selectedHome: HomeData = HomeData()
     
     var body: some View {
         ZStack{
@@ -36,8 +36,8 @@ struct HomeListView: View {
                 }
             }
             .sheet(isPresented: $showHomeResultCardSheet, content: {
-                //ResultCardSheetView(selectedHomeIndex: $selectedHomeIndex)
-                //    .presentationDragIndicator(.visible)
+                ResultCardSheetView(homeData: $selectedHome)
+                    .presentationDragIndicator(.visible)
             })
         }
         .accentColor(Color.Button.tertiary)
@@ -52,6 +52,28 @@ struct HomeListView: View {
                     title: $0.homeName,
                     address: $0.locationText,
                     rentType: $0.homeCategoryType?.text)
+            }
+        }
+        .onChange(of: showHomeResultCardSheet) { oldValue, newValue in
+            if !showHomeResultCardSheet {
+                homeList = homes.map {
+                    return ViewedHome(
+                        id: $0.id,
+                        image: $0.homeImage,
+                        title: $0.homeName,
+                        address: $0.locationText,
+                        rentType: $0.homeCategoryType?.text)
+                }
+            }
+        }
+        .onChange(of: homes) { oldValue, newValue in
+            homeList = homes.map {
+                return ViewedHome(
+                    id: $0.id,
+                    image: $0.homeImage,
+                    title: $0.homeName,
+                    address: $0.locationText,
+                    rentType: $0.homeRentalType?.text)
             }
         }
     }
@@ -113,10 +135,10 @@ private extension HomeListView {
             ForEach(Array(homeList.reversed().enumerated()), id: \.element.id) { index, home in
                 Button {
                     if let selectedHomeIndex = homes.firstIndex(where: {$0.id == home.id }) {
-                        self.selectedHomeIndex = selectedHomeIndex
+                        self.selectedHome = homes[selectedHomeIndex]
                         showHomeResultCardSheet = true
                         print(selectedHomeIndex)
-                        print(homes[selectedHomeIndex])
+                        print(homes[selectedHomeIndex].homeName)
                     }
                 } label: {
                     ViewedHomeCellView(home: $homeList[homeList.count - 1 - index])

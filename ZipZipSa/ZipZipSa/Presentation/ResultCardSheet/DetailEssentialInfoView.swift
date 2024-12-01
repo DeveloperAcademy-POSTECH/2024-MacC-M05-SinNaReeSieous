@@ -637,6 +637,7 @@ private extension DetailEssentialInfoView {
                     FacilityData(rawValue: facility.rawValue)
                 }
                 print(homeData.facilities.map{$0.icon})
+                print(location)
             } catch let networkError as NetworkError {
                 networkError.logError()
             } catch {
