@@ -615,7 +615,11 @@ private extension EssentialInfoView {
         
         do {
             let placemarks = try await geocoder.reverseGeocodeLocation(location)
-            return placemarks.first.flatMap { formatAddress(from: $0) }
+            guard let bestPlacemark = placemarks.first else {
+                print("역지오코딩 결과가 없습니다.")
+                return nil
+            }
+            return formatAddress(from: bestPlacemark)
         } catch {
             print("역지오코딩 실패: \(error.localizedDescription)")
             return nil
@@ -623,12 +627,25 @@ private extension EssentialInfoView {
     }
     
     private func formatAddress(from placemark: CLPlacemark) -> String? {
-        let administrativeArea = placemark.administrativeArea ?? "" // 도/광역시
-        let locality = placemark.locality ?? "" // 시/군/구
-        let thoroughfare = placemark.thoroughfare ?? "" // 도로명
-        let subThoroughfare = placemark.subThoroughfare ?? "" // 도로번호
-        let address = "\(administrativeArea) \(locality) \(thoroughfare) \(subThoroughfare)"
-            .trimmingCharacters(in: .whitespaces)
+        var components: [String] = []
+        
+        if let administrativeArea = placemark.administrativeArea {
+            components.append(administrativeArea)
+        }
+        if let subAdministrativeArea = placemark.subAdministrativeArea {
+            components.append(subAdministrativeArea)
+        }
+        if let locality = placemark.locality {
+            components.append(locality)
+        }
+        if let thoroughfare = placemark.thoroughfare {
+            components.append(thoroughfare)
+        }
+        if let subThoroughfare = placemark.subThoroughfare {
+            components.append(subThoroughfare)
+        }
+
+        let address = components.joined(separator: " ")
         return address.isEmpty ? nil : address
     }
     
