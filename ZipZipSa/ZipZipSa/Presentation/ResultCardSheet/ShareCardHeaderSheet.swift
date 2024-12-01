@@ -10,37 +10,32 @@ import SwiftData
 
 struct ShareCardHeaderSheet: View {
     @Binding var homeData: HomeData
-    
-    var mainPicture: UIImage? {
-        homeData.homeImage
-    }
+    @State private var displayImage: UIImage?
     
     var body: some View {
-        content
-            .clipShape(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 16, topTrailing: 16)))
-    }
-    
-    @ViewBuilder
-    private var content: some View {
-        if let image = mainPicture {
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFill()
-                .frame(width: UIScreen.screenSize.width-32, height: 340)
-                .overlay(Color.black.opacity(0.3))
-                .overlay(contentOverlay)
-        } else {
-            Rectangle()
-                .fill(Color.Button.tertiary)
-                .frame(height: 340)
-                .overlay {
-                    Image(.charResultCard)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 130)
+        Image(uiImage: displayImage ?? .basicYongboogiHead)
+            .resizable()
+            .scaledToFill()
+            .frame(width: UIScreen.screenSize.width-32, height: 340)
+            .overlay(Color.black.opacity(0.3))
+            .overlay {
+                if displayImage == nil {
+                    Rectangle()
+                        .fill(Color.Button.tertiary)
+                        .frame(height: 340)
+                        .overlay {
+                            Image(.charResultCard)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 130)
+                        }
                 }
-                .overlay(contentOverlay)
-        }
+            }
+            .overlay(contentOverlay)
+            .clipShape(UnevenRoundedRectangle(cornerRadii: .init(topLeading: 16, topTrailing: 16)))
+            .task {
+                await displayImage = loadImage()
+            }
     }
 }
 
@@ -145,5 +140,9 @@ private extension ShareCardHeaderSheet {
         } else {
             return "\(rentalFeeStrings[1])억 \(rentalFeeStrings[0])만원"
         }
+    }
+    
+    private func loadImage() async -> UIImage {
+        return homeData.homeImage ?? .basicYongboogiHead
     }
 }
