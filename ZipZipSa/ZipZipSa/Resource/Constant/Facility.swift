@@ -8,7 +8,7 @@
 import Foundation
 
 enum Facility: String, Hashable, CaseIterable {
-    case lundry = "빨래방"
+    case lundry = "세탁소"
     case convenienceStore = "편의점"
     case mart = "마트"
     case hospital = "병원"
