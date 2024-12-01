@@ -147,9 +147,9 @@ private extension ShareCardSheet {
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
             
-            if !availableFacility.isEmpty {
+            if !homeData.facilities.isEmpty {
                 HStack {
-                    ForEach(availableFacility, id: \.self) { facility in
+                    ForEach(homeData.facilities, id: \.self) { facility in
                         Image(systemName: facility.icon)
                             .resizable()
                             .scaledToFit()

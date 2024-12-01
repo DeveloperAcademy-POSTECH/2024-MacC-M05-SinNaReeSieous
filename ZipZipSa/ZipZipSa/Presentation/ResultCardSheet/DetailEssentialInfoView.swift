@@ -52,7 +52,7 @@ struct DetailEssentialInfoView: View {
             ZZSMainButton(
                 action: {
                     Task {
-                        await endEssentialInfoView()
+                        await moveToChecklistView()
                     }
                 },
                 text: "체크리스트 보기"
@@ -91,7 +91,7 @@ private extension DetailEssentialInfoView {
     // MARK: - View
     
     var NavigationTitle: some View {
-        Text("기본정보")
+        Text("기본정보를 알려주세요")
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .largeTitle)
             .padding(.horizontal, 16)
@@ -630,11 +630,13 @@ private extension DetailEssentialInfoView {
                 let location = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
                 let results = try await FacilityManager.searchFacilities(at: location)
                 
+                print(results)
                 homeData.facilitiesData = Facility.allCases.filter { facility in
                     results[facility.rawValue] == true
                 }.map { facility in
                     FacilityData(rawValue: facility.rawValue)
                 }
+                print(homeData.facilities.map{$0.icon})
             } catch let networkError as NetworkError {
                 networkError.logError()
             } catch {
@@ -645,7 +647,7 @@ private extension DetailEssentialInfoView {
         }
     }
     
-    private func endEssentialInfoView() async {
+    private func moveToChecklistView() async {
         await searchFacilities()
         if homeData.homeName.isEmpty {
             homeData.homeName = basicHomeName
