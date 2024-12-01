@@ -71,7 +71,7 @@ private extension ResultCardSheetView {
     
     var ResultDetailViewButton: some View {
         NavigationLink(destination: {
-            DetailEssentialInfoView(homeData: $homeData)
+           
         }, label: {
             Text(ZipLiteral.ResultCard.resultDetailButtonText)
                 .foregroundStyle(.gray)

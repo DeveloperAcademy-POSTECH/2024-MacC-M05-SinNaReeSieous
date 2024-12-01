@@ -32,6 +32,12 @@ struct ShareCardHeaderView: View {
             Rectangle()
                 .fill(Color.Button.tertiary)
                 .frame(height: 340)
+                .overlay {
+                    Image(.charResultCard)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 130)
+                }
                 .overlay(contentOverlay)
         }
     }
@@ -41,16 +47,9 @@ private extension ShareCardHeaderView {
     // MARK: - View
     
     private var contentOverlay: some View {
-        VStack {
-            HomeNickname
+        VStack(spacing: 0) {
+            HomeNicknameAndType
             HomeAddress
-            Spacer()
-            if mainPicture == nil {
-                Image(.charResultCard)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 130)
-            }
             Spacer()
             HomeTags
         }
@@ -58,20 +57,31 @@ private extension ShareCardHeaderView {
         .frame(height: 340)
     }
     
-    var HomeNickname: some View {
-        HStack {
+    var HomeNicknameAndType: some View {
+        HStack(alignment: .top) {
             Text(homeData.homeName)
                 .foregroundStyle(Color.Tag.colorWhite)
                 .applyZZSFont(zzsFontSet: .subheadlineBold)
                 .padding(.horizontal, 8)
+                .padding(.vertical, 6)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.Tag.backgroundWhite)
-                        .frame(height: 32)
                 )
             Spacer()
+            
+            if let type = homeData.homeCategoryType?.text {
+                Text(type)
+                    .foregroundStyle(Color.Text.onColorSecondary)
+                    .applyZZSFont(zzsFontSet: .caption1Bold)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 4)
+                    .background {
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.Text.onColorSecondary, lineWidth: 1)
+                    }
+            }
         }
-        .padding(.top, 8)
         .padding(.bottom, 6)
     }
     
@@ -87,47 +97,48 @@ private extension ShareCardHeaderView {
     var HomeTags: some View {
         VStack(spacing: 6) {
             HStack(spacing: 6) {
-                if let category = homeData.homeCategoryType?.text{
-                    ZZSTag(text: category)
-                }
-                if let direction = homeData.homeDirectionType?.text  {
-                    ZZSTag(text: direction)
-                }
                 if homeData.homeAreaPyeong != "" && homeData.homeAreaSquareMeter != "" {
                     ZZSTag(text: "\(homeData.homeAreaPyeong)평/\(homeData.homeAreaSquareMeter)m²")
-                }
-                
-                ForEach(0..<spaceCount) { _ in
-                    Rectangle().fill(Color.clear)
+                    ZZSTag(text: "월세 \(monthlyFee)")
+                } else {
+                    ZZSTag(text: "월세 \(monthlyFee)")
+                    Rectangle()
+                        .fill(Color.clear)
                         .frame(height: 28)
                 }
+                
             }
             
             HStack(spacing: 6) {
-                ZZSTag(text: "보증금 \(rentalFeeStrings[0])")
-                ZZSTag(text: "월세 \(rentalFeeStrings[2])")
-                ZZSTag(text: "관리비 \(rentalFeeStrings[3])")
+                ZZSTag(text: "보증금 \(deposit)")
+                ZZSTag(text: "관리비 \(managementFee)")
             }
         }
     }
     
     var rentalFeeStrings: [String] {
         return homeData.rentalFeeData.map { rentalFee in
-            return rentalFee.value.isEmpty ? "없음" : "\(rentalFee.value)만원"
+            return rentalFee.value
         }
     }
+
+    var monthlyFee: String {
+       return rentalFeeStrings[2].isEmpty ? "없음" : "\(rentalFeeStrings[2])만원"
+    }
     
-    var spaceCount: Int {
-        var count = 3
-        if let _ = homeData.homeCategoryType?.text {
-            count -= 1
+    var managementFee: String {
+        return rentalFeeStrings[3].isEmpty ? "없음" : "\(rentalFeeStrings[3])만원"
+    }
+    
+    var deposit: String {
+        if rentalFeeStrings[0].isEmpty && rentalFeeStrings[1].isEmpty {
+            return "없음"
+        } else if rentalFeeStrings[0].isEmpty {
+            return "\(rentalFeeStrings[1])억"
+        } else if rentalFeeStrings[1].isEmpty {
+            return "\(rentalFeeStrings[0])만원"
+        } else {
+            return "\(rentalFeeStrings[1])억 \(rentalFeeStrings[0])만원"
         }
-        if let _ = homeData.homeDirectionType?.text  {
-            count -= 1
-        }
-        if homeData.homeAreaPyeong != "" && homeData.homeAreaSquareMeter != "" {
-            count -= 1
-        }
-        return count
     }
 }
