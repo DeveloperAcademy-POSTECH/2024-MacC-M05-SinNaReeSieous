@@ -123,7 +123,11 @@ private extension ShareCardHeaderView {
     }
 
     var monthlyFee: String {
-       return rentalFeeStrings[2].isEmpty ? "없음" : "\(rentalFeeStrings[2])만원"
+        if homeData.homeRentalType == .fullDeposit {
+            return "없음"
+        } else {
+            return rentalFeeStrings[2].isEmpty ? "없음" : "\(rentalFeeStrings[2])만원"
+        }
     }
     
     var managementFee: String {
