@@ -45,7 +45,7 @@ private extension SettingView {
     var CustomDivider : some View {
         Rectangle()
             .fill(Color.Additional.seperator)
-            .frame(width: UIScreen.screenSize.width, height: 2)
+            .frame(width: UIScreen.screenSize.width, height: 1)
     }
     
     var CategoryChange: some View {
@@ -64,21 +64,33 @@ private extension SettingView {
                 }
                 .padding(.bottom, 14)
                 
-                CategoryCellList
+                if userCategories.isEmpty {
+                    CategoryEmtpyText
+                        .padding(.bottom, 29)
+                } else {
+                    CategoryCellList
+                        .padding(.bottom, 19)
+                }
             }
             .padding(.horizontal, 16)
-            .padding(.bottom, 19)
+            
         }
     }
     
+    var CategoryEmtpyText: some View {
+        Text("선택한 카테고리가 없어요")
+            .foregroundStyle(Color.Text.tertiary)
+            .applyZZSFont(zzsFontSet: .caption1Regular)
+    }
+    
     var CategoryCellList: some View {
-        HStack (spacing: 12) {
-            ForEach(userCategories.indices, id: \.self) { index in
-                if let category = userCategories[safe: index] {
-                    CategoryCell(for: category)
+            HStack(spacing: 12) {
+                ForEach(userCategories.indices, id: \.self) { index in
+                    if let category = userCategories[safe: index] {
+                        CategoryCell(for: category)
+                    }
                 }
             }
-        }
     }
     
     func CategoryCell(for category: ChecklistCategory) -> some View {
