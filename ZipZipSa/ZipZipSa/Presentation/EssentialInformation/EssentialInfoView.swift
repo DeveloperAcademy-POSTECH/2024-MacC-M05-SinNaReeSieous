@@ -632,16 +632,6 @@ private extension EssentialInfoView {
         return address.isEmpty ? nil : address
     }
     
-    private func formatAddress(from placemark: MKPlacemark) -> String? {
-        let administrativeArea = placemark.administrativeArea ?? "" // 도/광역시
-        let locality = placemark.locality ?? "" // 시/군/구
-        let thoroughfare = placemark.thoroughfare ?? "" // 도로명
-        let subThoroughfare = placemark.subThoroughfare ?? "" // 도로번호
-        let address = "\(administrativeArea) \(locality) \(thoroughfare) \(subThoroughfare)"
-            .trimmingCharacters(in: .whitespaces)
-        return address.isEmpty ? nil : address
-    }
-    
     private func searchFacilities() async {
         if let coordinates = homeData.location?.coordinate {
             do {

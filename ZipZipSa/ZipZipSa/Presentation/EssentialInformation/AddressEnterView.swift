@@ -150,12 +150,23 @@ private extension AddressEnterView {
     }
     
     var CompleteButton: some View {
-        ZZSMainButton(
-            action: { applySearchResult() },
-            text: "완료"
-        )
+        let isDisabled = selectedCoordinates == nil
+        
+        return Button {
+            applySearchResult()
+        } label: {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(isDisabled ? Color.Button.disabled : Color.Button.primaryBlue)
+                .frame(height: 53)
+                .overlay {
+                    Text("완료")
+                        .foregroundStyle(isDisabled ? Color.Text.disabled : Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyBold)
+                }
+        }
         .padding(.bottom, 12)
         .padding([.horizontal, .top], 16)
+        .disabled(isDisabled)
     }
     
     // MARK: - Action
