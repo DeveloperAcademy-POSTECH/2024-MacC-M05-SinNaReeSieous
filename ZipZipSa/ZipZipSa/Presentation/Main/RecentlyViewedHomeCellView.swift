@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct RecentlyViewedHomeCellView: View {
-    @Binding var home: ViewedHome
+    let home: HomeData
     
     var body: some View {
-        if let image = home.image {
+        if let image = home.homeImage {
             Image(uiImage: image)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
@@ -22,7 +22,7 @@ struct RecentlyViewedHomeCellView: View {
                         Color.black.opacity(0.4)
                         VStack(alignment: .leading) {
                             HStack(alignment: .top, spacing:0) {
-                                Text(home.title)
+                                Text(home.homeName)
                                     .foregroundStyle(Color.Tag.backgroundGray)
                                     .applyZZSFont(zzsFontSet: .subheadlineBold)
                                     .padding(.horizontal, 8)
@@ -32,8 +32,8 @@ struct RecentlyViewedHomeCellView: View {
                                             .fill(Color.Tag.backgroundWhite)
                                     }
                                 Spacer()
-                                if let rentType = home.rentType {
-                                    Text(rentType)
+                                if let homeType = home.homeCategoryType?.text {
+                                    Text(homeType)
                                         .foregroundStyle(Color.Text.onColorSecondary)
                                         .applyZZSFont(zzsFontSet: .caption1Bold)
                                         .padding(.horizontal, 6)
@@ -47,8 +47,8 @@ struct RecentlyViewedHomeCellView: View {
                             }
                             
                             Spacer()
-                            if let address = home.address {
-                                Text(address)
+                            if let locationText = home.locationText {
+                                Text(locationText)
                                     .foregroundStyle(Color.Text.onColorPrimary)
                                     .applyZZSFont(zzsFontSet: .caption1Bold)
                                     .frame(maxWidth: 168, alignment: .leading)
@@ -71,7 +71,7 @@ struct RecentlyViewedHomeCellView: View {
                         Color.black.opacity(0.4)
                         VStack(alignment: .leading) {
                             HStack(alignment: .top, spacing:0) {
-                                Text(home.title)
+                                Text(home.homeName)
                                     .foregroundStyle(Color.Tag.backgroundGray)
                                     .applyZZSFont(zzsFontSet: .subheadlineBold)
                                     .padding(.horizontal, 8)
@@ -81,8 +81,8 @@ struct RecentlyViewedHomeCellView: View {
                                             .fill(Color.Tag.backgroundWhite)
                                     }
                                 Spacer()
-                                if let rentType = home.rentType {
-                                    Text(rentType)
+                                if let homeType = home.homeCategoryType?.text {
+                                    Text(homeType)
                                         .foregroundStyle(Color.Text.onColorSecondary)
                                         .applyZZSFont(zzsFontSet: .caption1Bold)
                                         .padding(.horizontal, 6)
@@ -93,13 +93,11 @@ struct RecentlyViewedHomeCellView: View {
                                         }
                                     
                                 }
-
                             }
                             
                             Spacer()
-                            
-                            if let address = home.address {
-                                Text(address)
+                            if let locationText = home.locationText {
+                                Text(locationText)
                                     .foregroundStyle(Color.Text.onColorPrimary)
                                     .applyZZSFont(zzsFontSet: .caption1Bold)
                                     .frame(maxWidth: 168, alignment: .leading)

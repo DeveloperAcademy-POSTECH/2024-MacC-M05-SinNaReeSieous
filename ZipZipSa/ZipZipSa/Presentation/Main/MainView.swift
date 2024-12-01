@@ -12,7 +12,6 @@ struct MainView: View {
     @Query var users: [User]
     @Query var homes: [HomeData]
     
-    @State private var homeList: [ViewedHome] = []  // 데이터 모델을 위한 배열
     @State private var currentTip = ZipZipSaTip.getRandomText()
     @State private var timer: Timer?
     @State private var showHomeHuntSheet: Bool = false
@@ -30,7 +29,7 @@ struct MainView: View {
                     MainButtons
                     RecentlyViewedHomeTitle
                     
-                    if homeList.isEmpty {
+                    if homes.isEmpty {
                         EmptyRecentlyViewedHome
                     } else {
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -45,42 +44,11 @@ struct MainView: View {
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
             EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
         }
-        .onChange(of: homes) { oldValue, newValue in
-            homeList = homes.map {
-                return ViewedHome(
-                    id: $0.id,
-                    image: $0.homeImage,
-                    title: $0.homeName,
-                    address: $0.locationText,
-                    rentType: $0.homeRentalType?.text)
-            }
-        }
         .sheet(isPresented: $showHomeResultCardSheet, content: {
             ResultCardSheetView(homeData: $selectedHome)
                 .presentationDragIndicator(.visible)
         })
-        .onChange(of: showHomeResultCardSheet) { oldValue, newValue in
-            if !showHomeResultCardSheet {
-                homeList = homes.map {
-                    return ViewedHome(
-                        id: $0.id,
-                        image: $0.homeImage,
-                        title: $0.homeName,
-                        address: $0.locationText,
-                        rentType: $0.homeCategoryType?.text)
-                }
-            }
-        }
         .onAppear {
-            homeList = homes.map {
-                return ViewedHome(
-                    id: $0.id,
-                    image: $0.homeImage,
-                    title: $0.homeName,
-                    address: $0.locationText,
-                    rentType: $0.homeCategoryType?.text)
-            }
-            
             print(users.count)
             print(users.first?.favoriteCategories.map{$0.text})
             print(homes.count)
@@ -248,7 +216,7 @@ private extension MainView {
     
     var RecentlyViewedHomeList: some View {
         LazyHGrid(rows: [GridItem(.fixed(UIScreen.screenSize.height / 812 * 208))], spacing: 20) {
-            ForEach(Array(homeList.suffix(3).reversed().enumerated()), id: \.element.id) { index, home in
+            ForEach(Array(homes.suffix(3).reversed().enumerated()), id: \.element.id) { index, home in
                 Button {
                     if let selectedHomeIndex = homes.firstIndex(where: {$0.id == home.id }) {
                         self.selectedHome = homes[selectedHomeIndex]
@@ -257,7 +225,7 @@ private extension MainView {
                         print(homes[selectedHomeIndex].homeName)
                     }
                 } label: {
-                    RecentlyViewedHomeCellView(home: $homeList[homeList.count - 1 - index])
+                    RecentlyViewedHomeCellView(home: homes[homes.count - 1 - index])
                 }
             }
         }

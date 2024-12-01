@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ViewedHomeCellView: View {
-    @Binding var home: ViewedHome
+    let home: HomeData
     
     var body: some View {
-        if let homeImage = home.image {
+        if let homeImage = home.homeImage {
             Image(uiImage: homeImage)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
@@ -23,7 +23,7 @@ struct ViewedHomeCellView: View {
                         Color.Additional.seperator.opacity(0.3)
                         Color.black.opacity(0.4)
                         VStack(alignment: .leading) {
-                            Text(home.title)
+                            Text(home.homeName)
                                 .applyZZSFont(zzsFontSet: .subheadlineBold)
                                 .foregroundStyle(Color.Tag.backgroundGray)
                                 .padding(.horizontal, 8)
@@ -35,16 +35,16 @@ struct ViewedHomeCellView: View {
                             
                             Spacer()
                             HStack {
-                                if let address = home.address {
-                                    Text(address)
+                                if let locationText = home.locationText {
+                                    Text(locationText)
                                         .frame(width: 216, alignment: .leading)
                                         .applyZZSFont(zzsFontSet: .caption1Bold)
                                         .foregroundStyle(Color.Text.onColorPrimary)
                                 }
                                 
                                 Spacer()
-                                if let rentType = home.rentType {
-                                    Text(rentType)
+                                if let homeCategoryType = home.homeCategoryType?.text {
+                                    Text(homeCategoryType)
                                         .foregroundStyle(Color.Text.onColorSecondary)
                                         .applyZZSFont(zzsFontSet: .caption1Bold)
                                         .padding(.horizontal, 6)
@@ -75,7 +75,7 @@ struct ViewedHomeCellView: View {
                         Color.Additional.seperator.opacity(0.3)
                         Color.black.opacity(0.4)
                         VStack(alignment: .leading) {
-                            Text(home.title)
+                            Text(home.homeName)
                                 .applyZZSFont(zzsFontSet: .subheadlineBold)
                                 .foregroundStyle(Color.Tag.backgroundGray)
                                 .padding(.horizontal, 8)
@@ -84,18 +84,17 @@ struct ViewedHomeCellView: View {
                                     RoundedRectangle(cornerRadius: 8)
                                         .fill(Color.Tag.backgroundWhite)
                                 }
-                            
                             Spacer()
                             HStack {
-                                if let address = home.address {
-                                    Text(address)
+                                if let locationText = home.locationText {
+                                    Text(locationText)
                                         .frame(width: 216, alignment: .leading)
                                         .applyZZSFont(zzsFontSet: .caption1Bold)
                                         .foregroundStyle(Color.Text.onColorPrimary)
                                 }
                                 Spacer()
-                                if let rentType = home.rentType {
-                                    Text(rentType)
+                                if let homeCategoryType = home.homeCategoryType?.text {
+                                    Text(homeCategoryType)
                                         .foregroundStyle(Color.Text.onColorSecondary)
                                         .applyZZSFont(zzsFontSet: .caption1Bold)
                                         .padding(.horizontal, 6)

@@ -10,7 +10,6 @@ import SwiftData
 
 struct HomeListView: View {
     @Query var homes: [HomeData]
-    @State private var homeList: [ViewedHome] = []  // 데이터 모델을 위한 배열
     
     @State private var showHomeHuntSheet = false
     @State private var showHomeResultCardSheet = false
@@ -23,7 +22,7 @@ struct HomeListView: View {
             
             VStack(spacing: 0) {
                 TopBar
-                if homeList.isEmpty {
+                if homes.isEmpty {
                     Spacer().frame(height: UIScreen.screenSize.height/812*48)
                     NoHome
                 } else {
@@ -43,38 +42,6 @@ struct HomeListView: View {
         .accentColor(Color.Button.tertiary)
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
             EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
-        }
-        .onAppear {
-            homeList = homes.map {
-                return ViewedHome(
-                    id: $0.id,
-                    image: $0.homeImage,
-                    title: $0.homeName,
-                    address: $0.locationText,
-                    rentType: $0.homeCategoryType?.text)
-            }
-        }
-        .onChange(of: showHomeResultCardSheet) { oldValue, newValue in
-            if !showHomeResultCardSheet {
-                homeList = homes.map {
-                    return ViewedHome(
-                        id: $0.id,
-                        image: $0.homeImage,
-                        title: $0.homeName,
-                        address: $0.locationText,
-                        rentType: $0.homeCategoryType?.text)
-                }
-            }
-        }
-        .onChange(of: homes) { oldValue, newValue in
-            homeList = homes.map {
-                return ViewedHome(
-                    id: $0.id,
-                    image: $0.homeImage,
-                    title: $0.homeName,
-                    address: $0.locationText,
-                    rentType: $0.homeRentalType?.text)
-            }
         }
     }
 }
@@ -132,7 +99,7 @@ private extension HomeListView {
     
     var ViewedHomeList: some View {
         LazyVGrid(columns: [GridItem(.flexible())], spacing: 32) {
-            ForEach(Array(homeList.reversed().enumerated()), id: \.element.id) { index, home in
+            ForEach(Array(homes.reversed().enumerated()), id: \.element.id) { index, home in
                 Button {
                     if let selectedHomeIndex = homes.firstIndex(where: {$0.id == home.id }) {
                         self.selectedHome = homes[selectedHomeIndex]
@@ -141,7 +108,7 @@ private extension HomeListView {
                         print(homes[selectedHomeIndex].homeName)
                     }
                 } label: {
-                    ViewedHomeCellView(home: $homeList[homeList.count - 1 - index])
+                    ViewedHomeCellView(home: homes[homes.count - 1 - index])
                 }
             }
         }
