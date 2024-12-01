@@ -88,8 +88,8 @@ private extension ResultCardView {
     }
     
     var ResultDetailViewButton: some View {
-        Button {
-            // TODO: 상세보기뷰로 이동
+        NavigationLink {
+            DetailEssentialInfoView(homeData: $homeData)
         } label: {
             Text(ZipLiteral.ResultCard.resultDetailButtonText)
                 .foregroundStyle(.gray)

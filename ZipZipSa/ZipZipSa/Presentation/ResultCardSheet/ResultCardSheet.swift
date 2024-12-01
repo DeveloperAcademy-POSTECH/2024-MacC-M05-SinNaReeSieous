@@ -63,13 +63,13 @@ private extension ResultCardSheetView {
     }
     
     var ResultDetailViewButton: some View {
-        NavigationLink(destination: {
+        NavigationLink {
             DetailEssentialInfoView(homeData: $homeData)
-        }, label: {
+        } label: {
             Text(ZipLiteral.ResultCard.resultDetailButtonText)
                 .foregroundStyle(.gray)
                 .font(Font.system(size: 16))
-        })
+        }
         .padding(.bottom, 24)
     }
     

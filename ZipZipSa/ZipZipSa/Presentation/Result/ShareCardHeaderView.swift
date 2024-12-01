@@ -25,7 +25,7 @@ struct ShareCardHeaderView: View {
             Image(uiImage: image)
                 .resizable()
                 .scaledToFill()
-                .frame(height: 340)
+                .frame(width: UIScreen.screenSize.width-32, height: 340)
                 .overlay(Color.black.opacity(0.3))
                 .overlay(contentOverlay)
         } else {
