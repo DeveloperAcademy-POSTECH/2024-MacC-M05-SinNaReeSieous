@@ -91,7 +91,7 @@ private extension DetailEssentialInfoView {
     // MARK: - View
     
     var NavigationTitle: some View {
-        Text("기본정보를 알려주세요")
+        Text("기본정보")
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .largeTitle)
             .padding(.horizontal, 16)
