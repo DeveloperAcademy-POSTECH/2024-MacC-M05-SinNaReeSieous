@@ -39,6 +39,7 @@ struct MainView: View {
                 }
             }
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .accentColor(Color.Button.tertiary)
         .navigationBarBackButtonHidden()
         .fullScreenCover(isPresented: $showHomeHuntSheet) {

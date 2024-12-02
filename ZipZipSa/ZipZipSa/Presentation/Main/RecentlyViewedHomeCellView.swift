@@ -17,6 +17,13 @@ struct RecentlyViewedHomeCellView: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(width: UIScreen.screenSize.width / 375 * 220, height: UIScreen.screenSize.height / 812 * 208)
                 .overlay {
+                    ZStack {
+                        Color.Additional.seperator.opacity(0.3)
+                        Color.black.opacity(0.4)
+                       
+                    }
+                }
+                .overlay {
                     VStack(alignment: .leading) {
                         HStack(alignment: .top, spacing: 0) {
                             Text(home.homeName)
