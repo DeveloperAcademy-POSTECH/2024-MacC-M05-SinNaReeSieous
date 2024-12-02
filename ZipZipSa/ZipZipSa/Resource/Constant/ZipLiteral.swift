@@ -50,8 +50,9 @@ enum ZipLiteral {
         """
         static let description: String =
         """
-        현재 RoomPlan 기능은
-        iPhone Pro 및 Pro Max 모델에서만 지원합니다.
+        RoomPlan 기능은 LiDAR 센서가 있는
+        iPhone 12 시리즈 이상의
+        Pro 및 Pro Max 모델에서만 지원합니다.
         
         바로 결과지를 보러 가볼까요?
         """
