@@ -52,6 +52,8 @@ private extension CategoryChangeView {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 62, height: 62)
+                .padding(.leading, 8)
+                .padding(.trailing, 18)
             
             Group {
                 if currentMessage.isEmpty {
@@ -64,7 +66,7 @@ private extension CategoryChangeView {
             .applyZZSFont(zzsFontSet: .subheadlineBold)
             .padding(.horizontal, 8)
             .padding(.vertical, 6)
-            .frame(width: UIScreen.screenSize.width / 375 * 255, alignment: .bottomLeading)
+            .frame(width: UIScreen.screenSize.width - 120, alignment: .bottomLeading)
             .background {
                 GeometryReader { geometry in
                     UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(
@@ -74,10 +76,7 @@ private extension CategoryChangeView {
                     ))
                     .stroke(.black, lineWidth: 1)
                     .fill(Color.Layer.first)
-                    .frame(
-                        width: UIScreen.screenSize.width / 375 * 255,
-                        height: geometry.size.height
-                    )
+                    .frame(width: UIScreen.screenSize.width - 120)
                 }
             }
         }
@@ -93,11 +92,11 @@ private extension CategoryChangeView {
                 HStack(alignment: .center) {
                     Text(ZipLiteral.CategorySelect.requiredTime)
                         .foregroundStyle(Color.Text.primary)
-                        .font(Font.system (size: 13, weight: .medium))
+                        .applyZZSFont(zzsFontSet: .footnote)
                     
                     Text("약 \(totalTime)분")
                         .foregroundStyle(Color.Text.primary)
-                        .font(Font.system (size: 16, weight: .semibold))
+                        .applyZZSFont(zzsFontSet: .bodyBold)
                 }
             }
             .padding(.bottom, UIScreen.isSe ? 0 : 32)

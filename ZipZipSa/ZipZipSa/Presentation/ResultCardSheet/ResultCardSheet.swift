@@ -12,6 +12,7 @@ struct ResultCardSheetView: View {
     @Query var homes: [HomeData]
     @State private var card: UIImage = UIImage()
     @Binding var homeData: HomeData
+    @State var updateCaputer = false
     
     var body: some View {
         NavigationStack {
@@ -29,6 +30,9 @@ struct ResultCardSheetView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .background(Color.Background.primary)
+            .task {
+                await loadImage()
+            }
         }
     }
 }
@@ -52,11 +56,10 @@ private extension ResultCardSheetView {
     var BackgroundForCapture: some View {
         GeometryReader { proxy in
             Color.clear
-                .onAppear {
-                    DispatchQueue.main.async {
+                .onChange(of: updateCaputer) { _ , _ in  DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
-                        card = ShareCardSheet(homeData: $homeData)
-                            .asUIImage(size: size)
+                        card = ShareCaptureCardView(homeData: $homeData)
+                        .asUIImage(size: size)
                     }
                 }
         }
@@ -85,5 +88,10 @@ private extension ResultCardSheetView {
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 24)
+    }
+    
+    private func loadImage() async {
+        try? await Task.sleep(nanoseconds: 500_000_000)
+        updateCaputer = true
     }
 }
