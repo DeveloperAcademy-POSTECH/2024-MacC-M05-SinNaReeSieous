@@ -41,7 +41,7 @@ final class HomeData {
     var resultMaxScoreData: Data? = nil
     var resultScoreData: Data? = nil
     var resultHazardData: [HazardData] = []
-    var memoData: [MemoData] = [MemoData(), MemoData(), MemoData(), MemoData(), MemoData()]
+    var memoData: [MemoData]
     
     // MARK: - ResultCard
     
@@ -58,7 +58,8 @@ final class HomeData {
         rentalFee: [RentalFeeData] = [RentalFeeData(), RentalFeeData(), RentalFeeData(), RentalFeeData()],
         imageData: Data? = nil,
         location: LocationData? = nil,
-        locationText: String? = nil
+        locationText: String? = nil,
+        memoData: [MemoData] = [MemoData(), MemoData(), MemoData(), MemoData(), MemoData()]
     ) {
         self.homeName = homeName
         self.homeCategoryData = homeCategory
@@ -70,6 +71,7 @@ final class HomeData {
         self.imageData = imageData
         self.location = location
         self.locationText = locationText
+        self.memoData = memoData
     }
 }
 
