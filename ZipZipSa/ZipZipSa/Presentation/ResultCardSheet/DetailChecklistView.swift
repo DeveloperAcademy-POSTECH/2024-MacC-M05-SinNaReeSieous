@@ -17,8 +17,8 @@ struct DetailChecklistView: View {
     @Binding var firstShow: Bool
     @Binding var returnToDetailEssentialInfoView: Bool
     
-    @State private var answers: [UUID: Set<Int>] = [:]
-    @State private var scores: [UUID: Float] = [:]
+    @State private var answers: [Int: Set<Int>] = [:]
+    @State private var scores: [Int: Float] = [:]
     
     var body: some View {
         VStack(spacing: 0) {
@@ -185,10 +185,13 @@ private extension DetailChecklistView {
     }
     
     func applyHomeDataToViewState() {
-        if let answers = homeData.loadDictionary(data: homeData.answerData, type: [UUID: Set<Int>].self) {
+        print("데이터 적용 됨")
+        if let answers = homeData.loadDictionary(data: homeData.answerData, type: [Int: Set<Int>].self) {
+            print(answers)
             self.answers = answers
         }
-        if let scores = homeData.loadDictionary(data: homeData.scoreData, type: [UUID: Float].self) {
+        if let scores = homeData.loadDictionary(data: homeData.scoreData, type: [Int: Float].self) {
+            print(scores)
             self.scores = scores
         }
     }

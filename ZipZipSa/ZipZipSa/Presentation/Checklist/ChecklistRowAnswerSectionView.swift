@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ChecklistRowAnswerSectionView: View {
-    @Binding var answers: [UUID: Set<Int>]
-    @Binding var scores: [UUID: Float]
+    @Binding var answers: [Int: Set<Int>]
+    @Binding var scores: [Int: Float]
     let checklistItem: ChecklistItem
     
     private let horizontalSpacing: CGFloat = 10
