@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct ShareCardView: View {
-
+    
     @Binding var homeData: HomeData
+    @State private var selectedFacility: String? = nil
+    @State private var showBubble: Bool = false
+    @State private var timer: Timer?
     
     let columnLayout = Array(repeating: GridItem(.flexible()), count: 3)
     var hazardTags: [String] {
@@ -21,17 +24,17 @@ struct ShareCardView: View {
     }
     
     var resultMaxScores: [String: Float] {
-      homeData.loadDictionary(data: homeData.resultMaxScoreData,
-                              type: [String: Float].self) ?? [:]
+        homeData.loadDictionary(data: homeData.resultMaxScoreData,
+                                type: [String: Float].self) ?? [:]
     }
     
     var resultScores: [String: Float] {
         homeData.loadDictionary(data: homeData.resultScoreData,
-                              type: [String: Float].self) ?? [:]
+                                type: [String: Float].self) ?? [:]
     }
     
     let categoryOrders = ["insectproof", "cleanliness", "security", "ventilation", "soundproof", "sunlight"]
-
+    
     var body: some View {
         VStack {
             ShareCardHeaderView(homeData: $homeData)
@@ -155,6 +158,36 @@ private extension ShareCardView {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 29, height: 29)
+                            .onTapGesture {
+                                withAnimation() {
+                                    selectedFacility = facility.rawValue
+                                    showBubble = true
+                                }
+                                
+                                timer?.invalidate()
+                                timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
+                                    withAnimation() {
+                                        showBubble = false
+                                    }
+                                }
+                            }
+                            .overlay {
+                                if showBubble && selectedFacility == facility.rawValue {
+                                    Text(facility.rawValue)
+                                        .fixedSize()
+                                        .lineLimit(1)
+                                        .foregroundStyle(Color.Text.onColorPrimary)
+                                        .applyZZSFont(zzsFontSet: .caption1Regular)
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 5)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .fill(Color.black.opacity(0.7))
+                                        )
+                                        .offset(y: -30)
+                                        .transition(.opacity)
+                                }
+                            }
                     }
                     Spacer()
                 }
