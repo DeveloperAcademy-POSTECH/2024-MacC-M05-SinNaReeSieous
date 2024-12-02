@@ -92,7 +92,9 @@ private extension ShareCardSheet {
             if !hazardTags.isEmpty {
                 LazyVGrid(columns: columnLayout) {
                     ForEach(hazardTags, id: \.self) { tag in
-                        ZZSTag(text: tag)
+                        ZZSTag(text: tag,
+                               textColor: Color.ChecklistTag.colorGray,
+                               backgroundColor: Color.ChecklistTag.backgroundGray)
                     }
                 }
             } else {

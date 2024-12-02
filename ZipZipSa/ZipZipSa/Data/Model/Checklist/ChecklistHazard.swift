@@ -20,15 +20,15 @@ enum Hazard: String, Hashable {
     
     var text: String {
         switch self {
-        case .waterLeak: return "누수 위험"
-        case .waterPressure: return "수압 안좋음"
-        case .waterCold: return "온수 잘 안 나옴"
-        case .waterDrainage: return "배수 안좋음"
-        case .mold: return "곰팡이 위험"
-        case .noise: return "소음 위험"
-        case .privacy: return "사생활 위험"
-        case .cockroach: return "바퀴 위험"
-        case .cigaretteSmell: return "담배 위험"
+        case .waterLeak: return "누수"
+        case .waterPressure: return "수압"
+        case .waterCold: return "온수"
+        case .waterDrainage: return "배수"
+        case .mold: return "곰팡이"
+        case .noise: return "소음"
+        case .privacy: return "사생활"
+        case .cockroach: return "바퀴벌레"
+        case .cigaretteSmell: return "담배"
         }
     }
 }

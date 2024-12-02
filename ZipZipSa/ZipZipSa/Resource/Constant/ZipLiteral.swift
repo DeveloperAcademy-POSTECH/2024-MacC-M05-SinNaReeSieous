@@ -95,7 +95,7 @@ enum ZipLiteral {
         
         // ShareCardView
         static let categorySectionTitle: String = "카테고리"
-        static let hazardSectionTitle: String = "필수체크"
+        static let hazardSectionTitle: String = "주의 요소"
         static let hazardSectioinEmptyText: String = "우와, 여기는 안전한 곳이에요!"
         static let roomModelSectionTitle: String = "집 구조"
         static let roomModelSectionEmptyText: String = "집 구조 등록으로 내게 꼭 맞는 집을\n더 쉽게 찾아보세요"

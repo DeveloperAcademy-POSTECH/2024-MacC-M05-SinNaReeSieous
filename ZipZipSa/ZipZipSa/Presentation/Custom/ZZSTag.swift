@@ -9,14 +9,22 @@ import SwiftUI
 
 struct ZZSTag: View {
     let text: String
+    let textColor: Color
+    let backgroundColor: Color
+    
+    init(text: String, textColor: Color = Color.Tag.colorWhite, backgroundColor: Color = Color.Tag.backgroundWhite) {
+        self.text = text
+        self.textColor = textColor
+        self.backgroundColor = backgroundColor
+    }
     
     var body: some View {
         RoundedRectangle(cornerRadius: 8)
-            .fill(Color.Tag.backgroundWhite)
+            .fill(backgroundColor)
             .frame(height: 28)
             .overlay {
                 Text(text)
-                    .foregroundStyle(Color.Tag.colorWhite)
+                    .foregroundStyle(textColor)
                     .applyZZSFont(zzsFontSet: .footnote)
             }
     }
