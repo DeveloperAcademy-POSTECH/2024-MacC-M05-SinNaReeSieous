@@ -14,16 +14,16 @@ struct UnsupportedDeviceView: View {
     @Binding var showHomeHuntSheet: Bool
     
     var body: some View {
-        ZStack {
+        VStack(spacing: 0) {
+            Spacer()
+            CharacterImage
+            UnsupportedTitle
+            UnsupportedDescription
+            Spacer()
+            ShowResultCardButton
+        }
+        .background {
             BackgroundView
-            VStack(spacing: 0) {
-                Spacer()
-                CharacterImage
-                UnsupportedTitle
-                UnsupportedDescription
-                Spacer()
-                ShowResultCardButton
-            }
         }
         .fullScreenCover(isPresented: $showResultCard) {
             ResultCardView(model: $model, homeData: $homeData, showHomeHuntSheet: $showHomeHuntSheet)
@@ -84,6 +84,6 @@ private extension UnsupportedDeviceView {
                 )
         }
         .padding(.horizontal, 16)
-        .padding(.bottom, 45)
+        .padding(.bottom, 12)
     }
 }
