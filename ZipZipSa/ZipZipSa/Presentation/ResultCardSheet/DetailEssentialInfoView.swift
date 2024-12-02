@@ -11,7 +11,7 @@ import SwiftData
 import MapKit
 
 struct DetailEssentialInfoView: View {
-    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Query var homes: [HomeData]
     @Binding var homeData: HomeData
     
@@ -28,6 +28,9 @@ struct DetailEssentialInfoView: View {
     @State private var moveToChecklistView: Bool = false
     @State private var selectedSpaceType: SpaceType = .kitchen
     @State private var firstShow: Bool = true
+    
+    @State private var returnToResultCardSheet = false
+    @State private var returnToDetailEssentialInfoView = false
     
     var body: some View {
         ScrollView {
@@ -64,15 +67,21 @@ struct DetailEssentialInfoView: View {
         .navigationDestination(isPresented: $moveToChecklistView, destination: {
             DetailChecklistView(homeData: $homeData,
                                 selectedSpaceType: $selectedSpaceType,
-                                firstShow: $firstShow)
+                                firstShow: $firstShow,
+                                returnToDetailEssentialInfoView: $returnToDetailEssentialInfoView)
         })
         .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.hidden, for: .navigationBar)
-        .onAppear {
-            
+        .onChange(of: returnToDetailEssentialInfoView) {
+            if returnToDetailEssentialInfoView {
+                returnToResultCardSheet = true
+            }
         }
+        .onChange(of: returnToResultCardSheet, { oldValue, newValue in
+            presentationMode.wrappedValue.dismiss()
+        })
         .onDisappear {
             Task {
                 await returnToResultCardSheet()
@@ -91,7 +100,7 @@ private extension DetailEssentialInfoView {
     // MARK: - View
     
     var NavigationTitle: some View {
-        Text("기본정보")
+        Text("기본정보예요")
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .largeTitle)
             .padding(.horizontal, 16)

@@ -21,7 +21,7 @@ struct ShareCardHeaderView: View {
                 if displayImage == nil {
                     Rectangle()
                         .fill(Color.Button.tertiary)
-                        .frame(height: 340)
+                        .frame(width: UIScreen.screenSize.width-32, height: 340)
                         .overlay {
                             Image(.charResultCard)
                                 .resizable()
@@ -37,6 +37,7 @@ struct ShareCardHeaderView: View {
             }
     }
 }
+
 
 private extension ShareCardHeaderView {
     // MARK: - View
@@ -141,7 +142,8 @@ private extension ShareCardHeaderView {
         }
     }
     
-    private func loadImage() async -> UIImage {
-        return homeData.homeImage ?? .basicYongboogiHead
+    private func loadImage() async -> UIImage? {
+        try? await Task.sleep(nanoseconds: 50_000_000)
+        return homeData.homeImage
     }
 }

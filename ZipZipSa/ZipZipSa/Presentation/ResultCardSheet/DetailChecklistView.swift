@@ -15,6 +15,7 @@ struct DetailChecklistView: View {
     @Binding var homeData: HomeData
     @Binding var selectedSpaceType: SpaceType
     @Binding var firstShow: Bool
+    @Binding var returnToDetailEssentialInfoView: Bool
     
     @State private var answers: [UUID: Set<Int>] = [:]
     @State private var scores: [UUID: Float] = [:]
@@ -96,7 +97,7 @@ private extension DetailChecklistView {
     
     var NavigationBarTitle: some View {
         HStack {
-            Text("체크리스트")
+            Text("체크리스트예요")
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .largeTitle)
             Spacer()
@@ -164,6 +165,7 @@ private extension DetailChecklistView {
     func bottomButtonAction() {
         if selectedSpaceType.rawValue == 4 {
             applyChecklistResult()
+            returnToDetailEssentialInfoView = true
             presentationMode.wrappedValue.dismiss()
         } else {
             let nextSpaceType = SpaceType(rawValue: selectedSpaceType.rawValue + 1)
