@@ -52,7 +52,7 @@ private extension HomeListView {
         VStack {
             NoHomeImage
             NoHomeText
-            Spacer().frame(height: UIScreen.screenSize.height/812*168)
+            Spacer()
             GoHomeHuntButton
         }
     }

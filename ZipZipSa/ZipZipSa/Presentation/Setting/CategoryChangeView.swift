@@ -99,6 +99,7 @@ private extension CategoryChangeView {
                         .applyZZSFont(zzsFontSet: .bodyBold)
                 }
             }
+            .padding(.bottom, UIScreen.isSe ? 0 : 32)
     }
     
     var BottomButton: some View {
