@@ -15,7 +15,7 @@ struct UnsupportedDeviceView: View {
     
     var body: some View {
         ZStack {
-            CameraView
+            BackgroundView
             VStack(spacing: 0) {
                 Spacer()
                 CharacterImage
@@ -34,8 +34,11 @@ struct UnsupportedDeviceView: View {
 private extension UnsupportedDeviceView {
     // MARK: - View
     
-    var CameraView: some View {
-        CameraViewRepresentable()
+    var BackgroundView: some View {
+        Image(.imgUnsupportedDevice)
+            .resizable()
+            .frame(width: UIScreen.screenSize.width, height: UIScreen.screenSize.height)
+            .scaledToFill()
             .blur(radius: 6, opaque: true)
             .overlay {
                 Rectangle()
@@ -81,6 +84,6 @@ private extension UnsupportedDeviceView {
                 )
         }
         .padding(.horizontal, 16)
-        .padding(.bottom, 35)
+        .padding(.bottom, 45)
     }
 }
