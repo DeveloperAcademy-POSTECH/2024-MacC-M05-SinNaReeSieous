@@ -42,6 +42,7 @@ private extension CategorySelectView {
         HStack(alignment: .bottom, spacing: 0) {
             Image("basicYongboogiBowtieHeadColor")
                 .resizable()
+                .scaledToFit()
                 .frame(width: 62, height: 62)
                 .padding(.leading, 8)
                 .padding(.trailing, 18)
