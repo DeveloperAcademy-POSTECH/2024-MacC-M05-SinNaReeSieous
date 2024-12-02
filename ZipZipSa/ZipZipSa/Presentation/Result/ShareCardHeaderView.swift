@@ -57,7 +57,7 @@ private extension ShareCardHeaderView {
         HStack(alignment: .top) {
             Text(homeData.homeName)
                 .foregroundStyle(Color.Tag.colorWhite)
-                .applyZZSFont(zzsFontSet: .subheadlineBold)
+                .applyZZSFont(zzsFontSet: .headline)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 6)
                 .background(
@@ -69,7 +69,7 @@ private extension ShareCardHeaderView {
             if let type = homeData.homeCategoryType?.text {
                 Text(type)
                     .foregroundStyle(Color.Text.onColorSecondary)
-                    .applyZZSFont(zzsFontSet: .caption1Bold)
+                    .applyZZSFont(zzsFontSet: .bodyBold)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 4)
                     .background {
@@ -83,9 +83,9 @@ private extension ShareCardHeaderView {
     
     var HomeAddress: some View {
         HStack {
-            Text(homeData.locationText ?? "")
+            Text(homeData.locationText ?? "등록된 주소가 없어요")
                 .foregroundStyle(Color.Text.onColorPrimary)
-                .applyZZSFont(zzsFontSet: .caption1Bold)
+                .applyZZSFont(zzsFontSet: .bodyBold)
             Spacer()
         }
     }
@@ -113,7 +113,9 @@ private extension ShareCardHeaderView {
     }
     
     var rentalFeeStrings: [String] {
-        return homeData.rentalFeeData.map { rentalFee in
+        return homeData.rentalFeeData.sorted {
+            $0.index < $1.index
+        }.map { rentalFee in
             return rentalFee.value
         }
     }

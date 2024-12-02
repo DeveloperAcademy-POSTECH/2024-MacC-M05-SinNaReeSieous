@@ -80,7 +80,7 @@ private extension SettingView {
     var CategoryEmtpyText: some View {
         Text("선택한 카테고리가 없어요")
             .foregroundStyle(Color.Text.tertiary)
-            .applyZZSFont(zzsFontSet: .caption1Regular)
+            .applyZZSFont(zzsFontSet: .footnote)
     }
     
     var CategoryCellList: some View {
