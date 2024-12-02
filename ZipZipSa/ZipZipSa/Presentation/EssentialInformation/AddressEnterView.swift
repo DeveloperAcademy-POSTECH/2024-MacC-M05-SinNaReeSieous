@@ -20,6 +20,8 @@ struct AddressEnterView: View {
     @FocusState private var focusedTextField: AddressEnterFocusField?
     @Binding var resultCoordinates: LocationData?
     @Binding var resultLocationText: String?
+    @State private var locationManager = CLLocationManager()
+    @State private var debounceTimer: Timer? = nil
     
     var body: some View {
         NavigationStack {
@@ -67,10 +69,12 @@ private extension AddressEnterView {
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .bodyRegular)
             .focused($focusedTextField, equals: .searchBar)
-            .onSubmit {
-                Task {
-                    await searchAddress(searchText)
-                    print(searchResults)
+            .onChange(of: searchText) {
+                debounceTimer?.invalidate()
+                debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
+                    Task {
+                        await searchAddress(searchText)
+                    }
                 }
             }
             
@@ -150,12 +154,23 @@ private extension AddressEnterView {
     }
     
     var CompleteButton: some View {
-        ZZSMainButton(
-            action: { applySearchResult() },
-            text: "완료"
-        )
+        let isDisabled = selectedCoordinates == nil
+        
+        return Button {
+            applySearchResult()
+        } label: {
+            RoundedRectangle(cornerRadius: 16)
+                .fill(isDisabled ? Color.Button.disabled : Color.Button.primaryBlue)
+                .frame(height: 53)
+                .overlay {
+                    Text("완료")
+                        .foregroundStyle(isDisabled ? Color.Text.disabled : Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyBold)
+                }
+        }
         .padding(.bottom, 12)
         .padding([.horizontal, .top], 16)
+        .disabled(isDisabled)
     }
     
     // MARK: - Action
@@ -179,6 +194,7 @@ private extension AddressEnterView {
         guard !query.isEmpty else {
             await MainActor.run {
                 searchResults = []
+                isLoading = false
             }
             return
         }
@@ -188,6 +204,9 @@ private extension AddressEnterView {
         
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = query
+        if let region = userRegion {
+            request.region = region
+        }
         
         let search = MKLocalSearch(request: request)
         do {
@@ -198,7 +217,10 @@ private extension AddressEnterView {
             }
         } catch {
             print("주소 검색 실패: \(error.localizedDescription)")
-            isLoading = false
+            await MainActor.run {
+                errorMessage = "검색에 실패했습니다. 다시 시도해주세요."
+                isLoading = false
+            }
         }
     }
     
@@ -216,6 +238,13 @@ private extension AddressEnterView {
             .joined(separator: " ")
         
         return address.isEmpty ? nil : address
+    }
+    
+    // MARK: - Computed Value
+    
+    private var userRegion: MKCoordinateRegion? {
+        guard let userLocation = locationManager.location?.coordinate else { return nil }
+        return MKCoordinateRegion(center: userLocation, latitudinalMeters: 5000, longitudinalMeters: 5000)
     }
 }
 
