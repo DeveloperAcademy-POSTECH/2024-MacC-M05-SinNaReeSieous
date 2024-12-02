@@ -100,7 +100,7 @@ private extension CategoryChangeView {
                         .font(Font.system (size: 16, weight: .semibold))
                 }
             }
-            .padding(.bottom, 32)
+            .padding(.bottom, UIScreen.isSe ? 0 : 32)
     }
     
     var BottomButton: some View {
