@@ -89,11 +89,6 @@ struct EssentialInfoView: View {
                     homeData.homeName = ""
                 }
             }
-            .onChange(of: homeData.rentalFeeData[0].value) { oldValue, newValue in
-                if homeData.rentalFeeData[0].value.count > 4 {
-                    homeData.rentalFeeData[0].value.removeLast()
-                }
-            }
         }
     }
 }
@@ -129,6 +124,11 @@ private extension EssentialInfoView {
                                                                          bottomTrailing: 16,
                                                                          topTrailing: 16))
                 .fill(Color.Button.enable)
+            }
+        }
+        .onChange(of: homeData.homeName) { oldValue, newValue in
+            if homeData.homeName.count > 18 {
+                homeData.homeName.removeLast()
             }
         }
         .padding(.horizontal, 16)
@@ -354,7 +354,7 @@ private extension EssentialInfoView {
         HStack(spacing: 16) {
             if moneyType == .deposit {
                 HStack(spacing: 6) {
-                    TextField(text: $homeData.rentalFeeData[moneyType.index[1]].value) {
+                    TextField(text: $homeData.rentalFeeData.sorted { $0.wrappedValue.index < $1.wrappedValue.index }[moneyType.index[1]].value) {
                         Text("000")
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -378,7 +378,7 @@ private extension EssentialInfoView {
             }
             
             HStack(spacing: 6) {
-                TextField(text: $homeData.rentalFeeData[moneyType.index[0]].value) {
+                TextField(text: $homeData.rentalFeeData.sorted { $0.wrappedValue.index < $1.wrappedValue.index }[moneyType.index[0]].value) {
                     Text("000")
                         .foregroundStyle(Color.Text.placeholder)
                         .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -402,7 +402,7 @@ private extension EssentialInfoView {
             
             if moneyType != .deposit {
                 HStack(spacing: 6) {
-                    TextField(text: $homeData.rentalFeeData[moneyType.index[0]].value) {
+                    TextField(text: $homeData.rentalFeeData.sorted { $0.wrappedValue.index < $1.wrappedValue.index }[moneyType.index[0]].value) {
                         Text("000")
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -424,6 +424,26 @@ private extension EssentialInfoView {
                         .applyZZSFont(zzsFontSet: .bodyRegular)
                 }
                 .hidden()
+            }
+        }
+        .onChange(of: homeData.rentalFeeData[0].value) { oldValue, newValue in
+            if homeData.rentalFeeData[0].value.count > 4 {
+                homeData.rentalFeeData[0].value.removeLast()
+            }
+        }
+        .onChange(of: homeData.rentalFeeData[1].value) { oldValue, newValue in
+            if homeData.rentalFeeData[1].value.count > 4 {
+                homeData.rentalFeeData[1].value.removeLast()
+            }
+        }
+        .onChange(of: homeData.rentalFeeData[2].value) { oldValue, newValue in
+            if homeData.rentalFeeData[2].value.count > 4 {
+                homeData.rentalFeeData[2].value.removeLast()
+            }
+        }
+        .onChange(of: homeData.rentalFeeData[3].value) { oldValue, newValue in
+            if homeData.rentalFeeData[3].value.count > 4 {
+                homeData.rentalFeeData[3].value.removeLast()
             }
         }
     }

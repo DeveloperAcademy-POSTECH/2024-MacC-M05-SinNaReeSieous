@@ -151,7 +151,7 @@ private extension ShareCardView {
             if !availableFacility.isEmpty {
                 HStack {
                     ForEach(availableFacility, id: \.self) { facility in
-                        Image(systemName: facility.icon)
+                        Image(facility.icon)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 29, height: 29)

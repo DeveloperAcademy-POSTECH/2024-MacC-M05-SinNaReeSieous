@@ -99,9 +99,9 @@ enum ZipLiteral {
         static let hazardSectionTitle: String = "주의 요소"
         static let hazardSectioinEmptyText: String = "우와, 여기는 안전한 곳이에요!"
         static let roomModelSectionTitle: String = "집 구조"
-        static let roomModelSectionEmptyText: String = "집 구조 등록으로 내게 꼭 맞는 집을\n더 쉽게 찾아보세요"
+        static let roomModelSectionEmptyText: String = "집 구조스캔을 하지 않았어요."
         static let nearbySectionTitle: String = "주변 시설"
-        static let nearbySectionEmptyText: String = "이 집 주변에는 시설이 없어요"
+        static let nearbySectionEmptyText: String = "이 집 주변에는 시설이 없어요."
     }
     
     enum HomeList{

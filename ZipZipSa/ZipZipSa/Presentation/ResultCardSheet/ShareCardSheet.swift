@@ -152,7 +152,7 @@ private extension ShareCardSheet {
             if !homeData.facilities.isEmpty {
                 HStack {
                     ForEach(homeData.facilities, id: \.self) { facility in
-                        Image(systemName: facility.icon)
+                        Image(facility.icon)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 29, height: 29)

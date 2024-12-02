@@ -24,7 +24,7 @@ struct ScoreGraph: View {
                 .overlay() {
                     Text(category)
                         .foregroundStyle(Color.ChecklistTag.colorYellow)
-                        .applyZZSFont(zzsFontSet: .caption1Regular)
+                        .applyZZSFont(zzsFontSet: .footnote)
                 }
                 .padding(.trailing, 8)
             
