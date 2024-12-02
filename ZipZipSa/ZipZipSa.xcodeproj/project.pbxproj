@@ -8,11 +8,25 @@
 
 /* Begin PBXFileReference section */
 		393FD8D32CE2045D00B1CEE7 /* ZipZipSa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZipZipSa.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		795DC35C2CEDDB670053E173 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		795DC3622CEDDC310053E173 /* Exceptions for "ZipZipSa" folder in "ZipZipSa" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 393FD8D22CE2045D00B1CEE7 /* ZipZipSa */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		393FD8D52CE2045D00B1CEE7 /* ZipZipSa */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				795DC3622CEDDC310053E173 /* Exceptions for "ZipZipSa" folder in "ZipZipSa" target */,
+			);
 			path = ZipZipSa;
 			sourceTree = "<group>";
 		};
@@ -32,6 +46,7 @@
 		393FD8CA2CE2045D00B1CEE7 = {
 			isa = PBXGroup;
 			children = (
+				795DC35C2CEDDB670053E173 /* Config.xcconfig */,
 				393FD8D52CE2045D00B1CEE7 /* ZipZipSa */,
 				393FD8D42CE2045D00B1CEE7 /* Products */,
 			);
@@ -78,7 +93,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					393FD8D22CE2045D00B1CEE7 = {
 						CreatedOnToolsVersion = 16.0;
@@ -86,14 +101,17 @@
 				};
 			};
 			buildConfigurationList = 393FD8CE2CE2045D00B1CEE7 /* Build configuration list for PBXProject "ZipZipSa" */;
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = 393FD8CA2CE2045D00B1CEE7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 393FD8D42CE2045D00B1CEE7 /* Products */;
 			projectDirPath = "";
@@ -246,29 +264,38 @@
 		};
 		393FD8E22CE2045E00B1CEE7 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 795DC35C2CEDDB670053E173 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ZipZipSa/Preview Content\"";
 				DEVELOPMENT_TEAM = D23XDL6TZZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ZipZipSa/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "집집사";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSCameraUsageDescription = "집 사진을 찍고 집 구조를 스캔하기 위해 카메라 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "현재위치를 집 주소로 저장하고 주변시설정보를 검색하기 위해 위치정보 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재위치를 집 주소로 저장하고 주변시설정보를 검색하기 위해 위치정보 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.SNRSs.ZipZipSa;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.SNRSs.ZZS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -281,29 +308,38 @@
 		};
 		393FD8E32CE2045E00B1CEE7 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 795DC35C2CEDDB670053E173 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ZipZipSa/Preview Content\"";
 				DEVELOPMENT_TEAM = D23XDL6TZZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ZipZipSa/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "집집사";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSCameraUsageDescription = "집 사진을 찍고 집 구조를 스캔하기 위해 카메라 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "현재위치를 집 주소로 저장하고 주변시설정보를 검색하기 위해 위치정보 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "현재위치를 집 주소로 저장하고 주변시설정보를 검색하기 위해 위치정보 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.SNRSs.ZipZipSa;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.SNRSs.ZZS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

@@ -6,16 +6,33 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @AppStorage("firstLaunch") var firstLaunch: Bool = true
+    @State var isLoading: Bool = true
+    @Query var users: [User]
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if isLoading {
+            LaunchScreen()
+                .onAppear {
+                    if users.isEmpty {
+                        firstLaunch = true
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        withAnimation {
+                            isLoading = false
+                        }
+                    }
+                }
+        } else {
+            if firstLaunch {
+                OnboardingView()
+            } else {
+                MainView()
+            }
         }
-        .padding()
     }
 }
 
