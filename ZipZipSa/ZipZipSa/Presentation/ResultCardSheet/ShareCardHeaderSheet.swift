@@ -1,13 +1,14 @@
 //
-//  ShareCardHeaderView.swift
+//  ShareCardHeaderSheet.swift
 //  ZipZipSa
 //
-//  Created by 조우현 on 11/29/24.
+//  Created by YunhakLee on 11/30/24.
 //
 
 import SwiftUI
+import SwiftData
 
-struct ShareCardHeaderView: View {
+struct ShareCardHeaderSheet: View {
     @Binding var homeData: HomeData
     @State private var displayImage: UIImage?
     
@@ -38,8 +39,7 @@ struct ShareCardHeaderView: View {
     }
 }
 
-
-private extension ShareCardHeaderView {
+private extension ShareCardHeaderSheet {
     // MARK: - View
     
     private var contentOverlay: some View {

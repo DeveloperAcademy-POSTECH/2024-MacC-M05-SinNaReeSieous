@@ -9,22 +9,20 @@ import SwiftUI
 import SwiftData
 
 struct HomeListView: View {
-    @State private var homeList: [ViewedHome] = [
-        ViewedHome(image: "mainPic_sample", title: "첫 번째 집", address: "부산광역시 강서구 녹산산단 382로 10~29번지 (송정동)", rentType: "월세"),
-        ViewedHome(image: "mainPic_sample", title: "두 번째 집", address: "서울시 강동구 동남로78길 48 (고덕1동)", rentType: "전세")
-    ]  // 데이터 모델을 위한 배열
-        
-    @State private var showHomeHuntSheet = false
     @Query var homes: [HomeData]
-
+    
+    @State private var showHomeHuntSheet = false
+    @State private var showHomeResultCardSheet = false
+    @State private var selectedHome: HomeData = HomeData()
+    
     var body: some View {
         ZStack{
             Color.Background.primary
                 .ignoresSafeArea()
             
-            VStack {
+            VStack(spacing: 0) {
                 TopBar
-                if homeList.isEmpty {
+                if homes.isEmpty {
                     Spacer().frame(height: UIScreen.screenSize.height/812*48)
                     NoHome
                 } else {
@@ -32,8 +30,14 @@ struct HomeListView: View {
                         ViewedHomeList
                             .padding(.horizontal, 16)
                     }
+                    .contentMargins(.bottom, 24, for: .automatic)
+                    .scrollIndicators(.hidden)
                 }
             }
+            .sheet(isPresented: $showHomeResultCardSheet, content: {
+                ResultCardSheetView(homeData: $selectedHome)
+                    .presentationDragIndicator(.visible)
+            })
         }
         .accentColor(Color.Button.tertiary)
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
@@ -94,14 +98,23 @@ private extension HomeListView {
     }
     
     var ViewedHomeList: some View {
-           LazyVGrid(columns: [GridItem(.flexible())], spacing: 32) {
-               ForEach(homeList.indices, id: \.self) { index in
-                   ViewedHomeCellView(home: $homeList[index])
-               }
-           }
-           .padding(.top, 36)
-       }
-   }
+        LazyVGrid(columns: [GridItem(.flexible())], spacing: 32) {
+            ForEach(Array(homes.reversed().enumerated()), id: \.element.id) { index, home in
+                Button {
+                    if let selectedHomeIndex = homes.firstIndex(where: {$0.id == home.id }) {
+                        self.selectedHome = homes[selectedHomeIndex]
+                        showHomeResultCardSheet = true
+                        print(selectedHomeIndex)
+                        print(homes[selectedHomeIndex].homeName)
+                    }
+                } label: {
+                    ViewedHomeCellView(home: homes[homes.count - 1 - index])
+                }
+            }
+        }
+        .padding(.top, 24)
+    }
+}
 
 #Preview {
     HomeListView()

@@ -1,15 +1,16 @@
 //
-//  ShareCardView.swift
+//  ShareCardSheet.swift
 //  ZipZipSa
 //
-//  Created by 조우현 on 11/20/24.
+//  Created by YunhakLee on 11/30/24.
 //
 
 import SwiftUI
+import SwiftData
 
-struct ShareCardView: View {
-
+struct ShareCardSheet: View {
     @Binding var homeData: HomeData
+    
     
     let columnLayout = Array(repeating: GridItem(.flexible()), count: 3)
     var hazardTags: [String] {
@@ -34,7 +35,7 @@ struct ShareCardView: View {
 
     var body: some View {
         VStack {
-            ShareCardHeaderView(homeData: $homeData)
+            ShareCardHeaderSheet(homeData: $homeData)
             
             ChecklistResult
             ZZSSperator()
@@ -57,7 +58,7 @@ struct ShareCardView: View {
     }
 }
 
-private extension ShareCardView {
+private extension ShareCardSheet {
     // MARK: - View
     
     var ChecklistResult: some View {
@@ -148,9 +149,9 @@ private extension ShareCardView {
                 .applyZZSFont(zzsFontSet: .bodyBold)
                 .padding(.bottom, 12)
             
-            if !availableFacility.isEmpty {
+            if !homeData.facilities.isEmpty {
                 HStack {
-                    ForEach(availableFacility, id: \.self) { facility in
+                    ForEach(homeData.facilities, id: \.self) { facility in
                         Image(systemName: facility.icon)
                             .resizable()
                             .scaledToFit()
