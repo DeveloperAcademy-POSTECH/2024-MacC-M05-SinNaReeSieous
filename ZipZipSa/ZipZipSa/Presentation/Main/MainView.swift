@@ -92,15 +92,14 @@ private extension MainView {
     var ZipZipSaTips : some View {
         RoundedRectangle(cornerRadius: 12)
             .stroke(.black, lineWidth:1)
-            .frame(height: 61)
+            .frame(height: 67)
             .overlay(alignment: .leading, content: {
                 HStack(spacing: 12) {
                     Image("basicYongboogiHeadColor")
                         .resizable()
                         .frame(width: 36, height: 34)
-                        .foregroundColor(.green)
                     Text(currentTip)
-                        .applyZZSFont(zzsFontSet: .footnote)
+                        .applyZZSFont(zzsFontSet: .subheadlineRegular)
                         .lineLimit(3)
                         .transition(.slide)
                         .animation(.easeInOut, value: currentTip)
@@ -172,7 +171,7 @@ private extension MainView {
                             .applyZZSFont(zzsFontSet: .title2)
                         Text(ZipLiteral.MainView.homeHuntButtonSub)
                             .foregroundStyle(Color.Text.primary)
-                            .applyZZSFont(zzsFontSet: .caption2)
+                            .applyZZSFont(zzsFontSet: .caption1Regular)
                     }
                     .padding(.top, 12)
                     .padding(.leading, 16)

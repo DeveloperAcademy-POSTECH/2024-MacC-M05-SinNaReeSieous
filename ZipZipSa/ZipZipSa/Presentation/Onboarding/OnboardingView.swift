@@ -32,17 +32,20 @@ struct OnboardingView: View {
 private extension OnboardingView {
     
     var MessageBubble: some View {
-        Text(ZipLiteral.Onboarding.onboardingGreetings[currentPage])
-            .foregroundStyle(Color.Text.primary)
-            .applyZZSFont(zzsFontSet: .bodyBold)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background {
-                UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 10, bottomTrailing: 10, topTrailing: 10))
-                    .fill(Color.Layer.first)
-                    .stroke(.black, lineWidth: 1)
-                    .frame(width: UIScreen.screenSize.width - 48)
-            }
+        HStack(alignment: .center) {
+            Text(ZipLiteral.Onboarding.onboardingGreetings[currentPage])
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .bodyBold)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+            
+            Spacer()
+        }
+        .background {
+            UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(topLeading: 10, bottomTrailing: 10, topTrailing: 10))
+                .fill(Color.Layer.first)
+                .stroke(.black, lineWidth: 1)
+        }
         .frame(width: UIScreen.screenSize.width - 48, height: 96)
         .padding(.bottom, 16)
     }

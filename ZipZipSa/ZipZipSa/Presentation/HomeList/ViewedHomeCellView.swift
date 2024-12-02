@@ -24,7 +24,8 @@ struct ViewedHomeCellView: View {
                         Color.black.opacity(0.4)
                         VStack(alignment: .leading) {
                             Text(home.homeName)
-                                .applyZZSFont(zzsFontSet: .subheadlineBold)
+                                .multilineTextAlignment(.leading)
+                                .applyZZSFont(zzsFontSet: .headline)
                                 .foregroundStyle(Color.Tag.backgroundGray)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 6)
@@ -32,21 +33,27 @@ struct ViewedHomeCellView: View {
                                     RoundedRectangle(cornerRadius: 8)
                                         .fill(Color.Tag.backgroundWhite)
                                 }
-                            
                             Spacer()
-                            HStack {
+                            HStack(alignment: .bottom) {
                                 if let locationText = home.locationText {
                                     Text(locationText)
+                                        .multilineTextAlignment(.leading)
                                         .frame(width: 216, alignment: .leading)
-                                        .applyZZSFont(zzsFontSet: .caption1Bold)
+                                        .applyZZSFont(zzsFontSet: .subheadlineBold)
                                         .foregroundStyle(Color.Text.onColorPrimary)
+                                } else {
+                                    Text("등록된 주소가 없어요")
+                                        .multilineTextAlignment(.leading)
+                                        .foregroundStyle(Color.Text.onColorPrimary)
+                                        .applyZZSFont(zzsFontSet: .subheadlineBold)
+                                        .frame(maxWidth: 216, alignment: .leading)
+                                        .lineLimit(2)
                                 }
-                                
                                 Spacer()
                                 if let homeCategoryType = home.homeCategoryType?.text {
                                     Text(homeCategoryType)
                                         .foregroundStyle(Color.Text.onColorSecondary)
-                                        .applyZZSFont(zzsFontSet: .caption1Bold)
+                                        .applyZZSFont(zzsFontSet: .bodyBold)
                                         .padding(.horizontal, 6)
                                         .padding(.vertical, 4)
                                         .background {
@@ -68,6 +75,7 @@ struct ViewedHomeCellView: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 150, height: 150)
                 .frame(width: UIScreen.screenSize.width / 375 * 343, height: UIScreen.screenSize.height / 812 * 208 )
+                .background(Color.Button.tertiary)
                 .clipped()
                 .cornerRadius(16)
                 .overlay {
@@ -76,7 +84,8 @@ struct ViewedHomeCellView: View {
                         Color.black.opacity(0.4)
                         VStack(alignment: .leading) {
                             Text(home.homeName)
-                                .applyZZSFont(zzsFontSet: .subheadlineBold)
+                                .multilineTextAlignment(.leading)
+                                .applyZZSFont(zzsFontSet: .headline)
                                 .foregroundStyle(Color.Tag.backgroundGray)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 6)
@@ -85,18 +94,26 @@ struct ViewedHomeCellView: View {
                                         .fill(Color.Tag.backgroundWhite)
                                 }
                             Spacer()
-                            HStack {
+                            HStack(alignment: .bottom) {
                                 if let locationText = home.locationText {
                                     Text(locationText)
+                                        .multilineTextAlignment(.leading)
                                         .frame(width: 216, alignment: .leading)
-                                        .applyZZSFont(zzsFontSet: .caption1Bold)
+                                        .applyZZSFont(zzsFontSet: .subheadlineBold)
                                         .foregroundStyle(Color.Text.onColorPrimary)
+                                } else {
+                                    Text("등록된 주소가 없어요")
+                                        .multilineTextAlignment(.leading)
+                                        .foregroundStyle(Color.Text.onColorPrimary)
+                                        .applyZZSFont(zzsFontSet: .subheadlineBold)
+                                        .frame(maxWidth: 216, alignment: .leading)
+                                        .lineLimit(2)
                                 }
                                 Spacer()
                                 if let homeCategoryType = home.homeCategoryType?.text {
                                     Text(homeCategoryType)
                                         .foregroundStyle(Color.Text.onColorSecondary)
-                                        .applyZZSFont(zzsFontSet: .caption1Bold)
+                                        .applyZZSFont(zzsFontSet: .bodyBold)
                                         .padding(.horizontal, 6)
                                         .padding(.vertical, 4)
                                         .background {
