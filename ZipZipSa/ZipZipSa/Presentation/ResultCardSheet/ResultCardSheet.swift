@@ -12,7 +12,7 @@ struct ResultCardSheetView: View {
     @Query var homes: [HomeData]
     @State private var card: UIImage = UIImage()
     @Binding var homeData: HomeData
-    @State var updateCaputer = false
+    @State var updateCapture = false
     
     var body: some View {
         NavigationStack {
@@ -56,7 +56,8 @@ private extension ResultCardSheetView {
     var BackgroundForCapture: some View {
         GeometryReader { proxy in
             Color.clear
-                .onChange(of: updateCaputer) { _ , _ in  DispatchQueue.main.async {
+                .onChange(of: updateCapture) { _ , _ in
+                    DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
                         card = ShareCaptureCardView(homeData: $homeData)
                         .asUIImage(size: size)
@@ -92,6 +93,6 @@ private extension ResultCardSheetView {
     
     private func loadImage() async {
         try? await Task.sleep(nanoseconds: 500_000_000)
-        updateCaputer = true
+        updateCapture.toggle()
     }
 }
