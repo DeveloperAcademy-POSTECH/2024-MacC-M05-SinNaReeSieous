@@ -130,7 +130,7 @@ private extension ChecklistView {
                 .applyZZSFont(zzsFontSet: .bodyRegular)
                 .tint(Color.Text.placeholder)
                 .overlay(alignment: .topLeading) {
-                    if homeData.memoData[selectedSpaceType.rawValue].value.isEmpty {
+                    if homeData.memoData.sorted(by: { $0.index < $1.index })[selectedSpaceType.rawValue].value.isEmpty {
                         Text(ZipLiteral.Checklist.memoPlaceHolder)
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
