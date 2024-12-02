@@ -154,7 +154,7 @@ private extension DetailChecklistView {
     
     var bottomButtonText: String {
         if selectedSpaceType.rawValue == 4 {
-            return "완료"
+            return "저장"
         } else {
             return "다음"
         }

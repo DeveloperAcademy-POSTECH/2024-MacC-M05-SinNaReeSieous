@@ -48,7 +48,7 @@ private extension ChecklistRowView {
     func CategoryChip(text: String, color: Color) -> some View {
         Text(text)
             .foregroundStyle(Color.ChecklistTag.colorGray)
-            .applyZZSFont(zzsFontSet: .caption1Regular)
+            .applyZZSFont(zzsFontSet: .footnote)
             .padding(.vertical, 4)
             .padding(.horizontal, 12)
             .background {
