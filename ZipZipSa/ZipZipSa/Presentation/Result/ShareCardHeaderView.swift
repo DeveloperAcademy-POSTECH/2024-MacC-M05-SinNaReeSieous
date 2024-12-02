@@ -113,7 +113,9 @@ private extension ShareCardHeaderView {
     }
     
     var rentalFeeStrings: [String] {
-        return homeData.rentalFeeData.map { rentalFee in
+        return homeData.rentalFeeData.sorted {
+            $0.index < $1.index
+        }.map { rentalFee in
             return rentalFee.value
         }
     }

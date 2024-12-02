@@ -354,7 +354,7 @@ private extension EssentialInfoView {
         HStack(spacing: 16) {
             if moneyType == .deposit {
                 HStack(spacing: 6) {
-                    TextField(text: $homeData.rentalFeeData[moneyType.index[1]].value) {
+                    TextField(text: $homeData.rentalFeeData.sorted { $0.wrappedValue.index < $1.wrappedValue.index }[moneyType.index[1]].value) {
                         Text("000")
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -378,7 +378,7 @@ private extension EssentialInfoView {
             }
             
             HStack(spacing: 6) {
-                TextField(text: $homeData.rentalFeeData[moneyType.index[0]].value) {
+                TextField(text: $homeData.rentalFeeData.sorted { $0.wrappedValue.index < $1.wrappedValue.index }[moneyType.index[0]].value) {
                     Text("000")
                         .foregroundStyle(Color.Text.placeholder)
                         .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -402,7 +402,7 @@ private extension EssentialInfoView {
             
             if moneyType != .deposit {
                 HStack(spacing: 6) {
-                    TextField(text: $homeData.rentalFeeData[moneyType.index[0]].value) {
+                    TextField(text: $homeData.rentalFeeData.sorted { $0.wrappedValue.index < $1.wrappedValue.index }[moneyType.index[0]].value) {
                         Text("000")
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)

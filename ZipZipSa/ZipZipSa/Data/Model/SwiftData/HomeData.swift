@@ -55,7 +55,7 @@ final class HomeData {
         homeAreaPyeong: String = "",
         homeAreaSquareMeter: String = "",
         homeDirectionData: String? = nil,
-        rentalFee: [RentalFeeData] = [RentalFeeData(), RentalFeeData(), RentalFeeData(), RentalFeeData()],
+        rentalFee: [RentalFeeData] = [RentalFeeData(index: 0), RentalFeeData(index: 1), RentalFeeData(index: 2), RentalFeeData(index: 3)],
         imageData: Data? = nil,
         location: LocationData? = nil,
         locationText: String? = nil,
@@ -180,9 +180,11 @@ extension HomeData {
 
 @Model
 final class RentalFeeData {
+    var index: Int
     var value: String
     
-    init(value: String = "") {
+    init(index: Int, value: String = "") {
+        self.index = index
         self.value = value
     }
 }
