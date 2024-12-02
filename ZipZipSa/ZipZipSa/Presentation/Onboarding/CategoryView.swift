@@ -37,6 +37,7 @@ private extension CategoryView {
             Image(isSelected ? category.onImage : category.offImage)
                 .resizable()
                 .scaledToFit()
+                .frame(width: widht, height: widht/166*130)
         }
     }
     
@@ -52,6 +53,10 @@ private extension CategoryView {
             totalTime += category.requiredTime
             currentMessage = category.categoryMessage
         }
+    }
+    
+    var widht: CGFloat {
+        return UIScreen.isSe ? (UIScreen.screenSize.width-80)/2 : (UIScreen.screenSize.width-43)/2
     }
 }
 
