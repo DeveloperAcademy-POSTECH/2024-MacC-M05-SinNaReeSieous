@@ -17,6 +17,7 @@ struct ResultCardView: View {
     @Binding var model: UIImage?
     @Binding var homeData: HomeData
     @Binding var showHomeHuntSheet: Bool
+    @State var updateCapture = false
     
     var body: some View {
         NavigationStack {
@@ -44,6 +45,9 @@ struct ResultCardView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     CloseButton
                 }
+            }
+            .task {
+                await loadImage()
             }
         }
     }
@@ -77,10 +81,10 @@ private extension ResultCardView {
     var BackgroundForCapture: some View {
         GeometryReader { proxy in
             Color.clear
-                .onAppear {
+                .onChange(of: updateCapture) { _ , _ in
                     DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
-                        card = ShareCardView(homeData: $homeData)
+                        card = ShareCaptureCardView(homeData: $homeData)
                             .asUIImage(size: size)
                     }
                 }
@@ -121,5 +125,10 @@ private extension ResultCardView {
             return
         }
         print("저장됨!")
+    }
+    
+    private func loadImage() async {
+        try? await Task.sleep(nanoseconds: 500_000_000)
+        updateCapture.toggle()
     }
 }
