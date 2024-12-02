@@ -110,7 +110,7 @@ private extension DetailChecklistView {
             Text(ZipLiteral.Checklist.memoSectionTitle)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .headline)
-            TextEditor(text: $homeData.memoData[selectedSpaceType.rawValue].value)
+            TextEditor(text: $homeData.memoData.sorted { $0.wrappedValue.index < $1.wrappedValue.index }[selectedSpaceType.rawValue].value)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .bodyRegular)
                 .tint(Color.Text.placeholder)
