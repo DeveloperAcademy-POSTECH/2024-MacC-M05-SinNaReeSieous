@@ -87,11 +87,6 @@ struct DetailEssentialInfoView: View {
                 await returnToResultCardSheet()
             }
         }
-        .onChange(of: homeData.rentalFeeData[0].value) { oldValue, newValue in
-            if homeData.rentalFeeData[0].value.count > 4 {
-                homeData.rentalFeeData[0].value.removeLast()
-            }
-        }
     }
 }
 
@@ -126,6 +121,11 @@ private extension DetailEssentialInfoView {
                                                                          bottomTrailing: 16,
                                                                          topTrailing: 16))
                 .fill(Color.Button.enable)
+            }
+        }
+        .onChange(of: homeData.homeName) { oldValue, newValue in
+            if homeData.homeName.count > 18 {
+                homeData.homeName.removeLast()
             }
         }
         .padding(.horizontal, 16)
@@ -421,6 +421,26 @@ private extension DetailEssentialInfoView {
                         .applyZZSFont(zzsFontSet: .bodyRegular)
                 }
                 .hidden()
+            }
+        }
+        .onChange(of: homeData.rentalFeeData[0].value) { oldValue, newValue in
+            if homeData.rentalFeeData[0].value.count > 4 {
+                homeData.rentalFeeData[0].value.removeLast()
+            }
+        }
+        .onChange(of: homeData.rentalFeeData[1].value) { oldValue, newValue in
+            if homeData.rentalFeeData[1].value.count > 4 {
+                homeData.rentalFeeData[1].value.removeLast()
+            }
+        }
+        .onChange(of: homeData.rentalFeeData[2].value) { oldValue, newValue in
+            if homeData.rentalFeeData[2].value.count > 4 {
+                homeData.rentalFeeData[2].value.removeLast()
+            }
+        }
+        .onChange(of: homeData.rentalFeeData[3].value) { oldValue, newValue in
+            if homeData.rentalFeeData[3].value.count > 4 {
+                homeData.rentalFeeData[3].value.removeLast()
             }
         }
     }
