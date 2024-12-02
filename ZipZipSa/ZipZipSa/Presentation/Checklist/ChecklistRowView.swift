@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ChecklistRowView: View {
     let selectedCategory: [ChecklistCategory]
-    @Binding var answers: [UUID: Set<Int>]
-    @Binding var scores: [UUID: Float]
+    @Binding var answers: [Int: Set<Int>]
+    @Binding var scores: [Int: Float]
     let checklistItem: ChecklistItem
     
     var body: some View {

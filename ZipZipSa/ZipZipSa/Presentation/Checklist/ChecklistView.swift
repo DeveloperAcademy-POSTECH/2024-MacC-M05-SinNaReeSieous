@@ -21,8 +21,8 @@ struct ChecklistView: View {
     @Binding var selectedSpaceType: SpaceType
     @Binding var firstShow: Bool
     
-    @State private var answers: [UUID: Set<Int>] = [:]
-    @State private var scores: [UUID: Float] = [:]
+    @State private var answers: [Int: Set<Int>] = [:]
+    @State private var scores: [Int: Float] = [:]
     
     @State private var model: UIImage? = nil
     @State private var moveToRoomScanInfoView: Bool = false
@@ -125,12 +125,12 @@ private extension ChecklistView {
             Text(ZipLiteral.Checklist.memoSectionTitle)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .headline)
-            TextEditor(text: $homeData.memoData[selectedSpaceType.rawValue].value)
+            TextEditor(text: $homeData.memoData.sorted { $0.wrappedValue.index < $1.wrappedValue.index }[selectedSpaceType.rawValue].value)
                 .foregroundStyle(Color.Text.primary)
                 .applyZZSFont(zzsFontSet: .bodyRegular)
                 .tint(Color.Text.placeholder)
                 .overlay(alignment: .topLeading) {
-                    if homeData.memoData[selectedSpaceType.rawValue].value.isEmpty {
+                    if homeData.memoData.sorted(by: { $0.index < $1.index })[selectedSpaceType.rawValue].value.isEmpty {
                         Text(ZipLiteral.Checklist.memoPlaceHolder)
                             .foregroundStyle(Color.Text.placeholder)
                             .applyZZSFont(zzsFontSet: .bodyRegular)
@@ -207,10 +207,10 @@ private extension ChecklistView {
     }
     
     func applyHomeDataToViewState() {
-        if let answers = homeData.loadDictionary(data: homeData.answerData, type: [UUID: Set<Int>].self) {
+        if let answers = homeData.loadDictionary(data: homeData.answerData, type: [Int: Set<Int>].self) {
             self.answers = answers
         }
-        if let scores = homeData.loadDictionary(data: homeData.scoreData, type: [UUID: Float].self) {
+        if let scores = homeData.loadDictionary(data: homeData.scoreData, type: [Int: Float].self) {
             self.scores = scores
         }
     }

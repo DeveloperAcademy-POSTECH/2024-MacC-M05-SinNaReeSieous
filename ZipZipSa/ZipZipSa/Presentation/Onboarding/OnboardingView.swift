@@ -71,7 +71,9 @@ private extension OnboardingView {
                 } else {
                     Button {
                         withAnimation {
-                            currentPage += 1
+                            if currentPage < ZipLiteral.Onboarding.onboardingGreetings.count - 1 {
+                                currentPage += 1
+                            }
                         }
                     } label: {
                         RoundedRectangle(cornerRadius: 16)

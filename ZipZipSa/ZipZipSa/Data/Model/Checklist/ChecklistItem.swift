@@ -11,8 +11,8 @@ struct ChecklistItem: Identifiable, Hashable {
     static func == (lhs: ChecklistItem, rhs: ChecklistItem) -> Bool {
         lhs.id == rhs.id
     }
-
-    let id: UUID
+    
+    let id: Int
     let space: Space
     let checkListType: ChecklistType
     let basicCategory: ChecklistCategory
@@ -21,15 +21,17 @@ struct ChecklistItem: Identifiable, Hashable {
     let remark: String?
     let hazard: Hazard?
     
-    init(space: Space,
-         checkListType: ChecklistType,
-         basicCategory: ChecklistCategory,
-         question: Question,
-         crossTip: [ChecklistCategory : String] = [:],
-         remark: String? = nil,
-         hazard: Hazard? = nil
+    init(
+        id: Int,
+        space: Space,
+        checkListType: ChecklistType,
+        basicCategory: ChecklistCategory,
+        question: Question,
+        crossTip: [ChecklistCategory : String] = [:],
+        remark: String? = nil,
+        hazard: Hazard? = nil
     ) {
-        self.id = UUID()
+        self.id = id
         self.space = space
         self.checkListType = checkListType
         self.basicCategory = basicCategory
@@ -46,6 +48,7 @@ extension ChecklistItem {
         // ============================ 외부 ============================ //
         
         ChecklistItem(
+            id: 0,
             space: Space(type: .exterior,
                          questionNumber: 1),
             checkListType: .advanced,
@@ -58,6 +61,7 @@ extension ChecklistItem {
             hazard: nil
         ),
         ChecklistItem(
+            id: 1,
             space: Space(type: .exterior,
                          questionNumber: 2),
             checkListType: .advanced,
@@ -70,6 +74,7 @@ extension ChecklistItem {
             hazard: nil
         ),
         ChecklistItem(
+            id: 2,
             space: Space(type: .exterior,
                          questionNumber: 3),
             checkListType: .advanced,
@@ -80,6 +85,7 @@ extension ChecklistItem {
             remark: "지네, 모기, 돈벌레 등이 나올 확률이 높아요."
         ),
         ChecklistItem(
+            id: 3,
             space: Space(type: .exterior,
                          questionNumber: 4),
             checkListType: .basic,
@@ -90,6 +96,7 @@ extension ChecklistItem {
             crossTip: [.security: "유흥가가 집 근처에 있으면 주취자를 마추질 가능성이 높아져요."]
         ),
         ChecklistItem(
+            id: 4,
             space: Space(type: .exterior,
                          questionNumber: 5),
             checkListType: .basic,
@@ -100,6 +107,7 @@ extension ChecklistItem {
             crossTip: [.ventilation: "매연 때문에 환기하기 어려울 수 있어요."]
         ),
         ChecklistItem(
+            id: 5,
             space: Space(type: .exterior,
                          questionNumber: 6),
             checkListType: .basic,
@@ -110,6 +118,7 @@ extension ChecklistItem {
             crossTip: [.insectproof : "쓰레기 처리장에서 발생한 벌레가 집으로 들어올 수 있어요."]
         ),
         ChecklistItem(
+            id: 6,
             space: Space(type: .exterior,
                          questionNumber: 7),
             checkListType: .basic,
@@ -120,6 +129,7 @@ extension ChecklistItem {
             remark: "식당 근처에는 벌레가 서식할 가능성이 높아요."
         ),
         ChecklistItem(
+            id: 7,
             space: Space(type: .exterior,
                          questionNumber: 8),
             checkListType: .basic,
@@ -129,6 +139,7 @@ extension ChecklistItem {
                                answerOptions: ["없어요", "있어요"])
         ),
         ChecklistItem(
+            id: 8,
             space: Space(type: .exterior,
                          questionNumber: 9),
             checkListType: .basic,
@@ -138,6 +149,7 @@ extension ChecklistItem {
                                answerOptions: ["건물 입구", "복도", "계단", "주차장", "건물 밖"])
         ),
         ChecklistItem(
+            id: 9,
             space: Space(type: .exterior,
                          questionNumber: 10),
             checkListType: .basic,
@@ -150,6 +162,7 @@ extension ChecklistItem {
         // ======================== 거실 및 현관 ============================ //
         
         ChecklistItem(
+            id: 10,
             space: Space(type: .livingRoom,
                          questionNumber: 1),
             checkListType: .basic,
@@ -159,6 +172,7 @@ extension ChecklistItem {
                                answerOptions: ["잘 들려요", "보통이에요", "안 들려요"])
         ),
         ChecklistItem(
+            id: 11,
             space: Space(type: .livingRoom,
                          questionNumber: 2),
             checkListType: .advanced,
@@ -168,6 +182,7 @@ extension ChecklistItem {
                                answerOptions: ["없어요", "있어요"])
         ),
         ChecklistItem(
+            id: 12,
             space: Space(type: .livingRoom,
                          questionNumber: 3),
             checkListType: .basic,
@@ -177,6 +192,7 @@ extension ChecklistItem {
                                answerOptions: ["없어요", "있어요"])
         ),
         ChecklistItem(
+            id: 13,
             space: Space(type: .livingRoom,
                          questionNumber: 4),
             checkListType: .advanced,
@@ -186,6 +202,7 @@ extension ChecklistItem {
                                answerOptions: ["없어요", "있어요"])
         ),
         ChecklistItem(
+            id: 14,
             space: Space(type: .livingRoom,
                          questionNumber: 5),
             checkListType: .basic,
@@ -195,6 +212,7 @@ extension ChecklistItem {
                                answerOptions: ["침대", "책상", "옷장", "신발장"])
         ),
         ChecklistItem(
+            id: 15,
             space: Space(type: .livingRoom,
                          questionNumber: 6),
             checkListType: .basic,
@@ -204,6 +222,7 @@ extension ChecklistItem {
                                answerOptions: ["세탁기", "냉장고", "가스레인지", "하이라이트", "에어컨", "전자레인지", "TV", "인터넷"])
         ),
         ChecklistItem(
+            id: 16,
             space: Space(type: .livingRoom,
                          questionNumber: 7),
             checkListType: .basic,
@@ -214,6 +233,7 @@ extension ChecklistItem {
             remark: "주택용 화재경보기 및 소화기 비치는 선택이 아니라 의무에요! 없을 경우 집주인에게 요청할 수 있어요."
         ),
         ChecklistItem(
+            id: 17,
             space: Space(type: .livingRoom,
                          questionNumber: 8),
             checkListType: .advanced,
@@ -224,6 +244,7 @@ extension ChecklistItem {
             remark: "먼지 다듬이나 권연벌레가 살기 좋은 환경이에요."
         ),
         ChecklistItem(
+            id: 18,
             space: Space(type: .livingRoom,
                          questionNumber: 9),
             checkListType: .basic,
@@ -233,6 +254,7 @@ extension ChecklistItem {
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
         ),
         ChecklistItem(
+            id: 19,
             space: Space(type: .livingRoom,
                          questionNumber: 10),
             checkListType: .basic,
@@ -243,6 +265,7 @@ extension ChecklistItem {
             hazard: .waterLeak
         ),
         ChecklistItem(
+            id: 20,
             space: Space(type: .livingRoom,
                          questionNumber: 11),
             checkListType: .advanced,
@@ -252,6 +275,7 @@ extension ChecklistItem {
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
         ),
         ChecklistItem(
+            id: 21,
             space: Space(type: .livingRoom,
                          questionNumber: 12),
             checkListType: .advanced,
@@ -261,6 +285,7 @@ extension ChecklistItem {
                                answerOptions: ["있어요", "없어요"])
         ),
         ChecklistItem(
+            id: 22,
             space: Space(type: .livingRoom,
                          questionNumber: 13),
             checkListType: .basic,
@@ -270,6 +295,7 @@ extension ChecklistItem {
                                answerOptions: ["어두워요", "보통이에요", "밝아요"])
         ),
         ChecklistItem(
+            id: 23,
             space: Space(type: .livingRoom,
                          questionNumber: 14),
             checkListType: .basic,
@@ -280,6 +306,7 @@ extension ChecklistItem {
             hazard: .noise
         ),
         ChecklistItem(
+            id: 24,
             space: Space(type: .livingRoom,
                          questionNumber: 15),
             checkListType: .basic,
@@ -291,6 +318,7 @@ extension ChecklistItem {
             hazard: .noise
         ),
         ChecklistItem(
+            id: 25,
             space: Space(type: .livingRoom,
                          questionNumber: 16),
             checkListType: .basic,
@@ -300,6 +328,7 @@ extension ChecklistItem {
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
         ),
         ChecklistItem(
+            id: 26,
             space: Space(type: .livingRoom,
                          questionNumber: 17),
             checkListType: .advanced,
@@ -311,6 +340,7 @@ extension ChecklistItem {
             hazard: .cockroach
         ),
         ChecklistItem(
+            id: 27,
             space: Space(type: .livingRoom,
                          questionNumber: 18),
             checkListType: .basic,
@@ -325,6 +355,7 @@ extension ChecklistItem {
             hazard: .mold
         ),
         ChecklistItem(
+            id: 28,
             space: Space(type: .livingRoom,
                          questionNumber: 19),
             checkListType: .advanced,
@@ -334,6 +365,7 @@ extension ChecklistItem {
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
         ),
         ChecklistItem(
+            id: 29,
             space: Space(type: .livingRoom,
                          questionNumber: 20),
             checkListType: .advanced,
@@ -345,6 +377,7 @@ extension ChecklistItem {
             hazard: .cockroach
         ),
         ChecklistItem(
+            id: 30,
             space: Space(type: .livingRoom,
                          questionNumber: 21),
             checkListType: .advanced,
@@ -354,9 +387,10 @@ extension ChecklistItem {
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
         ),
         
-         // ======================== 창문 ============================ //
+        // ======================== 창문 ============================ //
         
         ChecklistItem(
+            id: 31,
             space: Space(type: .window,
                          questionNumber: 1),
             checkListType: .basic,
@@ -367,6 +401,7 @@ extension ChecklistItem {
             crossTip: [.ventilation: "환기가 잘 되면 습기가 차지 않아 곰팡이가 없어요."]
         ),
         ChecklistItem(
+            id: 32,
             space: Space(type: .window,
                          questionNumber: 2),
             checkListType: .basic,
@@ -377,6 +412,7 @@ extension ChecklistItem {
             remark: "창문이 마주보고 있거나 ‘ㄱ’자로 있으면 맞바람이 불어서 환기가 잘 돼요."
         ),
         ChecklistItem(
+            id: 33,
             space: Space(type: .window,
                          questionNumber: 3),
             checkListType: .basic,
@@ -386,6 +422,7 @@ extension ChecklistItem {
                                answerOptions: ["없어요", "해당사항 없음", "있어요"])
         ),
         ChecklistItem(
+            id: 34,
             space: Space(type: .window,
                          questionNumber: 4),
             checkListType: .basic,
@@ -398,6 +435,7 @@ extension ChecklistItem {
             hazard: .privacy
         ),
         ChecklistItem(
+            id: 35,
             space: Space(type: .window,
                          questionNumber: 5),
             checkListType: .basic,
@@ -411,6 +449,7 @@ extension ChecklistItem {
         // ======================== 주방 ============================ //
         
         ChecklistItem(
+            id: 36,
             space: Space(type: .kitchen,
                          questionNumber: 1),
             checkListType: .basic,
@@ -420,6 +459,7 @@ extension ChecklistItem {
                                answerOptions: ["없어요", "있어요"])
         ),
         ChecklistItem(
+            id: 37,
             space: Space(type: .kitchen,
                          questionNumber: 2),
             checkListType: .basic,
@@ -429,6 +469,7 @@ extension ChecklistItem {
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
         ),
         ChecklistItem(
+            id: 38,
             space: Space(type: .kitchen,
                          questionNumber: 3),
             checkListType: .basic,
@@ -439,6 +480,7 @@ extension ChecklistItem {
             remark: "후드 위 찬장과 같은 곳도 꼭 확인하세요. 썩은 음식물 때문에 벌레가 꼬일 수 있어요."
         ),
         ChecklistItem(
+            id: 39,
             space: Space(type: .kitchen,
                          questionNumber: 4),
             checkListType: .basic,
@@ -450,6 +492,7 @@ extension ChecklistItem {
             hazard: .cockroach
         ),
         ChecklistItem(
+            id: 30,
             space: Space(type: .kitchen,
                          questionNumber: 5),
             checkListType: .basic,
@@ -459,6 +502,7 @@ extension ChecklistItem {
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
         ),
         ChecklistItem(
+            id: 41,
             space: Space(type: .kitchen,
                          questionNumber: 6),
             checkListType: .basic,
@@ -469,6 +513,7 @@ extension ChecklistItem {
             hazard: .waterPressure
         ),
         ChecklistItem(
+            id: 42,
             space: Space(type: .kitchen,
                          questionNumber: 7),
             checkListType: .basic,
@@ -479,6 +524,7 @@ extension ChecklistItem {
             hazard: .waterCold
         ),
         ChecklistItem(
+            id: 43,
             space: Space(type: .kitchen,
                          questionNumber: 8),
             checkListType: .basic,
@@ -489,6 +535,7 @@ extension ChecklistItem {
             hazard: .waterDrainage
         ),
         ChecklistItem(
+            id: 44,
             space: Space(type: .kitchen,
                          questionNumber: 9),
             checkListType: .basic,
@@ -498,6 +545,7 @@ extension ChecklistItem {
                                answerOptions: ["나요", "안 나요"])
         ),
         ChecklistItem(
+            id: 45,
             space: Space(type: .kitchen,
                          questionNumber: 10),
             checkListType: .basic,
@@ -509,6 +557,7 @@ extension ChecklistItem {
             hazard: .waterLeak
         ),
         ChecklistItem(
+            id: 46,
             space: Space(type: .kitchen,
                          questionNumber: 11),
             checkListType: .basic,
@@ -521,6 +570,7 @@ extension ChecklistItem {
         // ======================== 화장실 ============================ //
         
         ChecklistItem(
+            id: 47,
             space: Space(type: .toilet,
                          questionNumber: 1),
             checkListType: .basic,
@@ -531,6 +581,7 @@ extension ChecklistItem {
             hazard: .cigaretteSmell
         ),
         ChecklistItem(
+            id: 48,
             space: Space(type: .toilet,
                          questionNumber: 2),
             checkListType: .basic,
@@ -540,6 +591,7 @@ extension ChecklistItem {
                                answerOptions: ["나요", "안 나요"])
         ),
         ChecklistItem(
+            id: 49,
             space: Space(type: .toilet,
                          questionNumber: 3),
             checkListType: .basic,
@@ -549,6 +601,7 @@ extension ChecklistItem {
                                answerOptions: ["없어요", "있어요"])
         ),
         ChecklistItem(
+            id: 50,
             space: Space(type: .toilet,
                          questionNumber: 4),
             checkListType: .basic,
@@ -558,6 +611,7 @@ extension ChecklistItem {
                                answerOptions: ["없어요", "있어요"])
         ),
         ChecklistItem(
+            id: 51,
             space: Space(type: .toilet,
                          questionNumber: 5),
             checkListType: .basic,
@@ -568,6 +622,7 @@ extension ChecklistItem {
             hazard: .waterPressure
         ),
         ChecklistItem(
+            id: 52,
             space: Space(type: .toilet,
                          questionNumber: 6),
             checkListType: .basic,
@@ -578,6 +633,7 @@ extension ChecklistItem {
             hazard: .waterCold
         ),
         ChecklistItem(
+            id: 53,
             space: Space(type: .toilet,
                          questionNumber: 7),
             checkListType: .basic,
@@ -588,6 +644,7 @@ extension ChecklistItem {
             hazard: .waterDrainage
         ),
         ChecklistItem(
+            id: 54,
             space: Space(type: .toilet,
                          questionNumber: 8),
             checkListType: .basic,
@@ -597,6 +654,7 @@ extension ChecklistItem {
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
         ),
         ChecklistItem(
+            id: 55,
             space: Space(type: .toilet,
                          questionNumber: 9),
             checkListType: .basic,
@@ -606,6 +664,7 @@ extension ChecklistItem {
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
         ),
         ChecklistItem(
+            id: 56,
             space: Space(type: .toilet,
                          questionNumber: 10),
             checkListType: .advanced,

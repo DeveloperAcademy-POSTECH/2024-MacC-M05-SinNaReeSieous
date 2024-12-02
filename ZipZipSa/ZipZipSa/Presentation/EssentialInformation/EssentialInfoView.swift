@@ -117,7 +117,7 @@ private extension EssentialInfoView {
             }
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .bodyRegular)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 12)
             .frame(height: 40)
             .background {
                 UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,
@@ -127,7 +127,7 @@ private extension EssentialInfoView {
             }
         }
         .onChange(of: homeData.homeName) { oldValue, newValue in
-            if homeData.homeName.count > 18 {
+            if homeData.homeName.count > 20 {
                 homeData.homeName.removeLast()
             }
         }
@@ -172,7 +172,7 @@ private extension EssentialInfoView {
                 }
                 Spacer()
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 12)
             .frame(height: 40)
             .background {
                 UnevenRoundedRectangle(cornerRadii: RectangleCornerRadii(bottomLeading: 16,

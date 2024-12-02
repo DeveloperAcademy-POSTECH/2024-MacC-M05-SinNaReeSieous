@@ -59,7 +59,7 @@ final class HomeData {
         imageData: Data? = nil,
         location: LocationData? = nil,
         locationText: String? = nil,
-        memoData: [MemoData] = [MemoData(), MemoData(), MemoData(), MemoData(), MemoData()]
+        memoData: [MemoData] = [MemoData(index: 0), MemoData(index: 1), MemoData(index: 2), MemoData(index: 3), MemoData(index: 4)]
     ) {
         self.homeName = homeName
         self.homeCategoryData = homeCategory
@@ -230,9 +230,11 @@ final class FacilityData {
 
 @Model
 final class MemoData {
+    var index: Int
     var value: String
     
-    init(value: String = "") {
+    init(index: Int, value: String = "") {
+        self.index = index
         self.value = value
     }
 }
