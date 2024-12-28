@@ -11,12 +11,15 @@ import SwiftData
 struct MainView: View {
     @Query var users: [User]
     @Query var homes: [HomeData]
+    @Environment(\.modelContext) private var modelContext
     
     @State private var currentTip = ZipZipSaTip.getRandomText()
     @State private var timer: Timer?
     @State private var showHomeHuntSheet: Bool = false
     @State private var showHomeResultCardSheet = false
     @State private var selectedHome: HomeData = HomeData()
+    @State private var isDeleting: Bool = false
+    @State private var deleteTargetHomeData: HomeData?
     
     var body: some View {
         NavigationStack {
@@ -49,6 +52,11 @@ struct MainView: View {
             ResultCardSheetView(homeData: $selectedHome)
                 .presentationDragIndicator(.visible)
         })
+        .confirmationDialog("이 항목이 삭제됩니다.", isPresented: $isDeleting, titleVisibility: .visible) {
+            Button("삭제", role: .destructive) {
+                if let deleteTargetHomeData { modelContext.delete(deleteTargetHomeData) }
+            }
+        }
         .onAppear {
             print(users.count)
             print(users.first?.favoriteCategories.map{$0.text})
@@ -56,7 +64,7 @@ struct MainView: View {
             print(homes.last?.homeName)
             print(users[0].favoriteCategories)
         }
-       
+        
     }
 }
 
@@ -225,7 +233,10 @@ private extension MainView {
                         print(homes[selectedHomeIndex].homeName)
                     }
                 } label: {
-                    RecentlyViewedHomeCellView(home: homes[homes.count - 1 - index])
+                    RecentlyViewedHomeCellView(home: home)
+                }
+                .contextMenu {
+                    DeleteButton(homeData: home)
                 }
             }
         }
@@ -249,6 +260,22 @@ private extension MainView {
         }
         .padding(.bottom, 8)
         .padding(.horizontal, 16)
+    }
+    
+    private func DeleteButton(homeData: HomeData) -> some View {
+        Button(role: .destructive){
+            deleteHome(homeData)
+        } label: {
+            Label("삭제", systemImage: "trash")
+                .font(.subheadline)
+        }
+    }
+    
+    private func deleteHome(_ homeData: HomeData) {
+        withAnimation {
+            deleteTargetHomeData = homeData
+            isDeleting = true
+        }
     }
 }
 
