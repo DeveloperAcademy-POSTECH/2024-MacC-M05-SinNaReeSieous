@@ -61,6 +61,11 @@ private extension AddressEnterView {
     
     var SearchBar: some View {
         HStack(spacing: 4) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(Color.Icon.tertiary)
+                .font(.system(size: 18, weight: .regular))
+                .padding(4)
+            
             TextField(text: $searchText) {
                 Text("집 주소를 입력해 주세요.")
                     .foregroundStyle(Color.Text.placeholder)
@@ -69,6 +74,10 @@ private extension AddressEnterView {
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .bodyRegular)
             .focused($focusedTextField, equals: .searchBar)
+            .submitLabel(.search)
+            .onAppear {
+                UITextField.appearance().clearButtonMode = .whileEditing
+            }
             .onChange(of: searchText) {
                 debounceTimer?.invalidate()
                 debounceTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { _ in
@@ -76,19 +85,6 @@ private extension AddressEnterView {
                         await searchAddress(searchText)
                     }
                 }
-            }
-            
-            Button {
-                print("Search")
-                Task {
-                    await searchAddress(searchText)
-                    print(searchResults)
-                }
-            } label: {
-                Image(systemName: "magnifyingglass")
-                    .foregroundStyle(Color.Icon.tertiary)
-                    .font(.system(size: 18, weight: .regular))
-                    .padding(4)
             }
         }
         .padding(.leading, 12)
@@ -115,13 +111,21 @@ private extension AddressEnterView {
                         }
                     } label: {
                         VStack(alignment: .leading, spacing: 0) {
-                            if let addressLine = formatAddress(from: result.placemark) {
-                                Text(addressLine)
+                            if let addressLine = formatAddress(from: result.placemark),
+                               let addressName = result.name{
+                                Text(addressName)
                                     .foregroundStyle(Color.Text.primary)
+                                    .applyZZSFont(zzsFontSet: .bodyBold)
+                                    .multilineTextAlignment(.leading)
+                                    .padding(.horizontal, 8)
+                                    .padding(.top, 12)
+                                
+                                Text(addressLine)
+                                    .foregroundStyle(Color.Text.tertiary)
                                     .applyZZSFont(zzsFontSet: .bodyRegular)
                                     .multilineTextAlignment(.leading)
                                     .padding(.horizontal, 8)
-                                    .padding(.vertical, 12)
+                                    .padding(.bottom, 12)
                             }
                             Rectangle()
                                 .fill(Color.Additional.seperator)
