@@ -120,13 +120,13 @@ private extension ShareCaptureCardView {
                 
                 Spacer()
             }
-            .padding(.bottom, 12)
             
             if let modelImage = homeData.modelImage {
                 Image(uiImage: modelImage)
                     .resizable()
-                    .scaledToFit()
-                    .frame(height: 140)
+                    .scaledToFill()
+                    .frame(height: 250)
+                    .clipped()
             } else {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(Color.Background.disabled)
@@ -139,7 +139,8 @@ private extension ShareCaptureCardView {
                     }
             }
         }
-        .padding(16)
+        .padding(.top, 16)
+        .padding(.horizontal, 16)
     }
     
     var NearbyFacilities: some View {
