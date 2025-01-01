@@ -38,7 +38,11 @@ struct CategoryChangeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 selectedCategory = Set(userCategories)
-                totalTime += selectedCategory.count*3
+                totalTime += selectedCategory.count*1
+                
+                if selectedCategory.contains(.cleanliness) {
+                    totalTime += 1
+                }
             }
         }
     }
