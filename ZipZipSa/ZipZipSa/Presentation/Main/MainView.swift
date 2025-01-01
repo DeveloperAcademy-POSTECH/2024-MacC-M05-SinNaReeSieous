@@ -45,6 +45,14 @@ struct MainView: View {
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .accentColor(Color.Button.tertiary)
         .navigationBarBackButtonHidden()
+        .confirmationDialog("이 항목이 삭제됩니다.", isPresented: $isDeleting, titleVisibility: .visible) {
+            Button("삭제", role: .destructive) {
+                if let deleteTargetHomeData { modelContext.delete(deleteTargetHomeData)
+                }
+                isDeleting = false
+                deleteTargetHomeData = nil
+            }
+        }
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
             EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
         }
@@ -52,11 +60,6 @@ struct MainView: View {
             ResultCardSheetView(homeData: $selectedHome)
                 .presentationDragIndicator(.visible)
         })
-        .confirmationDialog("이 항목이 삭제됩니다.", isPresented: $isDeleting, titleVisibility: .visible) {
-            Button("삭제", role: .destructive) {
-                if let deleteTargetHomeData { modelContext.delete(deleteTargetHomeData) }
-            }
-        }
         .onAppear {
             print(users.count)
             print(users.first?.favoriteCategories.map{$0.text})
