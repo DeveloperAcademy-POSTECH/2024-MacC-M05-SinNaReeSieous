@@ -12,14 +12,14 @@ struct HomeListView: View {
     @Query var homes: [HomeData]
     @Environment(\.modelContext) private var modelContext
     
+    @State private var selectedHome: HomeData = HomeData()
     @State private var showHomeHuntSheet = false
     @State private var showHomeResultCardSheet = false
-    @State private var selectedHome: HomeData = HomeData()
-    @State private var isDeleting: Bool = false
+    @State private var showDeleteActionSheet: Bool = false
     @State private var deleteTargetHomeData: HomeData?
     
     var body: some View {
-        ZStack{
+        ZStack {
             Color.Background.primary
                 .ignoresSafeArea()
             
@@ -37,17 +37,18 @@ struct HomeListView: View {
                     .scrollIndicators(.hidden)
                 }
             }
-            .sheet(isPresented: $showHomeResultCardSheet, content: {
-                ResultCardSheetView(homeData: $selectedHome)
-                    .presentationDragIndicator(.visible)
-            })
+            
         }
-        .confirmationDialog("이 항목이 삭제됩니다.", isPresented: $isDeleting, titleVisibility: .visible) {
+        .accentColor(Color.Button.tertiary)
+        .confirmationDialog("이 항목이 삭제됩니다.", isPresented: $showDeleteActionSheet, titleVisibility: .visible) {
             Button("삭제", role: .destructive) {
                 if let deleteTargetHomeData { modelContext.delete(deleteTargetHomeData) }
             }
         }
-        .accentColor(Color.Button.tertiary)
+        .sheet(isPresented: $showHomeResultCardSheet) {
+            ResultCardSheetView(homeData: $selectedHome)
+                .presentationDragIndicator(.visible)
+        }
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
             EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
         }
@@ -138,7 +139,7 @@ private extension HomeListView {
     private func deleteHome(_ homeData: HomeData) {
         withAnimation {
             deleteTargetHomeData = homeData
-            isDeleting = true
+            showDeleteActionSheet = true
         }
     }
 }
