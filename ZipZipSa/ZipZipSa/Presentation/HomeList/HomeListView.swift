@@ -15,8 +15,6 @@ struct HomeListView: View {
     @State private var selectedHome: HomeData = HomeData()
     @State private var showHomeHuntSheet = false
     @State private var showHomeResultCardSheet = false
-    @State private var showDeleteActionSheet: Bool = false
-    @State private var deleteTargetHomeData: HomeData?
     
     var body: some View {
         ZStack {
@@ -40,11 +38,6 @@ struct HomeListView: View {
             
         }
         .accentColor(Color.Button.tertiary)
-        .confirmationDialog("이 항목이 삭제됩니다.", isPresented: $showDeleteActionSheet, titleVisibility: .visible) {
-            Button("삭제", role: .destructive) {
-                if let deleteTargetHomeData { modelContext.delete(deleteTargetHomeData) }
-            }
-        }
         .sheet(isPresented: $showHomeResultCardSheet) {
             ResultCardSheetView(homeData: $selectedHome)
                 .presentationDragIndicator(.visible)
@@ -138,8 +131,7 @@ private extension HomeListView {
     
     private func deleteHome(_ homeData: HomeData) {
         withAnimation {
-            deleteTargetHomeData = homeData
-            showDeleteActionSheet = true
+            modelContext.delete(homeData)
         }
     }
 }

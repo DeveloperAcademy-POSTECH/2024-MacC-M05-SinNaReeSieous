@@ -18,8 +18,6 @@ struct MainView: View {
     @State private var selectedHome: HomeData = HomeData()
     @State private var showHomeHuntSheet: Bool = false
     @State private var showHomeResultCardSheet = false
-    @State private var showDeleteActionSheet: Bool = false
-    @State private var deleteTargetHomeData: HomeData?
     
     var body: some View {
         NavigationStack {
@@ -45,14 +43,6 @@ struct MainView: View {
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .accentColor(Color.Button.tertiary)
         .navigationBarBackButtonHidden()
-        .confirmationDialog("이 항목이 삭제됩니다.", isPresented: $showDeleteActionSheet, titleVisibility: .visible) {
-            Button("삭제", role: .destructive) {
-                if let deleteTargetHomeData { modelContext.delete(deleteTargetHomeData)
-                }
-                showDeleteActionSheet = false
-                deleteTargetHomeData = nil
-            }
-        }
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
             EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
         }
@@ -276,8 +266,7 @@ private extension MainView {
     
     private func deleteHome(_ homeData: HomeData) {
         withAnimation {
-            deleteTargetHomeData = homeData
-            showDeleteActionSheet = true
+            modelContext.delete(homeData)
         }
     }
 }
