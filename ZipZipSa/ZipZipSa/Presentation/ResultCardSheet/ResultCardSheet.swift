@@ -71,8 +71,8 @@ private extension ResultCardSheetView {
             DetailEssentialInfoView(homeData: $homeData)
         } label: {
             Text(ZipLiteral.ResultCard.resultDetailButtonText)
-                .foregroundStyle(.gray)
-                .font(Font.system(size: 16))
+                .foregroundStyle(Color.Text.tertiary)
+                .applyZZSFont(zzsFontSet: .bodyBold)
         }
         .padding(.bottom, 24)
     }
@@ -80,11 +80,12 @@ private extension ResultCardSheetView {
     var ShareButton: some View {
         ShareLink(item: Image(uiImage: card), preview: SharePreview(ZipLiteral.ResultCard.sharePreviewText, icon: ZipLiteral.ResultCard.sharePreviewIcon)) {
             RoundedRectangle(cornerRadius: 15)
-                .foregroundStyle(.primary)
+                .foregroundStyle(Color.Button.primaryBlue)
                 .frame(height: 53)
                 .overlay(
                     Text(ZipLiteral.ResultCard.shareButtonText)
-                        .foregroundStyle(Color.white)
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .bodyBold)
                 )
         }
         .padding(.horizontal, 16)

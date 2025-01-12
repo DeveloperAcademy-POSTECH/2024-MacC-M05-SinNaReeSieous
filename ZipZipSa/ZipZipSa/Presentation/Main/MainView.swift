@@ -15,11 +15,9 @@ struct MainView: View {
     
     @State private var currentTip = ZipZipSaTip.getRandomText()
     @State private var timer: Timer?
+    @State private var selectedHome: HomeData = HomeData()
     @State private var showHomeHuntSheet: Bool = false
     @State private var showHomeResultCardSheet = false
-    @State private var selectedHome: HomeData = HomeData()
-    @State private var isDeleting: Bool = false
-    @State private var deleteTargetHomeData: HomeData?
     
     var body: some View {
         NavigationStack {
@@ -45,21 +43,13 @@ struct MainView: View {
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .accentColor(Color.Button.tertiary)
         .navigationBarBackButtonHidden()
-        .confirmationDialog("이 항목이 삭제됩니다.", isPresented: $isDeleting, titleVisibility: .visible) {
-            Button("삭제", role: .destructive) {
-                if let deleteTargetHomeData { modelContext.delete(deleteTargetHomeData)
-                }
-                isDeleting = false
-                deleteTargetHomeData = nil
-            }
-        }
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
             EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
         }
-        .sheet(isPresented: $showHomeResultCardSheet, content: {
+        .sheet(isPresented: $showHomeResultCardSheet) {
             ResultCardSheetView(homeData: $selectedHome)
                 .presentationDragIndicator(.visible)
-        })
+        }
         .onAppear {
             print(users.count)
             print(users.first?.favoriteCategories.map{$0.text})
@@ -276,8 +266,7 @@ private extension MainView {
     
     private func deleteHome(_ homeData: HomeData) {
         withAnimation {
-            deleteTargetHomeData = homeData
-            isDeleting = true
+            modelContext.delete(homeData)
         }
     }
 }
