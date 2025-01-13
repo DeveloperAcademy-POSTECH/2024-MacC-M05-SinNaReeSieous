@@ -22,6 +22,7 @@ struct RoomScanInfoView: View {
                 CharacterImage
                 InfoTitle
                 InfoDescription
+                ExempleRoomModel
                 Spacer()
                 StartScanButton
                 SkipScanButton
@@ -77,6 +78,14 @@ private extension RoomScanInfoView {
             .multilineTextAlignment(.center)
             .foregroundStyle(Color.Text.onColorPrimary)
             .applyZZSFont(zzsFontSet: .bodyRegular)
+            .padding(.bottom, 24)
+    }
+    
+    var ExempleRoomModel: some View {
+        Image(.exRoomScanInfo)
+            .resizable()
+            .scaledToFit()
+            .frame(height: 93)
     }
     
     var StartScanButton: some View {

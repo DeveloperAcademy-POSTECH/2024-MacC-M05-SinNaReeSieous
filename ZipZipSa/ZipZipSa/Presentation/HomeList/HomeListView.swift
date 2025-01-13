@@ -10,13 +10,14 @@ import SwiftData
 
 struct HomeListView: View {
     @Query var homes: [HomeData]
+    @Environment(\.modelContext) private var modelContext
     
+    @State private var selectedHome: HomeData = HomeData()
     @State private var showHomeHuntSheet = false
     @State private var showHomeResultCardSheet = false
-    @State private var selectedHome: HomeData = HomeData()
     
     var body: some View {
-        ZStack{
+        ZStack {
             Color.Background.primary
                 .ignoresSafeArea()
             
@@ -34,12 +35,13 @@ struct HomeListView: View {
                     .scrollIndicators(.hidden)
                 }
             }
-            .sheet(isPresented: $showHomeResultCardSheet, content: {
-                ResultCardSheetView(homeData: $selectedHome)
-                    .presentationDragIndicator(.visible)
-            })
+            
         }
         .accentColor(Color.Button.tertiary)
+        .sheet(isPresented: $showHomeResultCardSheet) {
+            ResultCardSheetView(homeData: $selectedHome)
+                .presentationDragIndicator(.visible)
+        }
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
             EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
         }
@@ -108,11 +110,29 @@ private extension HomeListView {
                         print(homes[selectedHomeIndex].homeName)
                     }
                 } label: {
-                    ViewedHomeCellView(home: homes[homes.count - 1 - index])
+                    ViewedHomeCellView(home: home)
+                }
+                .contextMenu {
+                    DeleteButton(homeData: home)
                 }
             }
         }
         .padding(.top, 24)
+    }
+    
+    private func DeleteButton(homeData: HomeData) -> some View {
+        Button(role: .destructive){
+            deleteHome(homeData)
+        } label: {
+            Label("삭제", systemImage: "trash")
+                .font(.subheadline)
+        }
+    }
+    
+    private func deleteHome(_ homeData: HomeData) {
+        withAnimation {
+            modelContext.delete(homeData)
+        }
     }
 }
 
