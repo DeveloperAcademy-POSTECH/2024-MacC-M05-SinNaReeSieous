@@ -36,7 +36,13 @@ enum ZipLiteral {
         static let seeAllViewedHomes: String = "전체보기"
         static let recentlyViewedHomeContent: String = "아직 내가 둘러본 집이 없어요.\n집을 보러 가서 집을 추가해 보세요."
     }
-    
+
+    enum FraudBook {
+        static let navigationTitle: String = "용북이의\n전월세사기 도감"
+        static let back: String = "뒤로"
+        static let emptyContent: String = "아직 준비 중인 내용이에요.\n조금만 기다려 주세요."
+    }
+
     enum Checklist {
         static let bottomButton = "집 구조 스캔하기"
         static let navigationTitle = "주인님을 위한\n맞춤 체크리스트예요"

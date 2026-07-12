@@ -46,6 +46,8 @@ extension Color {
         static let primaryBlue = Color(.zzsBlue20)
         static let secondaryYellow = Color(.zzsYellow20)
         static let secondaryBlue = Color(.zzsBlue10)
+        /// 전월세사기 도감 카테고리 카드 배경 (Figma: #F6CBCB)
+        static let secondaryRed = Color(.zzsRed10)
         static let tertiary = Color(.zzsWarmGray50)
         static let enable = Color(.zzsWhite)
         static let disabled = Color(.zzsWarmGray20)
