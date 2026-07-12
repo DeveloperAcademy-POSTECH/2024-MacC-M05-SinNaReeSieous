@@ -20,7 +20,7 @@ struct ResultCardSheetView: View {
                 NavigationTitle
                 
                 ScrollView {
-                    ShareCardSheet(homeData: $homeData)
+                    ZZSShareCard(homeData: $homeData, layout: .interactive)
                         .background(BackgroundForCapture)
                     
                     ResultDetailViewButton
@@ -59,7 +59,7 @@ private extension ResultCardSheetView {
                 .onChange(of: updateCapture) { _ , _ in
                     DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
-                        card = ShareCaptureCardView(homeData: $homeData)
+                        card = ZZSShareCard(homeData: $homeData, layout: .capture)
                         .asUIImage(size: size)
                     }
                 }
@@ -68,7 +68,7 @@ private extension ResultCardSheetView {
     
     var ResultDetailViewButton: some View {
         NavigationLink {
-            DetailEssentialInfoView(homeData: $homeData)
+            EssentialInfoView(mode: .review, homeData: $homeData)
         } label: {
             Text(ZipLiteral.ResultCard.resultDetailButtonText)
                 .foregroundStyle(Color.Text.tertiary)

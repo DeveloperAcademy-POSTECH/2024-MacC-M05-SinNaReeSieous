@@ -25,7 +25,7 @@ struct ResultCardView: View {
                 NavigationTitle
                 
                 ScrollView {
-                    ShareCardView(homeData: $homeData)
+                    ZZSShareCard(homeData: $homeData, layout: .interactive)
                         .background(BackgroundForCapture)
                     
                     ResultDetailViewButton
@@ -84,7 +84,7 @@ private extension ResultCardView {
                 .onChange(of: updateCapture) { _ , _ in
                     DispatchQueue.main.async {
                         let size = CGSize(width: proxy.size.width, height: proxy.size.height)
-                        card = ShareCaptureCardView(homeData: $homeData)
+                        card = ZZSShareCard(homeData: $homeData, layout: .capture)
                             .asUIImage(size: size)
                     }
                 }
@@ -93,7 +93,7 @@ private extension ResultCardView {
     
     var ResultDetailViewButton: some View {
         NavigationLink {
-            DetailEssentialInfoView(homeData: $homeData)
+            EssentialInfoView(mode: .review, homeData: $homeData)
         } label: {
             Text(ZipLiteral.ResultCard.resultDetailButtonText)
                 .foregroundStyle(Color.Text.tertiary)
@@ -125,7 +125,6 @@ private extension ResultCardView {
         guard let _ = try? modelContext.save() else  {
             return
         }
-        print("저장됨!")
     }
     
     private func loadImage() async {

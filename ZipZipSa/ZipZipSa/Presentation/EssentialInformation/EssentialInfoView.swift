@@ -10,108 +10,158 @@ import PhotosUI
 import SwiftData
 import MapKit
 
+/// 기본정보 화면. 첫 기록(.homeHunt)과 재열람/수정(.review)을 모드로 처리한다.
+/// homeHunt 진입(NavigationStack·HomeData 소유)은 HomeHuntSheetView가 담당한다.
 struct EssentialInfoView: View {
-    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Query var homes: [HomeData]
-    
-    @Binding var showHomeHuntSheet: Bool
 
-    @State private var homeData = HomeData()
+    let mode: EssentialInfoViewModel.Mode
+    @Binding var homeData: HomeData
+
+    /// homeHunt 전용 — 닫기 버튼과 하위 화면의 시트 닫기용으로 전달
+    var showHomeHuntSheet: Binding<Bool>? = nil
+
+    @State private var viewModel: EssentialInfoViewModel
+
     @State private var firstShow: Bool = true
-    
-    @State private var isGettingAddress: Bool = false
     @FocusState private var focusField: EssentialInfoField?
-    
+
     @State private var showPhotoTypeSelectSheet: Bool = false
     @State private var showImagePicker: Bool = false
     @State private var useCamera: Bool = false
-    
-    @StateObject private var locationManager = LocationManager()
+
     @State private var showAddressEnterView: Bool = false
-    
+
     @State private var moveToChecklistView: Bool = false
     @State private var selectedSpaceType: SpaceType = .kitchen
-    
+
+    /// review 전용 — 체크리스트 저장 후 결과 카드 시트로 복귀하는 신호
+    @State private var returnToResultCardSheet = false
+    @State private var returnToDetailEssentialInfoView = false
+
+    init(
+        mode: EssentialInfoViewModel.Mode,
+        homeData: Binding<HomeData>,
+        showHomeHuntSheet: Binding<Bool>? = nil
+    ) {
+        self.mode = mode
+        self._homeData = homeData
+        self.showHomeHuntSheet = showHomeHuntSheet
+        self._viewModel = State(initialValue: EssentialInfoViewModel(mode: mode))
+    }
+
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    NavigationTitle
-                    NameSection
-                    AddressSection
-                    HomePhotoSection
-                    HomeCategorySection
-                    HomeRentalTypeSection
-                    if homeData.homeRentalType != nil {
-                        HomeRentalMoneySection
-                    }
-                    HomeAreaSection
-                    HomeDirectionSection
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                NavigationTitle
+                NameSection
+                AddressSection
+                HomePhotoSection
+                HomeCategorySection
+                HomeRentalTypeSection
+                if homeData.homeRentalType != nil {
+                    HomeRentalMoneySection
                 }
+                HomeAreaSection
+                HomeDirectionSection
             }
-            .scrollIndicators(.never)
-            .contentMargins(.bottom, 120, for: .scrollContent)
-            .clipped()
-            .overlay(alignment: .bottom) {
-                ZZSMainButton(
-                    action: {
-                        Task {
-                            await endEssentialInfoView()
-                        }
-                    },
-                    text: "다음"
-                )
-                .padding([.horizontal, .top], 16)
-                .padding(.bottom, 12)
-                .background(Color.Background.primary)
-            }
-            .navigationDestination(isPresented: $moveToChecklistView, destination: {
-                ChecklistView(
-                    showHomeHuntSheet: $showHomeHuntSheet,
-                    homeData: $homeData,
-                    selectedSpaceType: $selectedSpaceType,
-                    firstShow: $firstShow)
-            })
+        }
+        .scrollIndicators(.never)
+        .contentMargins(.bottom, 120, for: .scrollContent)
+        .clipped()
+        .overlay(alignment: .bottom) {
+            ZZSMainButton(
+                action: {
+                    Task {
+                        await moveNextStep()
+                    }
+                },
+                text: viewModel.bottomButtonText
+            )
+            .padding([.horizontal, .top], 16)
+            .padding(.bottom, 12)
             .background(Color.Background.primary)
-            .dismissKeyboard()
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar {
+        }
+        .navigationDestination(isPresented: $moveToChecklistView) {
+            ChecklistDestination
+        }
+        .background(Color.Background.primary)
+        .dismissKeyboard()
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(.hidden, for: .navigationBar)
+        .toolbar {
+            if mode == .homeHunt {
                 ToolbarItem(placement: .topBarLeading) {
                     CloseButton
                 }
             }
-            .onAppear {
-                if firstShow {
-                    homeData = HomeData()
-                }
-                if homeData.homeName == basicHomeName {
-                    homeData.homeName = ""
-                }
+        }
+        .onAppear {
+            guard mode == .homeHunt else { return }
+            if firstShow {
+                homeData = HomeData()
+            }
+            if homeData.homeName == viewModel.basicHomeName(homes: homes, homeData: homeData) {
+                homeData.homeName = ""
+            }
+        }
+        .onChange(of: returnToDetailEssentialInfoView) {
+            if returnToDetailEssentialInfoView {
+                returnToResultCardSheet = true
+            }
+        }
+        .onChange(of: returnToResultCardSheet, { oldValue, newValue in
+            presentationMode.wrappedValue.dismiss()
+        })
+        .onDisappear {
+            guard mode == .review else { return }
+            Task {
+                await viewModel.completeEditing(homeData: homeData, homes: homes)
             }
         }
     }
 }
 
 private extension EssentialInfoView {
-    
+
     // MARK: - View
-    
+
+    @ViewBuilder
+    var ChecklistDestination: some View {
+        switch mode {
+        case .homeHunt:
+            ChecklistView(
+                mode: .homeHunt,
+                homeData: $homeData,
+                selectedSpaceType: $selectedSpaceType,
+                firstShow: $firstShow,
+                showHomeHuntSheet: showHomeHuntSheet)
+        case .review:
+            ChecklistView(
+                mode: .review,
+                homeData: $homeData,
+                selectedSpaceType: $selectedSpaceType,
+                firstShow: $firstShow,
+                onSaveComplete: { returnToDetailEssentialInfoView = true })
+        }
+    }
+
     var NavigationTitle: some View {
-        Text("기본정보를 알려주세요")
+        Text(viewModel.navigationTitle)
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .largeTitle)
             .padding(.horizontal, 16)
             .padding(.bottom, 32)
     }
-    
+
     // NameSection
-    
+
     var NameSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionTitle(text: "집 별명")
             TextField(text: $homeData.homeName) {
-                Text(basicHomeName)
+                Text(viewModel.basicHomeName(homes: homes, homeData: homeData))
                     .foregroundStyle(Color.Text.placeholder)
                     .applyZZSFont(zzsFontSet: .bodyRegular)
             }
@@ -134,9 +184,9 @@ private extension EssentialInfoView {
         .padding(.horizontal, 16)
         .padding(.bottom, 32)
     }
-    
+
     // AddressSection
-    
+
     var AddressSection: some View {
         VStack(alignment: .center, spacing: 0) {
             HStack {
@@ -155,7 +205,7 @@ private extension EssentialInfoView {
             .presentationDragIndicator(.visible)
         }
     }
-    
+
     var SearchAddressButton: some View {
         Button {
             showAddressEnterView = true
@@ -166,7 +216,7 @@ private extension EssentialInfoView {
                         .foregroundStyle(Color.Text.primary)
                         .applyZZSFont(zzsFontSet: .bodyRegular)
                 } else {
-                    Text(addressPlaceHolder)
+                    Text(viewModel.addressPlaceHolder)
                         .foregroundStyle(Color.Text.placeholder)
                         .applyZZSFont(zzsFontSet: .bodyRegular)
                 }
@@ -182,12 +232,11 @@ private extension EssentialInfoView {
             }
         }
     }
-    
+
     var GetCurrentAddressButton: some View {
         Button {
-            print("get Current Address")
             Task {
-                await fetchCurrentLocation()
+                await viewModel.fetchCurrentLocation(for: homeData)
             }
         } label: {
             HStack(spacing: 0) {
@@ -208,9 +257,9 @@ private extension EssentialInfoView {
             .padding(.horizontal, 8)
         }
     }
-    
+
     // HomePhotoSection
-    
+
     var HomePhotoSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionTitle(text: "건물 외관")
@@ -233,7 +282,7 @@ private extension EssentialInfoView {
                 .ignoresSafeArea()
         }
     }
-    
+
     var GetPhotoButton: some View {
         Button {
             showPhotoTypeSelectSheet = true
@@ -260,9 +309,9 @@ private extension EssentialInfoView {
             }
         }
     }
-    
+
     // HomeCategorySection
-    
+
     var HomeCategorySection: some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionTitle(text: "유형")
@@ -271,7 +320,7 @@ private extension EssentialInfoView {
         .padding(.horizontal, 16)
         .padding(.bottom, 24)
     }
-    
+
     var HomeCategoryButtonStack: some View {
         HStack(spacing: 8) {
             ForEach(HomeCategory.allCases.indices, id: \.self) { index in
@@ -293,9 +342,9 @@ private extension EssentialInfoView {
             }
         }
     }
-    
+
     // HomeRentalTypeSection
-    
+
     var HomeRentalTypeSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionTitle(text: "계약형태")
@@ -304,7 +353,7 @@ private extension EssentialInfoView {
         .padding(.horizontal, 16)
         .padding(.bottom, 24)
     }
-    
+
     var HomeRentalTypeButtonStack: some View {
         HStack(spacing: 8) {
             ForEach(HomeRentalType.allCases.indices, id: \.self) { index in
@@ -326,9 +375,9 @@ private extension EssentialInfoView {
             }
         }
     }
-    
+
     // HomeRentalMoneySection
-    
+
     var HomeRentalMoneySection: some View {
         VStack(alignment: .leading, spacing: 24) {
             if let selectedHomeRentalType = homeData.homeRentalType {
@@ -342,14 +391,14 @@ private extension EssentialInfoView {
         .background(Color.Background.secondary)
         .padding(.bottom, 24)
     }
-    
+
     func HomeRentalMoneyTextFieldSection(moneyType: HomeRentalMoneytype) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionTitle(text: moneyType.text)
             HomeRentalMoneyTextField(moneyType: moneyType)
         }
     }
-    
+
     func HomeRentalMoneyTextField(moneyType: HomeRentalMoneytype) -> some View  {
         HStack(spacing: 16) {
             if moneyType == .deposit {
@@ -376,7 +425,7 @@ private extension EssentialInfoView {
                         .applyZZSFont(zzsFontSet: .bodyRegular)
                 }
             }
-            
+
             HStack(spacing: 6) {
                 TextField(text: $homeData.rentalFeeData.sorted { $0.wrappedValue.index < $1.wrappedValue.index }[moneyType.index[0]].value) {
                     Text("000")
@@ -399,7 +448,7 @@ private extension EssentialInfoView {
                     .foregroundStyle(Color.Text.primary)
                     .applyZZSFont(zzsFontSet: .bodyRegular)
             }
-            
+
             if moneyType != .deposit {
                 HStack(spacing: 6) {
                     TextField(text: $homeData.rentalFeeData.sorted { $0.wrappedValue.index < $1.wrappedValue.index }[moneyType.index[0]].value) {
@@ -447,9 +496,9 @@ private extension EssentialInfoView {
             }
         }
     }
-    
+
     // HomeArea
-    
+
     var HomeAreaSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionTitle(text: "면적")
@@ -458,7 +507,7 @@ private extension EssentialInfoView {
         .padding(.horizontal, 16)
         .padding(.bottom, 24)
     }
-    
+
     var HomeAreaTextFieldStack: some View {
         HStack(spacing: 8) {
             PyeongTextField
@@ -468,7 +517,7 @@ private extension EssentialInfoView {
             SquareMeterTextField
         }
     }
-    
+
     var PyeongTextField: some View {
         HStack(spacing: 6) {
             TextField(text: $homeData.homeAreaPyeong) {
@@ -497,7 +546,7 @@ private extension EssentialInfoView {
             guard focusField == .areaPyeong else {
                 return
             }
-            
+
             if homeData.homeAreaPyeong.isEmpty {
                 homeData.homeAreaSquareMeter = ""
             } else {
@@ -508,7 +557,7 @@ private extension EssentialInfoView {
             }
         }
     }
-    
+
     var SquareMeterTextField: some View {
         HStack {
             TextField(text: $homeData.homeAreaSquareMeter) {
@@ -537,7 +586,7 @@ private extension EssentialInfoView {
             guard focusField == .areaSquareMeter else {
                 return
             }
-            
+
             if homeData.homeAreaSquareMeter.isEmpty {
                 homeData.homeAreaPyeong = ""
             } else {
@@ -548,9 +597,9 @@ private extension EssentialInfoView {
             }
         }
     }
-    
+
     // HomeDirection
-    
+
     var HomeDirectionSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             SectionTitle(text: "집의 방향")
@@ -558,7 +607,7 @@ private extension EssentialInfoView {
         }
         .padding(.horizontal, 16)
     }
-    
+
     var HomeDirectionButtonStack: some View {
         HStack(spacing: 8) {
             ForEach(HomeDirection.allCases.indices, id: \.self) { index in
@@ -580,121 +629,27 @@ private extension EssentialInfoView {
             }
         }
     }
-    
+
     func SectionTitle(text: String) -> some View {
         Text(text)
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .bodyBold)
     }
-    
+
     var CloseButton: some View {
         Button {
-            showHomeHuntSheet = false
+            showHomeHuntSheet?.wrappedValue = false
         } label: {
             Image(systemName: "xmark")
                 .foregroundStyle(Color.Icon.tertiary)
                 .applyZZSFont(zzsFontSet: .bodyBold)
         }
     }
-    
-    // MARK: - Computed Values
-    
-    var basicHomeName: String {
-        "\(homes.count+1)번째 집"
-    }
-    
-    var addressPlaceHolder: String {
-        if isGettingAddress {
-            return "주소를 가져오는중 ..."
-        } else {
-            return "주소를 입력해 주세요"
-        }
-    }
-    
-    // MARK: - Custom Method
-    
-    private func fetchCurrentLocation() async {
-        do {
-            isGettingAddress = true
-            let coordinate = try await locationManager.fetchCurrentLocation()
-            homeData.location = LocationData(coordinate: coordinate)
-            if let address = await reverseGeocode(coordinate) {
-                homeData.locationText = address
-            } else {
-                print("현재 위치를 가져올 수 없습니다.")
-            }
-            print("현재위치 좌표: \(coordinate.latitude), \(coordinate.longitude)")
-        } catch {
-            print("현재위치 가져오기 실패: \(error.localizedDescription)")
-        }
-    }
 
-    private func reverseGeocode(_ coordinate: CLLocationCoordinate2D) async -> String? {
-        let geocoder = CLGeocoder()
-        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        
-        do {
-            let placemarks = try await geocoder.reverseGeocodeLocation(location)
-            guard let bestPlacemark = placemarks.first else {
-                print("역지오코딩 결과가 없습니다.")
-                return nil
-            }
-            return formatAddress(from: bestPlacemark)
-        } catch {
-            print("역지오코딩 실패: \(error.localizedDescription)")
-            return nil
-        }
-    }
-    
-    private func formatAddress(from placemark: CLPlacemark) -> String? {
-        var components: [String] = []
-        
-        if let administrativeArea = placemark.administrativeArea {
-            components.append(administrativeArea)
-        }
-        if let subAdministrativeArea = placemark.subAdministrativeArea {
-            components.append(subAdministrativeArea)
-        }
-        if let locality = placemark.locality {
-            components.append(locality)
-        }
-        if let thoroughfare = placemark.thoroughfare {
-            components.append(thoroughfare)
-        }
-        if let subThoroughfare = placemark.subThoroughfare {
-            components.append(subThoroughfare)
-        }
+    // MARK: - Action
 
-        let address = components.joined(separator: " ")
-        return address.isEmpty ? nil : address
-    }
-    
-    private func searchFacilities() async {
-        if let coordinates = homeData.location?.coordinate {
-            do {
-                let location = CLLocationCoordinate2D(latitude: coordinates.latitude, longitude: coordinates.longitude)
-                let results = try await FacilityManager.searchFacilities(at: location)
-                
-                homeData.facilitiesData = Facility.allCases.filter { facility in
-                    results[facility.rawValue] == true
-                }.map { facility in
-                    FacilityData(rawValue: facility.rawValue)
-                }
-            } catch let networkError as NetworkError {
-                networkError.logError()
-            } catch {
-                print("Unexpected error: \(error)")
-            }
-        } else {
-            homeData.facilitiesData = []
-        }
-    }
-    
-    private func endEssentialInfoView() async {
-        await searchFacilities()
-        if homeData.homeName.isEmpty {
-            homeData.homeName = basicHomeName
-        }
+    func moveNextStep() async {
+        await viewModel.completeEditing(homeData: homeData, homes: homes)
         moveToChecklistView = true
     }
 }
@@ -704,8 +659,3 @@ enum EssentialInfoField {
     case areaPyeong
     case areaSquareMeter
 }
-
-//
-//#Preview {
-//    EssentialInfoView(homeCount: .constant(1), showHomeHuntSheet: .constant(true))
-//}

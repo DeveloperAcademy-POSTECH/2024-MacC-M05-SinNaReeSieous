@@ -66,6 +66,8 @@ extension Color {
         static let colorGray = Color(.zzsWarmGray90)
         static let backgroundYellow = Color(.zzsYellow20)
         static let colorYellow = Color(.zzsBlack)
+        /// 커스텀 체크리스트 "대표" 배지 배경 (Figma: themecoloryellow/zzsyellow-80)
+        static let backgroundBadge = Color(.zzsYellow80)
     }
     
     enum Additional {

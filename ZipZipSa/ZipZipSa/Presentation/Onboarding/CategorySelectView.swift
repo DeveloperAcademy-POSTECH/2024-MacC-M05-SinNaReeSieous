@@ -116,7 +116,6 @@ private extension CategorySelectView {
             ChecklistCategoryData(rawValue: $0.rawValue)
         }
         let user = User(favoriteCategoryData: checklistCategoryData)
-        print(user.favoriteCategories)
         modelContext.insert(user)
         guard let _ = try? modelContext.save() else  {
             return

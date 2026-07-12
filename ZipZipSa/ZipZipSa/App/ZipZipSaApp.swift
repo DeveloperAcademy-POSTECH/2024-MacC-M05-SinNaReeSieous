@@ -11,10 +11,25 @@ import SwiftData
 @main
 struct ZipZipSaApp: App {
 
+    let container: ModelContainer
+
+    init() {
+        do {
+            container = try ModelContainer(
+                for: Schema(versionedSchema: ZipZipSaSchemaV2.self),
+                migrationPlan: ZipZipSaMigrationPlan.self
+            )
+        } catch {
+            fatalError("ModelContainer 생성 실패: \(error)")
+        }
+        container.mainContext.autosaveEnabled = true
+        LegacyBlobMigrator.migrateIfNeeded(context: container.mainContext)
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .modelContainer(for: [User.self, ChecklistCategoryData.self, HomeData.self, RentalFeeData.self, LocationData.self, FacilityData.self, MemoData.self, HazardData.self], isAutosaveEnabled: true)
         }
+        .modelContainer(container)
     }
 }

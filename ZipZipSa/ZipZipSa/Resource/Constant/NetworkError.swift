@@ -16,13 +16,13 @@ enum NetworkError: Error {
     func logError() {
         switch self {
         case .invalidURL(let keyword):
-            print("Invalid URL for keyword: \(keyword)")
+            ZZSLog.error("Invalid URL for keyword: \(keyword)")
         case .noData(let keyword):
-            print("No data for keyword: \(keyword)")
+            ZZSLog.error("No data for keyword: \(keyword)")
         case .networkError(let keyword, let description):
-            print("Network error for \(keyword): \(description)")
+            ZZSLog.error("Network error for \(keyword): \(description)")
         case .decodingError(let keyword, let description):
-            print("Decoding error for \(keyword): \(description)")
+            ZZSLog.error("Decoding error for \(keyword): \(description)")
         }
     }
     

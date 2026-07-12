@@ -28,10 +28,12 @@ enum ZipLiteral {
     
     enum MainView {
         static let navigationTitleText: String = "어떤 집을 \n보러 갈까요?"
+        static let checklistManageButtonMain: String = "체크리스트 관리"
+        static let checklistManageButtonSub: String = "목록을 만들고 수정해요"
         static let homeHuntButtonMain: String = "집 보러가기"
         static let homeHuntButtonSub: String = "용북이와 함께 집을 둘러봐요"
-        static let viewedHomeButton: String = "내가 본 집"
         static let recentlyViewedHomeTitle: String = "최근 본 집"
+        static let seeAllViewedHomes: String = "전체보기"
         static let recentlyViewedHomeContent: String = "아직 내가 둘러본 집이 없어요.\n집을 보러 가서 집을 추가해 보세요."
     }
     
@@ -40,6 +42,40 @@ enum ZipLiteral {
         static let navigationTitle = "주인님을 위한\n맞춤 체크리스트예요"
         static let memoSectionTitle = "메모"
         static let memoPlaceHolder = "메모를 입력해 주세요"
+    }
+
+    enum ChecklistTemplate {
+        // 관리(목록) 화면
+        static let listTitle = "수정할 체크리스트를\n알려주세요"
+        static let back = "뒤로"
+        static let create = "만들기"
+        static let defaultTemplateName = "기본"
+        static let primaryBadge = "대표"
+        static let questionCountSuffix = "개 문항"
+        static let setAsPrimary = "대표로 지정"
+        static let delete = "삭제"
+
+        // 편집 화면
+        static let close = "닫기"
+        static let editTitleSuffix = "체크리스트예요"
+        static let newTemplateTitleName = "새로 만드는"
+        static let addSectionTitle = "질문 추가하기"
+        static let addAction = "추가하기"
+        static let removeAction = "삭제하기"
+        static let next = "다음"
+
+        // 이름 입력 화면
+        static let nameEditTitle = "변경할 체크리스트\n이름을 알려주세요"
+        static let nameNewTitle = "새 체크리스트\n이름을 알려주세요"
+        static let namePlaceholder = "이름을 입력해 주세요"
+        static let setPrimaryCheckbox = "대표 체크리스트로 설정하기"
+        static let complete = "완료하기"
+        static let later = "나중에 할래요"
+
+        // 체크리스트 전환 시트
+        static let switchButton = "체크리스트 변경"
+        static let switchTitle = "사용할 체크리스트를\n선택해 주세요"
+        static let inUse = "사용 중"
     }
     
     enum UnsupportedDevice {

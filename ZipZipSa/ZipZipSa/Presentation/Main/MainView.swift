@@ -44,7 +44,7 @@ struct MainView: View {
         .accentColor(Color.Button.tertiary)
         .navigationBarBackButtonHidden()
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
-            EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
+            HomeHuntSheetView(showHomeHuntSheet: $showHomeHuntSheet)
         }
         .sheet(isPresented: $showHomeResultCardSheet) {
             ResultCardSheetView(homeData: $selectedHome)
@@ -136,18 +136,16 @@ private extension MainView {
     
     var MainButtons: some View {
         HStack(spacing: 11) {
+            ChecklistManageButton
             HomeHuntButton
-            ViewedHomeButton
         }
         .padding(.top, 24)
         .padding(.bottom, UIScreen.isSe ? 12 : 64)
         .padding(.horizontal, 16)
     }
-    
-    var HomeHuntButton: some View {
-        Button {
-            showHomeHuntSheet = true
-        } label: {
+
+    var ChecklistManageButton: some View {
+        NavigationLink(destination: ChecklistTemplateListView()) {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.Button.secondaryYellow)
                 .frame(height: ((UIScreen.screenSize.width - 43) / 2) / 166 * 210)
@@ -160,10 +158,10 @@ private extension MainView {
                 }
                 .overlay(alignment: .topLeading, content: {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(ZipLiteral.MainView.homeHuntButtonMain)
+                        Text(ZipLiteral.MainView.checklistManageButtonMain)
                             .foregroundStyle(Color.Text.primary)
                             .applyZZSFont(zzsFontSet: .title2)
-                        Text(ZipLiteral.MainView.homeHuntButtonSub)
+                        Text(ZipLiteral.MainView.checklistManageButtonSub)
                             .foregroundStyle(Color.Text.primary)
                             .applyZZSFont(zzsFontSet: .caption1Regular)
                     }
@@ -172,9 +170,11 @@ private extension MainView {
                 })
         }
     }
-    
-    var ViewedHomeButton: some View {
-        NavigationLink(destination: HomeListView()) {
+
+    var HomeHuntButton: some View {
+        Button {
+            showHomeHuntSheet = true
+        } label: {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.Button.primaryBlue)
                 .frame(height: ((UIScreen.screenSize.width - 43) / 2) / 166 * 210)
@@ -186,24 +186,33 @@ private extension MainView {
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
                 .overlay(alignment: .topLeading) {
-                    VStack(alignment: .leading) {
-                        Text(ZipLiteral.MainView.viewedHomeButton)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(ZipLiteral.MainView.homeHuntButtonMain)
                             .foregroundStyle(Color.Text.primary)
                             .applyZZSFont(zzsFontSet: .title2)
-                            .padding(.top, 12)
-                            .padding(.leading, 16)
+                        Text(ZipLiteral.MainView.homeHuntButtonSub)
+                            .foregroundStyle(Color.Text.primary)
+                            .applyZZSFont(zzsFontSet: .caption1Regular)
                     }
+                    .padding(.top, 12)
+                    .padding(.leading, 16)
                 }
         }
     }
-    
+
     var RecentlyViewedHomeTitle: some View {
-        VStack (alignment: .leading){
+        HStack(alignment: .firstTextBaseline) {
             Text(ZipLiteral.MainView.recentlyViewedHomeTitle)
                 .foregroundStyle(Color.Text.primary)
                 .font(Font.system (size: 24, weight: .bold))
-                .padding(.bottom, 24)
+            Spacer()
+            NavigationLink(destination: HomeListView()) {
+                Text(ZipLiteral.MainView.seeAllViewedHomes)
+                    .foregroundStyle(Color.Text.tertiary)
+                    .applyZZSFont(zzsFontSet: .subheadlineRegular)
+            }
         }
+        .padding(.bottom, 24)
         .padding(.horizontal, 16)
     }
     
@@ -214,8 +223,6 @@ private extension MainView {
                     if let selectedHomeIndex = homes.firstIndex(where: {$0.id == home.id }) {
                         self.selectedHome = homes[selectedHomeIndex]
                         showHomeResultCardSheet = true
-                        print(selectedHomeIndex)
-                        print(homes[selectedHomeIndex].homeName)
                     }
                 } label: {
                     RecentlyViewedHomeCellView(home: home)
