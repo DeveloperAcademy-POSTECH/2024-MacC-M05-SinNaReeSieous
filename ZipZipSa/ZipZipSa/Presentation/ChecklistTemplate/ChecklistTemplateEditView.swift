@@ -18,8 +18,20 @@ struct ChecklistTemplateEditView: View {
     @State private var isAddSectionExpanded = false
     @State private var moveToNameEdit = false
 
-    init(template: ChecklistTemplateData?) {
-        self._viewModel = State(initialValue: ChecklistTemplateEditViewModel(template: template))
+    /// 템플릿 선택 화면에서 푸시된 경우 전체 플로우(fullScreenCover)를 닫는 클로저.
+    /// nil이면 이 화면이 플로우 루트이므로 dismiss로 닫는다.
+    private let onClose: (() -> Void)?
+
+    init(
+        template: ChecklistTemplateData?,
+        initialCodes: [String]? = nil,
+        onClose: (() -> Void)? = nil
+    ) {
+        self._viewModel = State(initialValue: ChecklistTemplateEditViewModel(
+            template: template,
+            initialCodes: initialCodes
+        ))
+        self.onClose = onClose
     }
 
     var body: some View {
@@ -58,7 +70,7 @@ struct ChecklistTemplateEditView: View {
         }
         .navigationDestination(isPresented: $moveToNameEdit) {
             ChecklistTemplateNameEditView(viewModel: viewModel) {
-                dismiss()
+                closeFlow()
             }
         }
     }
@@ -68,9 +80,17 @@ private extension ChecklistTemplateEditView {
 
     // MARK: - View
 
+    func closeFlow() {
+        if let onClose {
+            onClose()
+        } else {
+            dismiss()
+        }
+    }
+
     var CloseButton: some View {
         Button {
-            dismiss()
+            closeFlow()
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "xmark")

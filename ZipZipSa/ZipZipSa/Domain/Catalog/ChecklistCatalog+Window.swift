@@ -51,7 +51,7 @@ extension ChecklistItem {
             code: "win-04",
             space: Space(type: .window,
                          questionNumber: 4),
-            checkListType: .basic,
+            checkListType: .quick,
             basicCategory: .sunlight,
             question: Question(question: "집과 앞 건물 사이의 거리는 어떤가요?",
                                answerType: .multiChoices,

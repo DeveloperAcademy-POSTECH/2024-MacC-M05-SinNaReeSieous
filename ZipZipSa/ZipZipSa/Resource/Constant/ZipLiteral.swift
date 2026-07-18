@@ -61,6 +61,13 @@ enum ZipLiteral {
         static let setAsPrimary = "대표로 지정"
         static let delete = "삭제"
 
+        // 템플릿 선택 화면
+        static let presetSelectTitle = "질문 템플릿을 선택하여\n시작할 수 있어요"
+        static let presetBasic = "기본"
+        static let presetDetailed = "자세히보기"
+        static let presetQuick = "빠르게보기"
+        static let presetCustom = "직접 추가하기"
+
         // 편집 화면
         static let close = "닫기"
         static let editTitleSuffix = "체크리스트예요"

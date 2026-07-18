@@ -39,8 +39,13 @@ struct ChecklistTemplateListView: View {
             }
         }
         .fullScreenCover(item: $editorTarget) { target in
-            NavigationStack {
-                ChecklistTemplateEditView(template: target.template)
+            switch target {
+            case .new:
+                ChecklistTemplateCreateFlowView(onClose: { editorTarget = nil })
+            case .edit(let template):
+                NavigationStack {
+                    ChecklistTemplateEditView(template: template)
+                }
             }
         }
     }
@@ -48,7 +53,8 @@ struct ChecklistTemplateListView: View {
 
 private extension ChecklistTemplateListView {
 
-    /// fullScreenCover(item:)용 편집 대상. nil 템플릿(신규)도 항목으로 표현한다.
+    /// fullScreenCover(item:)용 편집 대상.
+    /// 신규(.new)는 템플릿 선택 화면부터, 수정(.edit)은 편집 화면부터 시작한다.
     enum EditorTarget: Identifiable {
         case new
         case edit(ChecklistTemplateData)
@@ -57,13 +63,6 @@ private extension ChecklistTemplateListView {
             switch self {
             case .new: return UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
             case .edit(let template): return template.id
-            }
-        }
-
-        var template: ChecklistTemplateData? {
-            switch self {
-            case .new: return nil
-            case .edit(let template): return template
             }
         }
     }

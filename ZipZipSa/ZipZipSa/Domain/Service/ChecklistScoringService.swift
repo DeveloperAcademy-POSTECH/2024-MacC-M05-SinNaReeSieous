@@ -13,13 +13,14 @@ import Foundation
 /// 답변/점수 딕셔너리의 키는 질문의 영구 code(String)다.
 enum ChecklistScoringService {
 
-    /// 노출 대상 질문 필터: basic 전부 + 관심 카테고리에 해당하는 advanced.
+    /// 노출 대상 질문 필터: 빠르게·기본 전부 + 관심 카테고리에 해당하는 추가.
+    /// 빠르게(quick)는 기본에서 세분화된 유형이므로, 기존 기본 세트와 동일한 결과를 유지한다.
     static func filteredItems(selectedCategories: [ChecklistCategory]) -> [ChecklistItem] {
         ChecklistItem.checklistItems.filter {
-            let isBasicCheckListItem = $0.checkListType == .basic
+            let isAlwaysIncludedItem = $0.checkListType != .advanced
             let isSelectedCategoryCheckListItem = $0.checkListType == .advanced
             && selectedCategories.contains($0.basicCategory)
-            return isBasicCheckListItem || isSelectedCategoryCheckListItem
+            return isAlwaysIncludedItem || isSelectedCategoryCheckListItem
         }
     }
 

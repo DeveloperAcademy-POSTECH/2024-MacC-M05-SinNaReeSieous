@@ -10,7 +10,7 @@ import Foundation
 /// questions(for:selectedCategories:)에 사용자의 활성 템플릿을 넘기기만 하면 된다.
 enum QuestionProvider {
 
-    /// 기본 템플릿: basic 질문 전부 + 관심 카테고리에 해당하는 advanced 질문.
+    /// 기본 템플릿: 빠르게·기본 질문 전부 + 관심 카테고리에 해당하는 추가 질문.
     static func questions(selectedCategories: [ChecklistCategory]) -> [ChecklistItem] {
         ChecklistScoringService.filteredItems(selectedCategories: selectedCategories)
     }

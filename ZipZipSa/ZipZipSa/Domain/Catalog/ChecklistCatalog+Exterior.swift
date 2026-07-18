@@ -126,7 +126,7 @@ extension ChecklistItem {
             code: "ext-10",
             space: Space(type: .exterior,
                          questionNumber: 10),
-            checkListType: .basic,
+            checkListType: .quick,
             basicCategory: .facilities,
             question: Question(question: "건물 옵션을 선택해주세요.",
                                answerType: .multiSelect(basicScore: 0, answerDisposition: .neutral),
