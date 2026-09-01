@@ -88,7 +88,7 @@ struct LegacyBlobMigrationTests {
         ])
 
         let hazards = ChecklistScoringService.hazards(items: items, answers: answers)
-        #expect(hazards.map(\.rawValue) == ["privacy", "noise", "waterCold"])
+        #expect(hazards.map(\.rawValue) == ["cockroach", "privacy", "noise", "waterCold"])
     }
 
     @Test func 이관은_멱등하다() throws {

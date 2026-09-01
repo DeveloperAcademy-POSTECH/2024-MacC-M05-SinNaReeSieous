@@ -31,7 +31,8 @@ struct ChecklistItem: Identifiable, Hashable {
     let question: Question
     let crossTip: [ChecklistCategory: String]
     let remark: String?
-    let hazard: Hazard?
+    /// 이 질문이 위험 응답일 때 붙는 위험요소. 한 질문이 여러 위험을 가리킬 수 있다.
+    let hazards: [Hazard]
 
     var id: String { code }
 
@@ -44,7 +45,7 @@ struct ChecklistItem: Identifiable, Hashable {
         question: Question,
         crossTip: [ChecklistCategory : String] = [:],
         remark: String? = nil,
-        hazard: Hazard? = nil
+        hazards: [Hazard] = []
     ) {
         self.legacyID = legacyID
         self.code = code
@@ -54,7 +55,19 @@ struct ChecklistItem: Identifiable, Hashable {
         self.question = question
         self.crossTip = crossTip
         self.remark = remark
-        self.hazard = hazard
+        self.hazards = hazards
+    }
+}
+
+extension ChecklistItem {
+    /// 칩으로 노출할 카테고리 — 대표 카테고리 + 크로스 카테고리 전부.
+    /// 관심 카테고리 선택 여부와 무관하게 이 질문이 걸쳐 있는 카테고리를 모두 보여준다.
+    /// crossTip은 Dictionary라 키 순서가 불안정하므로 allCases 순서로 고정한다.
+    var displayCategories: [ChecklistCategory] {
+        let crossCategories = ChecklistCategory.allCases.filter {
+            $0 != basicCategory && crossTip.keys.contains($0)
+        }
+        return [basicCategory] + crossCategories
     }
 }
 

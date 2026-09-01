@@ -21,7 +21,7 @@ extension ChecklistItem {
             question: Question(question: "화장실에서 담배냄새가 나나요?",
                                answerType: .twoChoices,
                                answerOptions: ["나요", "안 나요"]),
-            hazard: .cigaretteSmell
+            hazards: [.cigaretteSmell]
         ),
         ChecklistItem(
             legacyID: 48,
@@ -66,7 +66,7 @@ extension ChecklistItem {
             question: Question(question: "변기와 샤워기, 수도 등의 수압은 강한가요?",
                                answerType: .multiChoices,
                                answerOptions: ["약해요", "보통이에요", "강해요"]),
-            hazard: .waterPressure
+            hazards: [.waterPressure]
         ),
         ChecklistItem(
             legacyID: 52,
@@ -78,7 +78,7 @@ extension ChecklistItem {
             question: Question(question: "온수가 나오는 데 얼마나 걸리나요?",
                                answerType: .multiChoices,
                                answerOptions: ["느려요", "보통이에요", "빨라요"]),
-            hazard: .waterCold
+            hazards: [.waterCold]
         ),
         ChecklistItem(
             legacyID: 53,
@@ -90,7 +90,7 @@ extension ChecklistItem {
             question: Question(question: "세면대, 샤워실의 배수가 잘 되나요?",
                                answerType: .multiChoices,
                                answerOptions: ["안 돼요", "보통이에요", "잘 돼요"]),
-            hazard: .waterDrainage
+            hazards: [.waterDrainage]
         ),
         ChecklistItem(
             legacyID: 54,
@@ -124,6 +124,19 @@ extension ChecklistItem {
             question: Question(question: "변기 물탱크에 곰팡이가 있나요?",
                                answerType: .multiChoices,
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
+        ),
+        ChecklistItem(
+            legacyID: 62,
+            code: "toi-11",
+            space: Space(type: .toilet,
+                         questionNumber: 11),
+            checkListType: .advanced,
+            basicCategory: .cleanliness,
+            question: Question(question: "변기의 상태는 어떤가요?",
+                               answerType: .multiChoices,
+                               answerOptions: ["더러워요", "보통이에요", "깨끗해요"]),
+            remark: "검정색으로 변색된 부분은 청소가 힘들 가능성이 높아요.",
+            hazards: [.mold]
         ),
     ]
 }

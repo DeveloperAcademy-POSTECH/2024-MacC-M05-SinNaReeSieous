@@ -56,7 +56,7 @@ extension ChecklistItem {
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
             remark: "바퀴벌레 배설물일 가능성이 있어요.",
-            hazard: .cockroach
+            hazards: [.cockroach]
         ),
         ChecklistItem(
             legacyID: 30,
@@ -79,7 +79,7 @@ extension ChecklistItem {
             question: Question(question: "싱크대의 수압은 강한가요?",
                                answerType: .multiChoices,
                                answerOptions: ["약해요", "보통이에요", "강해요"]),
-            hazard: .waterPressure
+            hazards: [.waterPressure]
         ),
         ChecklistItem(
             legacyID: 42,
@@ -91,7 +91,7 @@ extension ChecklistItem {
             question: Question(question: "온수가 나오는 데 얼마나 걸리나요?",
                                answerType: .multiChoices,
                                answerOptions: ["느려요", "보통이에요", "빨라요"]),
-            hazard: .waterCold
+            hazards: [.waterCold]
         ),
         ChecklistItem(
             legacyID: 43,
@@ -103,7 +103,7 @@ extension ChecklistItem {
             question: Question(question: "싱크대의 배수가 잘되나요?",
                                answerType: .multiChoices,
                                answerOptions: ["안 돼요", "보통이에요", "잘 돼요"]),
-            hazard: .waterDrainage
+            hazards: [.waterDrainage]
         ),
         ChecklistItem(
             legacyID: 44,
@@ -127,7 +127,7 @@ extension ChecklistItem {
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
             remark: "하부장 바닥이 축축하거나 울어 있는지 확인해 보세요. 심한 경우 아랫집 천장에 누수를 일으킬 수 있어요.",
-            hazard: .waterLeak
+            hazards: [.waterLeak]
         ),
         ChecklistItem(
             legacyID: 46,
@@ -139,6 +139,30 @@ extension ChecklistItem {
             question: Question(question: "냉장고 내부에서 냄새가 나거나 얼룩이 있나요?",
                                answerType: .multiChoices,
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
+        ),
+        ChecklistItem(
+            legacyID: 60,
+            code: "kit-12",
+            space: Space(type: .kitchen,
+                         questionNumber: 12),
+            checkListType: .quick,
+            basicCategory: .insectproof,
+            question: Question(question: "집 안 구석에 검은색 작은 점 같은 흔적이 있나요?",
+                               answerType: .twoChoices,
+                               answerOptions: ["있어요", "없어요"]),
+            remark: "경첩이나 주방 구석 등을 살펴봐요. 바퀴벌레 배설물일 가능성이 있어요.",
+            hazards: [.cockroach]
+        ),
+        ChecklistItem(
+            legacyID: 61,
+            code: "kit-13",
+            space: Space(type: .kitchen,
+                         questionNumber: 13),
+            checkListType: .advanced,
+            basicCategory: .facilities,
+            question: Question(question: "냉장고 크기는 어떤가요?",
+                               answerType: .multiChoices,
+                               answerOptions: ["작아요", "보통이에요", "충분해요"])
         ),
     ]
 }

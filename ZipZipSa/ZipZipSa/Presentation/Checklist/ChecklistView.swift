@@ -124,20 +124,35 @@ struct ChecklistView: View {
 
 private extension ChecklistView {
 
+    var currentItems: [ChecklistItem] {
+        viewModel.items(for: selectedSpaceType)
+    }
+
     // MARK: - View
+
+    /// 질문 사이 구분선 (Figma 5120-12035: 좌우 16, 위아래 24)
+    var QuestionDivider: some View {
+        ZZSSperator(color: Color.Additional.checklistSeperator)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 24)
+    }
 
     var ChecklistList: some View {
         ScrollViewReader { scrollView in
             LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
                 Section {
                     Spacer().frame(height: 18)
-                    ForEach(viewModel.items(for: selectedSpaceType)) { checklistItem in
+                    ForEach(currentItems) { checklistItem in
                         ChecklistRowView(
                             viewModel: viewModel,
                             checklistItem: checklistItem
                         )
                         .padding(.horizontal, 16)
-                        .padding(.bottom, 40)
+                        if checklistItem.id == currentItems.last?.id {
+                            Spacer().frame(height: 40)
+                        } else {
+                            QuestionDivider
+                        }
                     }
                     Memo
 

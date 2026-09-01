@@ -95,11 +95,10 @@ enum ChecklistScoringService {
         var hazards: [Hazard] = []
 
         items.forEach { checklistItem in
-            guard let hazard = checklistItem.hazard else {
+            guard answers[checklistItem.code] == [0] else {
                 return
             }
-            let hasHazard = answers[checklistItem.code] == [0]
-            if hasHazard && !hazards.contains(hazard) {
+            for hazard in checklistItem.hazards where !hazards.contains(hazard) {
                 hazards.append(hazard)
             }
         }

@@ -111,11 +111,23 @@ private extension ChecklistTemplateListView {
             .padding(.vertical, 12)
     }
 
+    /// 대표 체크리스트는 항상 맨 위에 노출한다.
+    var rows: [ChecklistTemplateRow] {
+        ChecklistTemplateRow.ordered(
+            templates: user?.templates ?? [],
+            markedID: user?.activeTemplateID
+        )
+    }
+
     var TemplateCardList: some View {
         VStack(spacing: 10) {
-            DefaultTemplateCard
-            ForEach(user?.templates.sorted { $0.createdAt < $1.createdAt } ?? []) { template in
-                TemplateCard(template: template)
+            ForEach(rows) { row in
+                switch row {
+                case .default:
+                    DefaultTemplateCard
+                case .custom(let template):
+                    TemplateCard(template: template)
+                }
             }
         }
         .padding(.horizontal, 16)

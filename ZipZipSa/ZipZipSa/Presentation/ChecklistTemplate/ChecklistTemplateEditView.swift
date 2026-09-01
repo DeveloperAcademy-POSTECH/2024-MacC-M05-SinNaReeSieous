@@ -78,7 +78,18 @@ struct ChecklistTemplateEditView: View {
 
 private extension ChecklistTemplateEditView {
 
+    var includedItems: [ChecklistItem] {
+        viewModel.includedItems(for: selectedSpaceType)
+    }
+
     // MARK: - View
+
+    /// 질문 사이 구분선 (Figma 6335-22914: 좌우 16, 위아래 24)
+    var QuestionDivider: some View {
+        ZZSSperator(color: Color.Additional.checklistSeperator)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 24)
+    }
 
     func closeFlow() {
         if let onClose {
@@ -116,10 +127,14 @@ private extension ChecklistTemplateEditView {
         LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
             Section {
                 Spacer().frame(height: 18)
-                ForEach(viewModel.includedItems(for: selectedSpaceType)) { item in
+                ForEach(includedItems) { item in
                     TemplateQuestionCell(item: item, isIncluded: true)
                         .padding(.horizontal, 16)
-                        .padding(.bottom, 40)
+                    if item.id == includedItems.last?.id {
+                        Spacer().frame(height: 40)
+                    } else {
+                        QuestionDivider
+                    }
                 }
                 AddSection
             } header: {
@@ -208,8 +223,8 @@ private extension ChecklistTemplateEditView {
             if item.checkListType == .advanced {
                 Chip(text: item.checkListType.text, color: Color.ChecklistTag.backgroundGray)
             }
-            if item.basicCategory.isSelectable {
-                Chip(text: item.basicCategory.text, color: Color.ChecklistTag.backgroundYellow)
+            ForEach(item.displayCategories, id: \.self) { category in
+                Chip(text: category.text, color: Color.ChecklistTag.backgroundYellow)
             }
         }
     }

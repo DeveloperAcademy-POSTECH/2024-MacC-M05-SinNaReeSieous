@@ -41,13 +41,13 @@ struct ChecklistScoringGoldenTests {
     @Test func 전체_관심카테고리_전부_첫옵션_응답() {
         let r = result(favorites: ChecklistAnswerFixtures.allFavorites,
                        answers: ChecklistAnswerFixtures.allFirstOption)
-        #expect(r.itemCount == 57)
+        #expect(r.itemCount == 60)
         #expect(r.category == [
             "cleanliness": 0.0, "insectproof": 0.0, "security": 2.0,
             "soundproof": 1.5, "sunlight": 0.0, "ventilation": 0.0
         ])
         #expect(r.max == [
-            "cleanliness": 36.0, "insectproof": 18.0, "security": 20.5,
+            "cleanliness": 38.0, "insectproof": 20.0, "security": 20.5,
             "soundproof": 10.0, "sunlight": 8.0, "ventilation": 18.0
         ])
         // 첫 옵션은 전부 위험 응답이므로 hazard 9종 전체가 수집된다 (한글명 정렬 순서).
@@ -61,11 +61,11 @@ struct ChecklistScoringGoldenTests {
         let r = result(favorites: ChecklistAnswerFixtures.allFavorites,
                        answers: ChecklistAnswerFixtures.allLastOption)
         #expect(r.category == [
-            "cleanliness": 36.0, "insectproof": 18.0, "security": 18.0,
+            "cleanliness": 38.0, "insectproof": 20.0, "security": 18.0,
             "soundproof": 9.5, "sunlight": 8.0, "ventilation": 18.0
         ])
         #expect(r.max == [
-            "cleanliness": 36.0, "insectproof": 18.0, "security": 20.5,
+            "cleanliness": 38.0, "insectproof": 20.0, "security": 20.5,
             "soundproof": 10.0, "sunlight": 8.0, "ventilation": 18.0
         ])
         #expect(r.hazards.isEmpty)
@@ -74,29 +74,29 @@ struct ChecklistScoringGoldenTests {
     @Test func 두_관심카테고리_짝수id만_첫옵션_응답() {
         let r = result(favorites: ChecklistAnswerFixtures.twoFavorites,
                        answers: ChecklistAnswerFixtures.evenIdsFirstOption)
-        #expect(r.itemCount == 48)
+        #expect(r.itemCount == 50)
         #expect(r.category == [
             "cleanliness": 6.0, "insectproof": 2.0, "security": 7.5,
             "soundproof": 3.0, "sunlight": 1.0, "ventilation": 1.0
         ])
         #expect(r.max == [
-            "cleanliness": 24.0, "insectproof": 8.0, "security": 20.5,
+            "cleanliness": 24.0, "insectproof": 10.0, "security": 20.5,
             "soundproof": 10.0, "sunlight": 6.0, "ventilation": 8.0
         ])
-        #expect(r.hazards.map(\.rawValue) == ["privacy", "noise", "waterCold"])
+        #expect(r.hazards.map(\.rawValue) == ["cockroach", "privacy", "noise", "waterCold"])
     }
 
     @Test func 관심카테고리_없음_전부_미응답() {
         // 미응답 질문의 기본값 가산 규칙(multiSelect는 basicScore, 그 외 1.0)이 지켜지는지 확인.
         let r = result(favorites: ChecklistAnswerFixtures.noFavorites,
                        answers: ChecklistAnswerFixtures.unanswered)
-        #expect(r.itemCount == 44)
+        #expect(r.itemCount == 46)
         #expect(r.category == [
-            "cleanliness": 12.0, "insectproof": 4.0, "security": 3.0,
+            "cleanliness": 12.0, "insectproof": 5.0, "security": 3.0,
             "soundproof": 6.0, "sunlight": 3.0, "ventilation": 4.0
         ])
         #expect(r.max == [
-            "cleanliness": 24.0, "insectproof": 8.0, "security": 8.5,
+            "cleanliness": 24.0, "insectproof": 10.0, "security": 8.5,
             "soundproof": 10.0, "sunlight": 6.0, "ventilation": 8.0
         ])
         #expect(r.hazards.isEmpty)
@@ -107,7 +107,7 @@ struct ChecklistScoringGoldenTests {
         let r = result(favorites: ChecklistAnswerFixtures.allFavorites,
                        answers: ChecklistAnswerFixtures.multiSelectAllOptions)
         #expect(r.category == [
-            "cleanliness": 18.0, "insectproof": 9.0, "security": 10.5,
+            "cleanliness": 19.0, "insectproof": 10.0, "security": 10.5,
             "soundproof": 4.0, "sunlight": 4.0, "ventilation": 9.0
         ])
         #expect(r.hazards.isEmpty)

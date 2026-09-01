@@ -58,7 +58,7 @@ extension ChecklistItem {
                                answerOptions: ["가까워요", "보통이에요", "멀어요"]),
             crossTip: [.ventilation: "앞 집과 거리가 너무 가까우면 바람이 잘 통하지 않아요.",
                        .security: "집 앞 건물과 너무 가까우면 사생활 보호가 되지 않을 수 있어요."],
-            hazard: .privacy
+            hazards: [.privacy]
         ),
         ChecklistItem(
             legacyID: 35,
@@ -71,6 +71,19 @@ extension ChecklistItem {
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
             crossTip: [.ventilation: "방충망이 찢어져있다면 환기가 불편할 수 있어요."]
+        ),
+        ChecklistItem(
+            legacyID: 59,
+            code: "win-06",
+            space: Space(type: .window,
+                         questionNumber: 6),
+            checkListType: .advanced,
+            basicCategory: .environment,
+            question: Question(question: "창문이 이중창인가요?",
+                               answerType: .twoChoices,
+                               answerOptions: ["단창", "이중창"]),
+            remark: "단창은 열 손실이 크고, 결로 때문에 곰팡이가 생기기 쉬워요.",
+            hazards: [.noise, .mold]
         ),
     ]
 }

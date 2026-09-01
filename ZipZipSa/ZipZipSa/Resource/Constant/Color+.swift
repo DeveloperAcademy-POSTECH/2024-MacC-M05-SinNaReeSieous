@@ -74,5 +74,7 @@ extension Color {
     
     enum Additional {
         static let seperator = Color(.zzsWarmGray30)
+        /// 체크리스트 질문 사이 구분선 (Figma: #DED4C8)
+        static let checklistSeperator = Color(.zzsWarmGray20)
     }
 }

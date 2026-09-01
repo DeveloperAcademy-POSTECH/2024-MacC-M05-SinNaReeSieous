@@ -50,22 +50,34 @@ private extension ChecklistTemplateSwitchSheet {
             .padding(.bottom, 12)
     }
 
+    /// 사용 중인 체크리스트는 항상 맨 위에 노출한다.
+    var rows: [ChecklistTemplateRow] {
+        ChecklistTemplateRow.ordered(
+            templates: user?.templates ?? [],
+            markedID: currentTemplateID
+        )
+    }
+
     var TemplateCardList: some View {
         VStack(spacing: 10) {
-            TemplateCard(
-                name: ZipLiteral.ChecklistTemplate.defaultTemplateName,
-                questionCount: defaultQuestionCount,
-                isCurrent: currentTemplateID == nil
-            ) {
-                select(nil)
-            }
-            ForEach(user?.templates.sorted { $0.createdAt < $1.createdAt } ?? []) { template in
-                TemplateCard(
-                    name: template.name,
-                    questionCount: template.questionCodes.count,
-                    isCurrent: currentTemplateID == template.id
-                ) {
-                    select(template)
+            ForEach(rows) { row in
+                switch row {
+                case .default:
+                    TemplateCard(
+                        name: ZipLiteral.ChecklistTemplate.defaultTemplateName,
+                        questionCount: defaultQuestionCount,
+                        isCurrent: currentTemplateID == nil
+                    ) {
+                        select(nil)
+                    }
+                case .custom(let template):
+                    TemplateCard(
+                        name: template.name,
+                        questionCount: template.questionCodes.count,
+                        isCurrent: currentTemplateID == template.id
+                    ) {
+                        select(template)
+                    }
                 }
             }
         }
@@ -87,6 +99,7 @@ private extension ChecklistTemplateSwitchSheet {
                         .applyZZSFont(zzsFontSet: .title2)
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)
+                        .frame(minHeight: 48, alignment: .top)
                     Text("\(questionCount)\(ZipLiteral.ChecklistTemplate.questionCountSuffix)")
                         .foregroundStyle(Color.Text.primary)
                         .applyZZSFont(zzsFontSet: .caption1Regular)

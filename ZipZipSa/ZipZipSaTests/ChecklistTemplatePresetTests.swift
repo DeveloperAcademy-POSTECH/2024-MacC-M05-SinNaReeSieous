@@ -9,8 +9,8 @@ import Testing
 struct ChecklistTemplatePresetTests {
 
     @Test func 프리셋_질문_수() {
-        #expect(ChecklistTemplatePreset.quick.questionCount == 10)
-        #expect(ChecklistTemplatePreset.basic.questionCount == 44)
+        #expect(ChecklistTemplatePreset.quick.questionCount == 12)
+        #expect(ChecklistTemplatePreset.basic.questionCount == 46)
         #expect(ChecklistTemplatePreset.detailed.questionCount == ChecklistItem.checklistItems.count)
         #expect(ChecklistTemplatePreset.custom.questionCount == 0)
     }
@@ -34,9 +34,9 @@ struct ChecklistTemplatePresetTests {
         // 노션 질문 정리 기준 "빠르게" 유형 (카탈로그 순서).
         #expect(ChecklistTemplatePreset.quick.questionCodes == [
             "ext-10",
-            "lvr-05", "lvr-06", "lvr-13", "lvr-16",
+            "lvr-05", "lvr-06", "lvr-13", "lvr-16", "lvr-22",
             "win-04",
-            "kit-06", "kit-08",
+            "kit-06", "kit-08", "kit-12",
             "toi-05", "toi-07"
         ])
     }

@@ -85,15 +85,8 @@ private extension ChecklistRowView {
         if checklistItem.checkListType == .advanced {
             result.append((checklistItem.checkListType.text, Color.ChecklistTag.backgroundGray))
         }
-        if checklistItem.basicCategory.isSelectable {
-            result.append((checklistItem.basicCategory.text, Color.ChecklistTag.backgroundYellow))
-        }
-
-        let crossChip = checklistItem.crossTip.keys
-            .filter { selectedCategory.contains($0) }
+        result += checklistItem.displayCategories
             .map { ($0.text, Color.ChecklistTag.backgroundYellow) }
-
-        result += crossChip
 
         return result
     }
