@@ -11,7 +11,7 @@ struct ChecklistTemplatePresetTests {
     @Test func 프리셋_질문_수() {
         #expect(ChecklistTemplatePreset.quick.questionCount == 12)
         #expect(ChecklistTemplatePreset.basic.questionCount == 46)
-        #expect(ChecklistTemplatePreset.detailed.questionCount == ChecklistItem.checklistItems.count)
+        #expect(ChecklistTemplatePreset.detailed.questionCount == ChecklistItem.activeItems.count)
         #expect(ChecklistTemplatePreset.custom.questionCount == 0)
     }
 

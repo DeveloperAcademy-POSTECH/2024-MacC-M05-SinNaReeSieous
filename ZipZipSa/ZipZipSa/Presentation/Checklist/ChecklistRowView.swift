@@ -11,9 +11,16 @@ struct ChecklistRowView: View {
     let viewModel: ChecklistViewModel
     let checklistItem: ChecklistItem
 
+    /// 온보딩(관심 카테고리 선택)이 사라지면서 체크리스트에서는 카테고리·추가 칩을
+    /// 노출하지 않는다. 되살릴 수 있도록 계산 로직(chipData)은 그대로 둔다.
+    /// 커스텀 체크리스트 편집 화면은 칩을 계속 보여준다.
+    private let showsCategoryChips = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            CategoryChipStack
+            if showsCategoryChips {
+                CategoryChipStack
+            }
             Question
             if captionType != .none {
                 Caption

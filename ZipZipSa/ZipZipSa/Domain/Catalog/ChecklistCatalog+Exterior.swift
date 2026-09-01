@@ -22,7 +22,8 @@ extension ChecklistItem {
                                answerType: .twoChoices,
                                answerOptions: ["없어요", "있어요"]),
             crossTip: [:],
-            remark: "밤 늦게 귀가 시 길이 더 밝고, 긴급한 경우 도움을 요청할 수 있어요."
+            remark: "밤 늦게 귀가 시 길이 더 밝고, 긴급한 경우 도움을 요청할 수 있어요.",
+            isRetired: true
         ),
         ChecklistItem(
             legacyID: 1,

@@ -27,8 +27,9 @@ enum QuestionProvider {
         guard let template, !template.isDefault else {
             return defaultQuestions()
         }
+        // 저장된 템플릿에 은퇴한 질문이 남아 있어도 새 체크리스트에는 내보내지 않는다
         let codes = Set(template.questionCodes)
-        return ChecklistItem.checklistItems.filter { codes.contains($0.code) }
+        return ChecklistItem.activeItems.filter { codes.contains($0.code) }
     }
 
     /// 커스텀 질문 세트의 채점 대상 카테고리: 질문들의 대표 카테고리 중

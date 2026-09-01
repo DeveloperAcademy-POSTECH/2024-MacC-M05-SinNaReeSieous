@@ -75,7 +75,10 @@ enum LegacyBlobMigrator {
         let favorites = user.favoriteCategories
         guard !favorites.isEmpty else { return }
 
-        let codes = ChecklistScoringService.filteredItems(selectedCategories: favorites).map(\.code)
+        // 은퇴한 질문은 이관 템플릿에도 넣지 않는다 (지난 기록에만 남는다)
+        let codes = ChecklistScoringService.filteredItems(selectedCategories: favorites)
+            .filter { !$0.isRetired }
+            .map(\.code)
         // 관심 카테고리에 걸린 '추가' 질문이 하나도 없으면 기본 세트와 같으므로 만들 필요가 없다
         guard codes != QuestionProvider.defaultQuestions().map(\.code) else { return }
         // 이미 옮겨둔 경우 다시 만들지 않는다 (멱등)

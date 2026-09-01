@@ -51,6 +51,7 @@ struct LegacyBlobMigrationTests {
         // 예전 기본 규칙(빠르게+기본+관심 카테고리 추가)이 그대로 담긴다
         let expected = ChecklistScoringService
             .filteredItems(selectedCategories: [.security, .cleanliness])
+            .filter { !$0.isRetired }
             .map(\.code)
         #expect(migrated?.questionCodes == expected)
         #expect(migrated!.questionCodes.count > QuestionProvider.defaultQuestions().count)

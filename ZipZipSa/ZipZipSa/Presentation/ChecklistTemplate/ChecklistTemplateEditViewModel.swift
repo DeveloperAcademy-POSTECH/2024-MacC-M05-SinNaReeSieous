@@ -76,7 +76,7 @@ final class ChecklistTemplateEditViewModel {
     }
 
     private func items(for spaceType: SpaceType) -> [ChecklistItem] {
-        ChecklistItem.checklistItems
+        ChecklistItem.activeItems
             .filter { $0.space.type == spaceType }
             .sorted { $0.space.questionNumber < $1.space.questionNumber }
     }
@@ -92,7 +92,7 @@ final class ChecklistTemplateEditViewModel {
         let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         let finalName = trimmedName.isEmpty ? defaultName(user: user) : trimmedName
         // 노출 순서는 공간·연번 기준이지만, 저장도 카탈로그 순서로 정규화해둔다
-        let orderedCodes = ChecklistItem.checklistItems
+        let orderedCodes = ChecklistItem.activeItems
             .filter { selectedCodes.contains($0.code) }
             .map(\.code)
 

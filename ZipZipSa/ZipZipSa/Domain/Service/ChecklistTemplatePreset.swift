@@ -37,9 +37,9 @@ enum ChecklistTemplatePreset: CaseIterable, Identifiable {
         }
     }
 
-    /// 프리셋에 포함되는 질문 code (카탈로그 순서).
+    /// 프리셋에 포함되는 질문 code (카탈로그 순서). 은퇴한 질문은 빠진다.
     var questionCodes: [String] {
-        ChecklistItem.checklistItems
+        ChecklistItem.activeItems
             .filter { includedTypes.contains($0.checkListType) }
             .map(\.code)
     }

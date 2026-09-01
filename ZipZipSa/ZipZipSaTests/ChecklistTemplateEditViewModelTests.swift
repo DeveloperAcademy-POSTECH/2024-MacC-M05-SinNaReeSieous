@@ -57,13 +57,13 @@ struct ChecklistTemplateEditViewModelTests {
     @Test func 저장은_새_템플릿을_만들고_대표를_지정한다() throws {
         let container = try makeContainer()
         let user = makeUser(in: container)
-        let item = ChecklistItem.checklistItems[0]
+        let item = ChecklistItem.activeItems[0]
 
         let vm = ChecklistTemplateEditViewModel()
         vm.start(user: user)
         vm.name = "커스텀"
         vm.isPrimary = true
-        vm.remove(ChecklistItem.checklistItems[1]) // 임의 조작
+        vm.remove(ChecklistItem.activeItems[1]) // 임의 조작
         vm.add(item)
         vm.save(context: container.mainContext)
 

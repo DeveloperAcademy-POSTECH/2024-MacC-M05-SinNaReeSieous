@@ -131,7 +131,7 @@ struct ChecklistViewModelTests {
         let container = try makeContainer()
         let home = makeHome(in: container)
         // 서로 다른 selectable 카테고리의 질문 두 개를 고른다
-        let items = ChecklistItem.checklistItems.filter { $0.basicCategory.isSelectable }
+        let items = ChecklistItem.activeItems.filter { $0.basicCategory.isSelectable }
         let first = items.first!
         let second = items.last { $0.basicCategory != first.basicCategory }!
         let template = makeTemplate(in: container, codes: [first.code, second.code])
@@ -149,7 +149,7 @@ struct ChecklistViewModelTests {
     @Test func 커스텀_템플릿_저장은_템플릿_질문세트를_스냅샷으로_남긴다() throws {
         let container = try makeContainer()
         let home = makeHome(in: container)
-        let codes = ChecklistItem.checklistItems.prefix(3).map(\.code)
+        let codes = ChecklistItem.activeItems.prefix(3).map(\.code)
         let template = makeTemplate(in: container, codes: Array(codes))
 
         let vm = ChecklistViewModel(mode: .homeHunt)
@@ -163,7 +163,7 @@ struct ChecklistViewModelTests {
         let container = try makeContainer()
         let home = makeHome(in: container)
         // security 질문 하나만 선택
-        let securityItem = ChecklistItem.checklistItems.first {
+        let securityItem = ChecklistItem.activeItems.first {
             $0.basicCategory == .security && $0.crossTip.isEmpty
         }!
         let template = makeTemplate(in: container, codes: [securityItem.code])
@@ -175,6 +175,19 @@ struct ChecklistViewModelTests {
         let maxScores = home.loadDictionary(data: home.resultMaxScoreData, type: [String: Float].self)
         #expect(maxScores?.keys.contains(ChecklistCategory.security.rawValue) == true)
         #expect(maxScores?.keys.contains(ChecklistCategory.sunlight.rawValue) != true)
+    }
+
+    @Test func 은퇴한_질문도_지난_기록에서는_그대로_보인다() throws {
+        // 카탈로그에서 뺀 질문이라도 이미 답해서 저장한 집에서는 문구·답변이 남아야 한다
+        let container = try makeContainer()
+        let home = makeHome(in: container)
+        let retired = ChecklistItem.checklistItems.first(where: \.isRetired)!
+        home.usedQuestionCodes = [retired.code, "ext-02"]
+
+        let vm = ChecklistViewModel(mode: .review)
+        vm.start(homeData: home, userFavorites: [])
+
+        #expect(vm.filteredItems.map(\.code) == [retired.code, "ext-02"])
     }
 
     @Test func review는_기록_당시_질문_스냅샷을_재현한다() throws {
@@ -204,7 +217,7 @@ struct ChecklistViewModelTests {
     @Test func switchTemplate은_질문세트를_바꾸고_답변은_유지한다() throws {
         let container = try makeContainer()
         let home = makeHome(in: container)
-        let codes = ChecklistItem.checklistItems.prefix(3).map(\.code)
+        let codes = ChecklistItem.activeItems.prefix(3).map(\.code)
         let template = makeTemplate(in: container, codes: Array(codes), activate: false)
 
         let vm = ChecklistViewModel(mode: .homeHunt)
