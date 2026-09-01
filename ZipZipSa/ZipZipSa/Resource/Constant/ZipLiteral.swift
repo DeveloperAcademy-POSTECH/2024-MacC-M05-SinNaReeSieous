@@ -56,6 +56,8 @@ enum ZipLiteral {
         static let back = "뒤로"
         static let create = "만들기"
         static let defaultTemplateName = "기본"
+        /// 관심 카테고리를 골라둔 기존 사용자의 세트를 옮겨 담은 템플릿 이름
+        static let favoriteMigratedName = "카테고리 반영 체크리스트"
         static let primaryBadge = "대표"
         static let questionCountSuffix = "개 문항"
         static let setAsPrimary = "대표로 지정"

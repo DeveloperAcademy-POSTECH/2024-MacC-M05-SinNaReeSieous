@@ -32,7 +32,7 @@ struct ChecklistTemplateEditViewModelTests {
         let vm = ChecklistTemplateEditViewModel()
         vm.start(user: user)
 
-        let expected = Set(QuestionProvider.questions(selectedCategories: [.security]).map(\.code))
+        let expected = Set(QuestionProvider.defaultQuestions().map(\.code))
         #expect(vm.selectedCodes == expected)
         #expect(vm.isNew)
         #expect(!vm.isPrimary)

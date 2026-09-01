@@ -34,6 +34,60 @@ struct LegacyBlobMigrationTests {
         return home
     }
 
+    @Test func 관심_카테고리_사용자는_기존_세트를_템플릿으로_이관받는다() throws {
+        let container = try makeContainer()
+        let context = container.mainContext
+        let user = UserService.fetchOrCreateUser(context: context)
+        let favorites: [ChecklistCategory] = [.security, .cleanliness]
+        user.favoriteCategoryData = favorites.map {
+            ChecklistCategoryData(rawValue: $0.rawValue)
+        }
+
+        LegacyBlobMigrator.migrateFavoriteCategoryTemplate(context: context)
+
+        let migrated = user.templates.first {
+            $0.name == ZipLiteral.ChecklistTemplate.favoriteMigratedName
+        }
+        // 예전 기본 규칙(빠르게+기본+관심 카테고리 추가)이 그대로 담긴다
+        let expected = ChecklistScoringService
+            .filteredItems(selectedCategories: [.security, .cleanliness])
+            .map(\.code)
+        #expect(migrated?.questionCodes == expected)
+        #expect(migrated!.questionCodes.count > QuestionProvider.defaultQuestions().count)
+        // 기본을 쓰던 사용자는 이관된 템플릿을 그대로 이어 쓴다
+        #expect(user.activeTemplateID == migrated?.id)
+
+        // 두 번 돌아도 복제되지 않는다
+        LegacyBlobMigrator.migrateFavoriteCategoryTemplate(context: context)
+        #expect(user.templates.count == 1)
+    }
+
+    @Test func 관심_카테고리가_없으면_템플릿을_만들지_않는다() throws {
+        let container = try makeContainer()
+        let context = container.mainContext
+        let user = UserService.fetchOrCreateUser(context: context)
+
+        LegacyBlobMigrator.migrateFavoriteCategoryTemplate(context: context)
+
+        #expect(user.templates.isEmpty)
+        #expect(user.activeTemplateID == nil)
+    }
+
+    @Test func 이관은_대표_템플릿을_이미_가진_사용자의_설정을_건드리지_않는다() throws {
+        let container = try makeContainer()
+        let context = container.mainContext
+        let user = UserService.fetchOrCreateUser(context: context)
+        user.favoriteCategoryData = [ChecklistCategoryData(rawValue: "security")]
+        let mine = ChecklistTemplateData(name: "내 체크리스트", questionCodes: ["ext-01"])
+        user.templates.append(mine)
+        user.activeTemplateID = mine.id
+
+        LegacyBlobMigrator.migrateFavoriteCategoryTemplate(context: context)
+
+        #expect(user.templates.count == 2)
+        #expect(user.activeTemplateID == mine.id)
+    }
+
     @Test func 이관_후_레코드_수와_값이_정확하다() throws {
         let container = try makeContainer()
         let legacy: [Int: Set<Int>] = [0: [1], 3: [0, 2], 30: [1], 56: [0]]

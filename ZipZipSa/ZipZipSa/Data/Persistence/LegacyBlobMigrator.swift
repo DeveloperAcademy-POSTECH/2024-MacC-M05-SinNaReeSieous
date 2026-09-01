@@ -22,7 +22,7 @@ import SwiftData
 enum LegacyBlobMigrator {
 
     static let dataVersionKey = "checklistDataVersion"
-    static let currentDataVersion = 2
+    static let currentDataVersion = 3
 
     /// 앱 시작 시 1회 호출. 이관이 끝났으면 즉시 반환한다.
     @MainActor
@@ -34,6 +34,7 @@ enum LegacyBlobMigrator {
             for home in homes {
                 migrate(home: home)
             }
+            migrateFavoriteCategoryTemplate(context: context)
             try context.save()
             defaults.set(currentDataVersion, forKey: dataVersionKey)
         } catch {
@@ -58,5 +59,37 @@ enum LegacyBlobMigrator {
         let modern = LegacyChecklistIDMap.fromLegacy(legacy)
         home.setChecklistAnswers(modern)
         // scoreData blob은 이관하지 않는다 — 답변에서 항상 파생 가능한 값이다.
+    }
+
+    /// 기본 체크리스트가 "빠르게 + 기본" 고정으로 바뀌면서(QuestionProvider.defaultQuestions),
+    /// 관심 카테고리로 '추가' 질문까지 받아보던 기존 사용자가 그 질문들을 잃지 않도록
+    /// 같은 세트를 커스텀 템플릿으로 옮겨 담는다.
+    ///
+    /// 기본 체크리스트를 쓰고 있던 사용자(activeTemplateID == nil)는 이 템플릿을
+    /// 대표로 지정해, 이관 전후로 보는 질문이 달라지지 않게 한다.
+    @MainActor
+    static func migrateFavoriteCategoryTemplate(context: ModelContext) {
+        // 온보딩을 아직 안 한 신규 설치에는 User가 없다 — 만들지 않는다.
+        guard let user = UserService.fetchUser(context: context) else { return }
+
+        let favorites = user.favoriteCategories
+        guard !favorites.isEmpty else { return }
+
+        let codes = ChecklistScoringService.filteredItems(selectedCategories: favorites).map(\.code)
+        // 관심 카테고리에 걸린 '추가' 질문이 하나도 없으면 기본 세트와 같으므로 만들 필요가 없다
+        guard codes != QuestionProvider.defaultQuestions().map(\.code) else { return }
+        // 이미 옮겨둔 경우 다시 만들지 않는다 (멱등)
+        guard !user.templates.contains(where: { $0.name == ZipLiteral.ChecklistTemplate.favoriteMigratedName })
+        else { return }
+
+        let template = ChecklistTemplateData(
+            name: ZipLiteral.ChecklistTemplate.favoriteMigratedName,
+            questionCodes: codes
+        )
+        user.templates.append(template)
+
+        if user.activeTemplateID == nil {
+            user.activeTemplateID = template.id
+        }
     }
 }

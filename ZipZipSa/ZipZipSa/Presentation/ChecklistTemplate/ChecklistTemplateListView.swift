@@ -70,7 +70,7 @@ private extension ChecklistTemplateListView {
     var user: User? { users.first }
 
     var defaultQuestionCount: Int {
-        QuestionProvider.questions(selectedCategories: user?.favoriteCategories ?? []).count
+        QuestionProvider.defaultQuestions().count
     }
 
     // MARK: - View

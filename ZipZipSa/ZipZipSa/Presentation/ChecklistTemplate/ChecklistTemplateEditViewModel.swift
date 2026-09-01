@@ -51,10 +51,7 @@ final class ChecklistTemplateEditViewModel {
         } else if let initialCodes {
             selectedCodes = Set(initialCodes)
         } else {
-            let defaultItems = QuestionProvider.questions(
-                selectedCategories: user?.favoriteCategories ?? []
-            )
-            selectedCodes = Set(defaultItems.map(\.code))
+            selectedCodes = Set(QuestionProvider.defaultQuestions().map(\.code))
         }
     }
 

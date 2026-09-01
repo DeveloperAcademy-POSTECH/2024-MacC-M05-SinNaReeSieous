@@ -84,10 +84,14 @@ private extension ChecklistTemplateEditView {
 
     // MARK: - View
 
-    /// 질문 사이 구분선 (Figma 6335-22914: 좌우 16, 위아래 24)
+    var availableItems: [ChecklistItem] {
+        viewModel.availableItems(for: selectedSpaceType)
+    }
+
+    /// 질문 사이 구분선 (Figma 6335-22914: 위아래 24).
+    /// 좌우 여백은 쓰는 쪽에서 준다 — 질문 추가하기 섹션은 이미 안쪽으로 들어와 있다.
     var QuestionDivider: some View {
         ZZSSperator(color: Color.Additional.checklistSeperator)
-            .padding(.horizontal, 16)
             .padding(.vertical, 24)
     }
 
@@ -134,6 +138,7 @@ private extension ChecklistTemplateEditView {
                         Spacer().frame(height: 40)
                     } else {
                         QuestionDivider
+                            .padding(.horizontal, 16)
                     }
                 }
                 AddSection
@@ -160,9 +165,12 @@ private extension ChecklistTemplateEditView {
             }
 
             if isAddSectionExpanded {
-                VStack(spacing: 40) {
-                    ForEach(viewModel.availableItems(for: selectedSpaceType)) { item in
+                VStack(spacing: 0) {
+                    ForEach(availableItems) { item in
                         TemplateQuestionCell(item: item, isIncluded: false)
+                        if item.id != availableItems.last?.id {
+                            QuestionDivider
+                        }
                     }
                 }
             }

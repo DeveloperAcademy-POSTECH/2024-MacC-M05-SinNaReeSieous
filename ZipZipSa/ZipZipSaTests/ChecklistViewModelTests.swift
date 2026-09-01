@@ -90,7 +90,11 @@ struct ChecklistViewModelTests {
 
         let vm = ChecklistViewModel(mode: .homeHunt)
         vm.start(homeData: home, userFavorites: favorites)
-        let item = vm.filteredItems[0]
+        // 2지선다를 골라야 index 1의 점수(2.0)가 고정된다 — 세트 구성이 바뀌어도 흔들리지 않게
+        let item = vm.filteredItems.first {
+            if case .twoChoices = $0.question.answerType { return true }
+            return false
+        }!
         vm.toggleAnswer(item: item, index: 1)
         vm.save(to: home)
 
@@ -193,7 +197,7 @@ struct ChecklistViewModelTests {
         let vm = ChecklistViewModel(mode: .review)
         vm.start(homeData: home, userFavorites: [])
 
-        let expected = QuestionProvider.questions(selectedCategories: [.security]).map(\.code)
+        let expected = ChecklistScoringService.filteredItems(selectedCategories: [.security]).map(\.code)
         #expect(vm.filteredItems.map(\.code) == expected)
     }
 
@@ -216,7 +220,7 @@ struct ChecklistViewModelTests {
         // 기본으로 되돌리면 관심 카테고리 규칙으로 복귀
         vm.switchTemplate(nil, homeData: home)
         #expect(vm.selectedCategories == [.security])
-        #expect(vm.filteredItems.map(\.code) == QuestionProvider.questions(selectedCategories: [.security]).map(\.code))
+        #expect(vm.filteredItems.map(\.code) == QuestionProvider.defaultQuestions().map(\.code))
     }
 
     @Test func applyResult는_결과_카드_필드를_채운다() throws {
