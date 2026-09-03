@@ -17,6 +17,8 @@ struct ChecklistTemplateEditView: View {
     @State private var selectedSpaceType: SpaceType = .livingRoom
     @State private var isAddSectionExpanded = false
     @State private var moveToNameEdit = false
+    /// 저장하지 않고 나가려 할 때 확인
+    @State private var showDiscardAlert = false
 
     /// 템플릿 선택 화면에서 푸시된 경우 전체 플로우(fullScreenCover)를 닫는 클로저.
     /// nil이면 이 화면이 플로우 루트이므로 dismiss로 닫는다.
@@ -68,6 +70,15 @@ struct ChecklistTemplateEditView: View {
         .onAppear {
             viewModel.start(user: users.first)
         }
+        .alert(ZipLiteral.Alert.discardTemplateEditTitle, isPresented: $showDiscardAlert) {
+            Button(ZipLiteral.Alert.leave, role: .destructive) {
+                closeFlow()
+            }
+            Button(ZipLiteral.Alert.cancel, role: .cancel) { }
+        } message: {
+            Text(ZipLiteral.Alert.discardTemplateEditMessage)
+                .multilineTextAlignment(.center)
+        }
         .navigationDestination(isPresented: $moveToNameEdit) {
             ChecklistTemplateNameEditView(viewModel: viewModel) {
                 closeFlow()
@@ -105,7 +116,7 @@ private extension ChecklistTemplateEditView {
 
     var CloseButton: some View {
         Button {
-            closeFlow()
+            showDiscardAlert = true
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "xmark")

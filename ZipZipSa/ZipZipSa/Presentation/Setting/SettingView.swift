@@ -22,7 +22,7 @@ struct SettingView: View {
                     // 관심 카테고리 선택이 없어지면서 변경 항목도 노출하지 않는다.
                     // CategoryChange / CategoryChangeView 코드는 그대로 둔다.
                     // CategoryChange
-                    CustomDivider
+                    // CustomDivider
                     PrivacyPolicy
                     Support
                     Spacer()

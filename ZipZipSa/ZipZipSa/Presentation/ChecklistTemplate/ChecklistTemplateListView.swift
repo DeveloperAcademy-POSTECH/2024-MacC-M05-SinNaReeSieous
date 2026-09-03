@@ -14,6 +14,10 @@ struct ChecklistTemplateListView: View {
     @Query private var users: [User]
 
     @State private var editorTarget: EditorTarget?
+    /// 삭제 확인 대상. nil이면 알럿을 띄우지 않는다.
+    @State private var templateToDelete: ChecklistTemplateData?
+    /// 기본 체크리스트는 삭제할 수 없다는 안내
+    @State private var showDefaultDeleteBlockedAlert = false
 
     var body: some View {
         ZStack {
@@ -37,6 +41,30 @@ struct ChecklistTemplateListView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 CreateButton
             }
+        }
+        .alert(
+            ZipLiteral.Alert.deleteTemplateTitle(templateToDelete?.name ?? ""),
+            isPresented: Binding(
+                get: { templateToDelete != nil },
+                set: { if !$0 { templateToDelete = nil } }
+            )
+        ) {
+            // 알럿을 만들 때의 대상을 클로저가 붙잡아두므로 닫히는 순서와 무관하게 안전하다
+            if let template = templateToDelete {
+                Button(ZipLiteral.Alert.delete, role: .destructive) {
+                    delete(template)
+                }
+            }
+            Button(ZipLiteral.Alert.cancel, role: .cancel) { }
+        } message: {
+            Text(ZipLiteral.Alert.deleteTemplateMessage)
+                .multilineTextAlignment(.center)
+        }
+        .alert(ZipLiteral.Alert.cannotDeleteDefaultTitle, isPresented: $showDefaultDeleteBlockedAlert) {
+            Button(ZipLiteral.Alert.cancel, role: .cancel) { }
+        } message: {
+            Text(ZipLiteral.Alert.cannotDeleteDefaultMessage)
+                .multilineTextAlignment(.center)
         }
         .fullScreenCover(item: $editorTarget) { target in
             switch target {
@@ -146,6 +174,18 @@ private extension ChecklistTemplateListView {
                 isPrimary: user?.activeTemplateID == nil
             )
         }
+        .contextMenu {
+            Button {
+                setPrimary(nil)
+            } label: {
+                Label(ZipLiteral.ChecklistTemplate.setAsPrimary, systemImage: "checkmark.circle")
+            }
+            Button(role: .destructive) {
+                showDefaultDeleteBlockedAlert = true
+            } label: {
+                Label(ZipLiteral.ChecklistTemplate.delete, systemImage: "trash")
+            }
+        }
     }
 
     func TemplateCard(template: ChecklistTemplateData) -> some View {
@@ -165,7 +205,7 @@ private extension ChecklistTemplateListView {
                 Label(ZipLiteral.ChecklistTemplate.setAsPrimary, systemImage: "checkmark.circle")
             }
             Button(role: .destructive) {
-                delete(template)
+                templateToDelete = template
             } label: {
                 Label(ZipLiteral.ChecklistTemplate.delete, systemImage: "trash")
             }
