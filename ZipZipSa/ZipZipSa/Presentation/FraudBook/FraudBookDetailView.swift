@@ -12,7 +12,7 @@ struct FraudBookDetailView: View {
 
     let category: FraudBookCategory
     private let sections: [FraudBookSection]
-    @State private var expandedSectionIDs: Set<UUID>
+    @State private var expandedSectionIDs: Set<String>
 
     init(category: FraudBookCategory) {
         self.category = category

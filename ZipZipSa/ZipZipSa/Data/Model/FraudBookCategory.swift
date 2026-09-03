@@ -7,9 +7,25 @@ import Foundation
 
 /// 전월세사기 도감의 아코디언 한 항목
 struct FraudBookSection: Identifiable {
-    let id = UUID()
     let title: String
     let content: String
+
+    /// 제목은 카테고리 안에서 유일하므로 그대로 식별자로 쓴다.
+    /// UUID를 쓰면 sections가 계산 프로퍼티라 뷰가 재생성될 때마다 id가 새로 발급되고,
+    /// State에 저장된 펼침 상태와 어긋나 첫 항목이 닫힌 채로 보인다.
+    var id: String { title }
+}
+
+/// 카드 우측 하단에 놓이는 캐릭터의 배치 정보 (Figma 5120-13270, 카드 343x130 기준).
+///
+/// 에셋은 카드 하단 밖으로 넘치는 부분을 미리 잘라낸 상태(...Shortened)라
+/// 카드 아래쪽에 딱 붙여 그리면 Figma와 같은 위치가 된다. 별도 오프셋이 필요 없다.
+struct FraudBookCharacter {
+    let imageName: String
+    let width: CGFloat
+    let height: CGFloat
+    /// 카드 오른쪽 끝에서 캐릭터까지의 간격
+    let trailingInset: CGFloat
 }
 
 /// 전월세사기 도감 카테고리 (Figma: 집집사_Hi-Fi_Copy 노드 5081-7502)
@@ -47,14 +63,24 @@ enum FraudBookCategory: Int, CaseIterable, Identifiable {
         }
     }
 
-    // TODO: 1~4번 카테고리는 Figma의 전용 캐릭터 에셋이 추가되면 교체
-    var characterImage: String {
+    /// 카드 우측 하단 캐릭터. 카테고리마다 크기와 오른쪽 간격이 다르다.
+    var character: FraudBookCharacter {
         switch self {
-        case .firstCheck: return "writingYongboogiFullColor"
-        case .landlordHistory: return "smileYongboogiFullColor"
-        case .depositSafety: return "winkingYongboogiFullColor"
-        case .afterContract: return "helloYongboogiFullColor"
-        case .whileLiving: return "basicYongboogiBowtieHeadColor"
+        case .firstCheck:
+            return FraudBookCharacter(imageName: "writingYongboogiFullColorShortened",
+                                      width: 80, height: 83, trailingInset: 20)
+        case .landlordHistory:
+            return FraudBookCharacter(imageName: "whistlingYongboogiFullColorShortened",
+                                      width: 85, height: 71, trailingInset: 8)
+        case .depositSafety:
+            return FraudBookCharacter(imageName: "stealingYongboogiFullColorShortened",
+                                      width: 90, height: 71, trailingInset: 9)
+        case .afterContract:
+            return FraudBookCharacter(imageName: "cleaningYongboogiFullColorShortened",
+                                      width: 95, height: 62, trailingInset: 12)
+        case .whileLiving:
+            return FraudBookCharacter(imageName: "fightingYongboogiFullColorShortened",
+                                      width: 65, height: 72, trailingInset: 22)
         }
     }
 
