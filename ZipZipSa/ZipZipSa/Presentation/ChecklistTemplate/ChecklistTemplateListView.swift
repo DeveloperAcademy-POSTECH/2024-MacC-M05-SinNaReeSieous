@@ -16,8 +16,8 @@ struct ChecklistTemplateListView: View {
     @State private var editorTarget: EditorTarget?
     /// 삭제 확인 대상. nil이면 알럿을 띄우지 않는다.
     @State private var templateToDelete: ChecklistTemplateData?
-    /// 기본 체크리스트는 삭제할 수 없다는 안내
-    @State private var showDefaultDeleteBlockedAlert = false
+    /// 삭제할 수 없는 체크리스트를 지우려 했을 때의 안내. nil이면 알럿을 띄우지 않는다.
+    @State private var deleteBlockReason: DeleteBlockReason?
 
     var body: some View {
         ZStack {
@@ -60,10 +60,16 @@ struct ChecklistTemplateListView: View {
             Text(ZipLiteral.Alert.deleteTemplateMessage)
                 .multilineTextAlignment(.center)
         }
-        .alert(ZipLiteral.Alert.cannotDeleteDefaultTitle, isPresented: $showDefaultDeleteBlockedAlert) {
+        .alert(
+            deleteBlockReason?.title ?? "",
+            isPresented: Binding(
+                get: { deleteBlockReason != nil },
+                set: { if !$0 { deleteBlockReason = nil } }
+            )
+        ) {
             Button(ZipLiteral.Alert.cancel, role: .cancel) { }
         } message: {
-            Text(ZipLiteral.Alert.cannotDeleteDefaultMessage)
+            Text(deleteBlockReason?.message ?? "")
                 .multilineTextAlignment(.center)
         }
         .fullScreenCover(item: $editorTarget) { target in
@@ -80,6 +86,27 @@ struct ChecklistTemplateListView: View {
 }
 
 private extension ChecklistTemplateListView {
+
+    /// 삭제할 수 없는 체크리스트와 그 이유.
+    /// 기본 체크리스트는 애초에 지울 대상이 아니고, 대표는 먼저 다른 걸 대표로 지정해야 한다.
+    enum DeleteBlockReason {
+        case isDefault
+        case isPrimary(name: String)
+
+        var title: String {
+            switch self {
+            case .isDefault: ZipLiteral.Alert.cannotDeleteDefaultTitle
+            case .isPrimary(let name): ZipLiteral.Alert.cannotDeletePrimaryTitle(name)
+            }
+        }
+
+        var message: String {
+            switch self {
+            case .isDefault: ZipLiteral.Alert.cannotDeleteDefaultMessage
+            case .isPrimary: ZipLiteral.Alert.cannotDeletePrimaryMessage
+            }
+        }
+    }
 
     /// fullScreenCover(item:)용 편집 대상.
     /// 신규(.new)는 템플릿 선택 화면부터, 수정(.edit)은 편집 화면부터 시작한다.
@@ -181,7 +208,7 @@ private extension ChecklistTemplateListView {
                 Label(ZipLiteral.ChecklistTemplate.setAsPrimary, systemImage: "checkmark.circle")
             }
             Button(role: .destructive) {
-                showDefaultDeleteBlockedAlert = true
+                deleteBlockReason = .isDefault
             } label: {
                 Label(ZipLiteral.ChecklistTemplate.delete, systemImage: "trash")
             }
@@ -205,7 +232,12 @@ private extension ChecklistTemplateListView {
                 Label(ZipLiteral.ChecklistTemplate.setAsPrimary, systemImage: "checkmark.circle")
             }
             Button(role: .destructive) {
-                templateToDelete = template
+                // 대표는 먼저 다른 체크리스트를 대표로 지정해야 지울 수 있다
+                if user?.activeTemplateID == template.id {
+                    deleteBlockReason = .isPrimary(name: template.name)
+                } else {
+                    templateToDelete = template
+                }
             } label: {
                 Label(ZipLiteral.ChecklistTemplate.delete, systemImage: "trash")
             }

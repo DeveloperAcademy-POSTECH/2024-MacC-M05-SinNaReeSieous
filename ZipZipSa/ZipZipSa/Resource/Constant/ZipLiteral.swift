@@ -208,19 +208,35 @@ enum ZipLiteral {
         static let cannotDeleteDefaultTitle: String = "'기본 문항'은 삭제할 수 없어요."
         static let cannotDeleteDefaultMessage: String = "기본 문항은 삭제가 불가능합니다."
 
-        /// 받침 유무로 목적격 조사(을/를)를 고른다.
+        // 대표로 지정된 체크리스트는 삭제할 수 없다
+        static func cannotDeletePrimaryTitle(_ name: String) -> String {
+            "'\(name)'\(topicParticle(after: name)) 삭제할 수 없어요."
+        }
+        static let cannotDeletePrimaryMessage: String = "대표 체크리스트는 삭제가 불가능합니다."
+
+        /// 마지막 글자에 받침이 있는지. 판별할 수 없으면 nil.
         /// 체크리스트 이름은 사용자가 정하므로 "체크리스트을" 같은 문장이 나오지 않게 한다.
-        /// 한글과 숫자만 판별하고 나머지는 '를'로 둔다.
-        private static func objectParticle(after word: String) -> String {
-            guard let last = word.last else { return "를" }
+        /// 한글과 숫자만 판별한다.
+        private static func hasFinalConsonant(_ word: String) -> Bool? {
+            guard let last = word.last else { return nil }
             if let scalar = last.unicodeScalars.first?.value, (0xAC00...0xD7A3).contains(scalar) {
-                return (scalar - 0xAC00) % 28 == 0 ? "를" : "을"
+                return (scalar - 0xAC00) % 28 != 0
             }
             // 1(일)·3(삼)처럼 읽었을 때 받침이 있는 숫자
             if let digit = last.wholeNumberValue, (0...9).contains(digit) {
-                return [0, 1, 3, 6, 7, 8].contains(digit) ? "을" : "를"
+                return [0, 1, 3, 6, 7, 8].contains(digit)
             }
-            return "를"
+            return nil
+        }
+
+        /// 목적격 조사 (을/를)
+        private static func objectParticle(after word: String) -> String {
+            (hasFinalConsonant(word) ?? false) ? "을" : "를"
+        }
+
+        /// 주제 조사 (은/는)
+        private static func topicParticle(after word: String) -> String {
+            (hasFinalConsonant(word) ?? false) ? "은" : "는"
         }
     }
     
