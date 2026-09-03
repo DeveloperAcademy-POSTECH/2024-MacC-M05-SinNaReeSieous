@@ -20,6 +20,10 @@ struct ChecklistTemplateEditView: View {
     /// 저장하지 않고 나가려 할 때 확인
     @State private var showDiscardAlert = false
 
+    /// 관심 카테고리 선택이 사라지면서 카테고리·추가 칩을 노출하지 않는다.
+    /// 체크리스트 작성 화면(ChecklistRowView)과 같은 방식으로, 계산 로직은 그대로 두고 렌더링만 끈다.
+    private let showsCategoryChips = false
+
     /// 템플릿 선택 화면에서 푸시된 경우 전체 플로우(fullScreenCover)를 닫는 클로저.
     /// nil이면 이 화면이 플로우 루트이므로 dismiss로 닫는다.
     private let onClose: (() -> Void)?
@@ -191,11 +195,13 @@ private extension ChecklistTemplateEditView {
         .background(Color.Background.disabled)
     }
 
-    /// 질문 셀: 카테고리 칩 + 액션(삭제하기/추가하기) + 질문 + 부연 + 비활성 답변 미리보기.
+    /// 질문 셀: 액션(삭제하기/추가하기) + 질문 + 부연 + 비활성 답변 미리보기.
     func TemplateQuestionCell(item: ChecklistItem, isIncluded: Bool) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .center) {
-                ChipStack(item: item)
+                if showsCategoryChips {
+                    ChipStack(item: item)
+                }
                 Spacer()
                 if isIncluded {
                     Button {
