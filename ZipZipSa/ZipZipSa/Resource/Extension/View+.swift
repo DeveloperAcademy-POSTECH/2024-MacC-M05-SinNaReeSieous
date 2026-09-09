@@ -11,14 +11,17 @@ import SwiftUI
 extension View {
     func asUIImage(size: CGSize) -> UIImage {
         let controller = UIHostingController(rootView: self)
-        let view = controller.view
-        
-        view?.bounds = CGRect(origin: .zero, size: size)
-        view?.backgroundColor = UIColor(Color.Background.primary)
-        
         let renderer = UIGraphicsImageRenderer(size: size)
+
+        guard let view = controller.view else {
+            return renderer.image { _ in }
+        }
+
+        view.bounds = CGRect(origin: .zero, size: size)
+        view.backgroundColor = UIColor(Color.Background.primary)
+
         return renderer.image { _ in
-            view?.drawHierarchy(in: view!.bounds, afterScreenUpdates: true)
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         }
     }
     

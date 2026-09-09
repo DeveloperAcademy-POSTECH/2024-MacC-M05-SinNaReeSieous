@@ -10,15 +10,17 @@ struct CategoryView: View {
     @Binding var totalTime: Int
     @Binding var currentMessage: String
     @Binding var selectedCategories: Set<ChecklistCategory>
-    
+
     var body: some View {
         VStack {
             LazyVGrid(columns: [
                 GridItem(.flexible(), spacing: 11),
                 GridItem(.flexible(), spacing: 11)
             ], spacing: 12) {
-                ForEach(OnboardingCategory.categories, id: \.checklistCategory) { category in
-                    CategoryButton(for: category)
+                ForEach(ChecklistCategory.selectionOrder, id: \.self) { category in
+                    if let meta = category.selectionMeta {
+                        CategoryButton(for: category, meta: meta)
+                    }
                 }
             }
             .padding(.horizontal, 16)
@@ -27,34 +29,34 @@ struct CategoryView: View {
 }
 
 private extension CategoryView {
-    
-    func CategoryButton(for category: OnboardingCategory) -> some View {
-        let isSelected = selectedCategories.contains(category.checklistCategory)
-        
+
+    func CategoryButton(for category: ChecklistCategory, meta: ChecklistCategory.SelectionMeta) -> some View {
+        let isSelected = selectedCategories.contains(category)
+
         return Button {
-            toggleCategory(category)
+            toggleCategory(category, meta: meta)
         } label: {
-            Image(isSelected ? category.onImage : category.offImage)
+            Image(isSelected ? meta.onImage : meta.offImage)
                 .resizable()
                 .scaledToFit()
                 .frame(width: widht, height: widht/166*130)
         }
     }
-    
-    func toggleCategory(_ category: OnboardingCategory) {
+
+    func toggleCategory(_ category: ChecklistCategory, meta: ChecklistCategory.SelectionMeta) {
         // 카테고리 선택 해제
-        if selectedCategories.contains(category.checklistCategory) {
-            selectedCategories.remove(category.checklistCategory)
-            totalTime -= category.requiredTime
+        if selectedCategories.contains(category) {
+            selectedCategories.remove(category)
+            totalTime -= meta.requiredTime
             currentMessage = ""
-            
+
         } else {  // 새로운 카테고리 선택
-            selectedCategories.insert(category.checklistCategory)
-            totalTime += category.requiredTime
-            currentMessage = category.categoryMessage
+            selectedCategories.insert(category)
+            totalTime += meta.requiredTime
+            currentMessage = meta.message
         }
     }
-    
+
     var widht: CGFloat {
         return UIScreen.isSe ? (UIScreen.screenSize.width-80)/2 : (UIScreen.screenSize.width-43)/2
     }

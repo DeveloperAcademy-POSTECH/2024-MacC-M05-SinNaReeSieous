@@ -114,7 +114,7 @@ private extension DoneScanningView {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first(where: { $0.isKeyWindow }),
               let topViewController = window.topMostViewController() else {
-            print("Top view controller not found")
+            ZZSLog.error("Top view controller not found")
             return
         }
 
@@ -132,20 +132,25 @@ private extension DoneScanningView {
         let processingQueue = DispatchQueue(label: "ProcessingQueue")
         
         guard let inputImage = CIImage(image: image) else {
-            print("Failed to create CIImage")
+            ZZSLog.error("Failed to create CIImage")
             return
         }
         processingQueue.async {
             guard let maskImage = subjectMaskImage(from: inputImage) else {
-                print("Failed to create mask image")
+                ZZSLog.error("Failed to create mask image")
                 DispatchQueue.main.async {
                 }
                 capturedView = nil
                 showErrorAlert = true
                 return
             }
-            let outputImage = apply(mask: maskImage, to: inputImage)
-            let image = render(ciImage: outputImage)
+            guard let outputImage = apply(mask: maskImage, to: inputImage),
+                  let image = render(ciImage: outputImage) else {
+                ZZSLog.error("Failed to render background-removed image")
+                capturedView = nil
+                showErrorAlert = true
+                return
+            }
             DispatchQueue.main.async {
                 self.model = image
             }
@@ -160,30 +165,30 @@ private extension DoneScanningView {
         do {
             try handler.perform([request])
             guard let result = request.results?.first else {
-                print("No observations found")
+                ZZSLog.error("No observations found")
                 return nil
             }
             let maskPixelBuffer = try result.generateScaledMaskForImage(forInstances: result.allInstances, from: handler)
             return CIImage(cvPixelBuffer: maskPixelBuffer)
         } catch {
-            print(error)
+            ZZSLog.error("\(error)")
             return nil
         }
     }
     
     // 이미지에 Mask를 적용하는 함수
-    func apply(mask: CIImage, to image: CIImage) -> CIImage {
+    func apply(mask: CIImage, to image: CIImage) -> CIImage? {
         let filter = CIFilter.blendWithMask()
         filter.inputImage = image
         filter.maskImage = mask
         filter.backgroundImage = CIImage.empty()
-        return filter.outputImage!
+        return filter.outputImage
     }
-    
+
     // 적용된 Mask에 따라 배경을 제거한 이미지를 리턴하는 함수
-    func render(ciImage: CIImage) -> UIImage {
+    func render(ciImage: CIImage) -> UIImage? {
         guard let cgImage = CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent) else {
-            fatalError("Failed to render CGImage")
+            return nil
         }
         return UIImage(cgImage: cgImage)
     }

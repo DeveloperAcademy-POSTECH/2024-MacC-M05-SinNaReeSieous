@@ -103,11 +103,9 @@ private extension AddressEnterView {
             VStack(spacing: 0) {
                 ForEach(searchResults, id: \.self) { result in
                     Button {
-                        print("Taaped")
                         if let coordinate = result.placemark.location?.coordinate {
                             selectedCoordinates = coordinate
                             searchText = formatAddress(from: result.placemark) ?? "선택된 주소"
-                            print("선택된 좌표: \(coordinate.latitude), \(coordinate.longitude)")
                         }
                     } label: {
                         VStack(alignment: .leading, spacing: 0) {
@@ -220,7 +218,7 @@ private extension AddressEnterView {
                 isLoading = false
             }
         } catch {
-            print("주소 검색 실패: \(error.localizedDescription)")
+            ZZSLog.error("주소 검색 실패: \(error.localizedDescription)")
             await MainActor.run {
                 errorMessage = "검색에 실패했습니다. 다시 시도해주세요."
                 isLoading = false

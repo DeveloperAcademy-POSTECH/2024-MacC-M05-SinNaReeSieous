@@ -43,7 +43,7 @@ struct HomeListView: View {
                 .presentationDragIndicator(.visible)
         }
         .fullScreenCover(isPresented: $showHomeHuntSheet) {
-            EssentialInfoView(showHomeHuntSheet: $showHomeHuntSheet)
+            HomeHuntSheetView(showHomeHuntSheet: $showHomeHuntSheet)
         }
     }
 }
@@ -106,8 +106,6 @@ private extension HomeListView {
                     if let selectedHomeIndex = homes.firstIndex(where: {$0.id == home.id }) {
                         self.selectedHome = homes[selectedHomeIndex]
                         showHomeResultCardSheet = true
-                        print(selectedHomeIndex)
-                        print(homes[selectedHomeIndex].homeName)
                     }
                 } label: {
                     ViewedHomeCellView(home: home)

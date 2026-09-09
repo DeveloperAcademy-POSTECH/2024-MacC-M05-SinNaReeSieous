@@ -8,7 +8,18 @@
 
 /* Begin PBXFileReference section */
 		393FD8D32CE2045D00B1CEE7 /* ZipZipSa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZipZipSa.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A11CE5000000000000000002 /* ZipZipSaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZipZipSaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXContainerItemProxy section */
+		A11CE5000000000000000007 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 393FD8CB2CE2045D00B1CEE7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 393FD8D22CE2045D00B1CEE7;
+			remoteInfo = ZipZipSa;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		795DC3622CEDDC310053E173 /* Exceptions for "ZipZipSa" folder in "ZipZipSa" target */ = {
@@ -29,10 +40,22 @@
 			path = ZipZipSa;
 			sourceTree = "<group>";
 		};
+		A11CE5000000000000000003 /* ZipZipSaTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ZipZipSaTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		393FD8D02CE2045D00B1CEE7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A11CE5000000000000000005 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -46,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				393FD8D52CE2045D00B1CEE7 /* ZipZipSa */,
+				A11CE5000000000000000003 /* ZipZipSaTests */,
 				393FD8D42CE2045D00B1CEE7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				393FD8D32CE2045D00B1CEE7 /* ZipZipSa.app */,
+				A11CE5000000000000000002 /* ZipZipSaTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -83,7 +108,38 @@
 			productReference = 393FD8D32CE2045D00B1CEE7 /* ZipZipSa.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A11CE5000000000000000001 /* ZipZipSaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A11CE500000000000000000B /* Build configuration list for PBXNativeTarget "ZipZipSaTests" */;
+			buildPhases = (
+				A11CE5000000000000000004 /* Sources */,
+				A11CE5000000000000000005 /* Frameworks */,
+				A11CE5000000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A11CE5000000000000000008 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A11CE5000000000000000003 /* ZipZipSaTests */,
+			);
+			name = ZipZipSaTests;
+			packageProductDependencies = (
+			);
+			productName = ZipZipSaTests;
+			productReference = A11CE5000000000000000002 /* ZipZipSaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
+
+/* Begin PBXTargetDependency section */
+		A11CE5000000000000000008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 393FD8D22CE2045D00B1CEE7 /* ZipZipSa */;
+			targetProxy = A11CE5000000000000000007 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXProject section */
 		393FD8CB2CE2045D00B1CEE7 /* Project object */ = {
@@ -95,6 +151,10 @@
 				TargetAttributes = {
 					393FD8D22CE2045D00B1CEE7 = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					A11CE5000000000000000001 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 393FD8D22CE2045D00B1CEE7;
 					};
 				};
 			};
@@ -116,6 +176,7 @@
 			projectRoot = "";
 			targets = (
 				393FD8D22CE2045D00B1CEE7 /* ZipZipSa */,
+				A11CE5000000000000000001 /* ZipZipSaTests */,
 			);
 		};
 /* End PBXProject section */
@@ -128,10 +189,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A11CE5000000000000000006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		393FD8CF2CE2045D00B1CEE7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A11CE5000000000000000004 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -348,6 +423,46 @@
 			};
 			name = Release;
 		};
+		A11CE5000000000000000009 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D23XDL6TZZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.SNRSs.ZZS.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZipZipSa.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ZipZipSa";
+			};
+			name = Debug;
+		};
+		A11CE500000000000000000A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D23XDL6TZZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.SNRSs.ZZS.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ZipZipSa.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ZipZipSa";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -365,6 +480,15 @@
 			buildConfigurations = (
 				393FD8E22CE2045E00B1CEE7 /* Debug */,
 				393FD8E32CE2045E00B1CEE7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+	A11CE500000000000000000B /* Build configuration list for PBXNativeTarget "ZipZipSaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A11CE5000000000000000009 /* Debug */,
+				A11CE500000000000000000A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

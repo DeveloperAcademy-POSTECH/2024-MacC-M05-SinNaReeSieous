@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct ChecklistRowView: View {
-    let selectedCategory: [ChecklistCategory]
-    @Binding var answers: [Int: Set<Int>]
-    @Binding var scores: [Int: Float]
+    let viewModel: ChecklistViewModel
     let checklistItem: ChecklistItem
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             CategoryChipStack
@@ -21,20 +19,23 @@ struct ChecklistRowView: View {
                 Caption
             }
             ChecklistRowAnswerSectionView(
-                answers: $answers,
-                scores: $scores,
+                viewModel: viewModel,
                 checklistItem: checklistItem
             )
             .padding(.top, 8)
-            
+
         }
     }
 }
 
 private extension ChecklistRowView {
-    
+
+    var selectedCategory: [ChecklistCategory] {
+        viewModel.selectedCategories
+    }
+
     // MARK: - View
-    
+
     var CategoryChipStack: some View {
         HStack(spacing: 8) {
             ForEach(chipData.indices, id:\.self) { index in
@@ -44,7 +45,7 @@ private extension ChecklistRowView {
             }
         }
     }
-    
+
     func CategoryChip(text: String, color: Color) -> some View {
         Text(text)
             .foregroundStyle(Color.ChecklistTag.colorGray)
@@ -56,13 +57,13 @@ private extension ChecklistRowView {
                     .fill(color)
             }
     }
-    
+
     var Question: some View {
         Text(checklistItem.question.question)
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .headline)
     }
-    
+
     var Caption: some View {
         HStack(alignment: .top, spacing: 8) {
             Image(captionType == .remark ? .charChecklistRemark
@@ -76,9 +77,9 @@ private extension ChecklistRowView {
                 .lineLimit(nil)
         }
     }
-    
+
     // MARK: - Computede Values
-    
+
     var chipData: [(text: String, clolr: Color)] {
         var result: [(String, Color)]  = []
         if checklistItem.checkListType == .advanced {
@@ -87,21 +88,21 @@ private extension ChecklistRowView {
         if checklistItem.basicCategory.isSelectable {
             result.append((checklistItem.basicCategory.text, Color.ChecklistTag.backgroundYellow))
         }
-        
+
         let crossChip = checklistItem.crossTip.keys
             .filter { selectedCategory.contains($0) }
             .map { ($0.text, Color.ChecklistTag.backgroundYellow) }
-        
+
         result += crossChip
-        
+
         return result
     }
-    
+
     var captionType: CaptionType {
         let isCrossTip = checklistItem.crossTip.keys.contains(where: {
             selectedCategory.contains($0)
         })
-        
+
         if checklistItem.remark != nil {
             return .remark
         } else if isCrossTip {
@@ -110,7 +111,7 @@ private extension ChecklistRowView {
             return .none
         }
     }
-    
+
     var captionText: String {
         switch captionType {
         case .remark:
@@ -125,9 +126,6 @@ private extension ChecklistRowView {
             return ""
         }
     }
-    
-    // MARK: - Action
-    
 }
 
 enum CaptionType {
@@ -135,8 +133,3 @@ enum CaptionType {
     case crossTip
     case none
 }
-
-
-//#Preview {
-//    ChecklistRowView(selectedCategory: .constant([]), answers: .constant([:]), scores: .constant([:]), checklistItem: ChecklistItem.checklistItems[0])
-//}

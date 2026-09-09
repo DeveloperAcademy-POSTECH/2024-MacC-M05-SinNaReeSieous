@@ -1,5 +1,5 @@
 //
-//  TestLocationManager.swift
+//  LocationManager.swift
 //  ZipZipSa
 //
 //  Created by 조우현 on 11/30/24.

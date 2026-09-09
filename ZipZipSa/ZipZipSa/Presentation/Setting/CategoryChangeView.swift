@@ -116,16 +116,16 @@ private extension CategoryChangeView {
     // MARK: - Computed Values
     
     var userCategories: [ChecklistCategory] {
-        return users[0].favoriteCategories
+        return users.first?.favoriteCategories ?? []
     }
-    
+
     // MARK: - Action
-    
+
     func endSelecting() {
         let checklistCategoryData = selectedCategory.map {
             ChecklistCategoryData(rawValue: $0.rawValue)
         }
-        let user = users[0]
+        let user = UserService.fetchOrCreateUser(context: modelContext)
         user.favoriteCategoryData.removeAll()
         user.favoriteCategoryData = checklistCategoryData
         try? modelContext.save()

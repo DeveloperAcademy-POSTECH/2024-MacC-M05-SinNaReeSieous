@@ -10,12 +10,12 @@ import RoomPlan
 import AVFoundation
 
 class RoomPlanManager: RoomCaptureViewDelegate, ObservableObject {
-    func encode(with coder: NSCoder) {
-        fatalError("Not Needed")
-    }
-    
+    // RoomCaptureViewDelegate가 NSCoding을 요구하지만 실제로 인코딩되지 않는다.
+    // 만에 하나 호출되더라도 크래시 대신 no-op/실패로 처리한다.
+    func encode(with coder: NSCoder) {}
+
     required init?(coder: NSCoder) {
-        fatalError("Not Needed")
+        return nil
     }
     
     var captureView: RoomCaptureView

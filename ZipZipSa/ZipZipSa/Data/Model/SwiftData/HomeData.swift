@@ -34,14 +34,32 @@ final class HomeData {
     var locationText: String?
     
     // MARK: - Checklist
-    
+
     var selectedCategoryData: [ChecklistCategoryData] = []
+
+    /// 레거시(V1) 답변 blob. [Int: Set<Int>] JSON.
+    /// V2부터 checklistAnswers가 원본이고, 이 blob은 롤백 대비 백업 미러로만 유지한다.
+    /// 다음 메이저 버전에서 제거 예정.
     var answerData: Data? = nil
+
+    /// 레거시(V1) 점수 blob. [Int: Float] JSON. answerData에서 파생 가능한 값이라
+    /// V2에서는 저장하지 않아도 되지만 롤백 대비로 함께 미러링한다.
     var scoreData: Data? = nil
+
     var resultMaxScoreData: Data? = nil
     var resultScoreData: Data? = nil
     var resultHazardData: [HazardData] = []
     var memoData: [MemoData]
+
+    // MARK: - Checklist (V2)
+
+    /// 질문별 답변 레코드 (V2 원본). 질문의 영구 code로 식별한다.
+    @Relationship(deleteRule: .cascade)
+    var checklistAnswers: [ChecklistAnswerData] = []
+
+    /// 이 집을 기록할 당시 노출됐던 질문 code 목록.
+    /// 커스텀 체크리스트 도입 후에도 과거 기록을 당시 질문 세트로 재현하기 위한 스냅샷.
+    var usedQuestionCodes: [String] = []
     
     // MARK: - ResultCard
     
@@ -115,7 +133,7 @@ extension HomeData {
             let jsonData = try JSONEncoder().encode(dictionary)
             return jsonData
         } catch {
-            print("Error serializing dictionary: \(error)")
+            ZZSLog.error("Error serializing dictionary: \(error)")
             return nil
         }
     }
@@ -128,11 +146,27 @@ extension HomeData {
             let dictionary = try JSONDecoder().decode(T.self, from: data)
             return dictionary
         } catch {
-            print("Error deserializing dictionary: \(error)")
+            ZZSLog.error("Error deserializing dictionary: \(error)")
             return nil
         }
     }
     
+    /// 답변 레코드를 [질문 code: 선택 인덱스 집합] 형태로 변환한다.
+    var checklistAnswersByCode: [String: Set<Int>] {
+        var result: [String: Set<Int>] = [:]
+        for answer in checklistAnswers {
+            result[answer.questionCode] = answer.selection
+        }
+        return result
+    }
+
+    /// 답변 딕셔너리를 레코드로 저장한다 (기존 레코드는 교체).
+    func setChecklistAnswers(_ answers: [String: Set<Int>]) {
+        checklistAnswers = answers.map {
+            ChecklistAnswerData(questionCode: $0.key, selectedIndices: $0.value.sorted())
+        }
+    }
+
     var selectedCategories: [ChecklistCategory] {
         var categories: [ChecklistCategory] = []
         
