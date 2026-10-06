@@ -76,6 +76,18 @@ extension ChecklistItem {
         }
         return [basicCategory] + crossCategories
     }
+
+    /// 캡션으로 노출할 크로스질문 팁. 관심 카테고리 선택 여부와 무관하게 전부 보여준다.
+    /// 여러 카테고리가 같은 통합 문구를 공유하므로 중복 문구는 한 번만 넣는다.
+    var crossTipText: String? {
+        var textData: [String] = []
+        ChecklistCategory.allCases.forEach {
+            if let tip = crossTip[$0], !textData.contains(tip) {
+                textData.append(tip)
+            }
+        }
+        return textData.isEmpty ? nil : textData.joined(separator: "\n")
+    }
 }
 
 extension ChecklistItem {

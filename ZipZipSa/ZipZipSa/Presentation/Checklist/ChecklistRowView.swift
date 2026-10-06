@@ -97,7 +97,7 @@ private extension ChecklistRowView {
     var captionType: CaptionType {
         if checklistItem.remark != nil {
             return .remark
-        } else if !checklistItem.crossTip.isEmpty {
+        } else if checklistItem.crossTipText != nil {
             return .crossTip
         } else {
             return .none
@@ -109,15 +109,7 @@ private extension ChecklistRowView {
         case .remark:
             return checklistItem.remark ?? ""
         case .crossTip:
-            // 관심 카테고리 선택이 사라져 선택 여부와 무관하게 팁을 노출한다.
-            // 여러 카테고리가 같은 통합 문구를 공유하므로 중복 문구는 한 번만 노출
-            var textData: [String] = []
-            ChecklistCategory.allCases.forEach {
-                if let tip = checklistItem.crossTip[$0], !textData.contains(tip) {
-                    textData.append(tip)
-                }
-            }
-            return textData.joined(separator: "\n")
+            return checklistItem.crossTipText ?? ""
         case .none:
             return ""
         }

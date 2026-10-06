@@ -244,6 +244,16 @@ private extension ChecklistTemplateEditView {
                         .foregroundStyle(Color.Text.primary)
                         .applyZZSFont(zzsFontSet: .caption1Regular)
                 }
+            } else if let crossTipText = item.crossTipText {
+                HStack(alignment: .top, spacing: 8) {
+                    Image(.charChecklistCross)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 28, height: 20)
+                    Text(crossTipText)
+                        .foregroundStyle(Color.Text.primary)
+                        .applyZZSFont(zzsFontSet: .caption1Regular)
+                }
             }
 
             AnswerPreview(item: item)
