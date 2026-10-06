@@ -26,7 +26,7 @@ enum ChecklistCategory: String, CaseIterable, Hashable {
         case .sunlight: return "채광"
         case .soundproof: return "방음"
         case .environment: return "실내환경"
-        case .facilities: return "공용시설 및 음선"
+        case .facilities: return "공용시설 및 옵션"
         }
     }
     

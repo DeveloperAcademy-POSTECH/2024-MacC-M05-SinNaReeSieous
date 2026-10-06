@@ -6,11 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXFileReference section */
-		393FD8D32CE2045D00B1CEE7 /* ZipZipSa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZipZipSa.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A11CE5000000000000000002 /* ZipZipSaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZipZipSaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-/* End PBXFileReference section */
-
 /* Begin PBXContainerItemProxy section */
 		A11CE5000000000000000007 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -20,6 +15,11 @@
 			remoteInfo = ZipZipSa;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		393FD8D32CE2045D00B1CEE7 /* ZipZipSa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZipZipSa.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A11CE5000000000000000002 /* ZipZipSaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZipZipSaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		795DC3622CEDDC310053E173 /* Exceptions for "ZipZipSa" folder in "ZipZipSa" target */ = {
@@ -133,14 +133,6 @@
 		};
 /* End PBXNativeTarget section */
 
-/* Begin PBXTargetDependency section */
-		A11CE5000000000000000008 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 393FD8D22CE2045D00B1CEE7 /* ZipZipSa */;
-			targetProxy = A11CE5000000000000000007 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXProject section */
 		393FD8CB2CE2045D00B1CEE7 /* Project object */ = {
 			isa = PBXProject;
@@ -214,6 +206,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A11CE5000000000000000008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 393FD8D22CE2045D00B1CEE7 /* ZipZipSa */;
+			targetProxy = A11CE5000000000000000007 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		393FD8DF2CE2045E00B1CEE7 /* Debug */ = {
@@ -345,7 +345,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ZipZipSa/Preview Content\"";
-				DEVELOPMENT_TEAM = D23XDL6TZZ;
+				DEVELOPMENT_TEAM = 9Z4SU2Y59A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ZipZipSa/Info.plist;
@@ -389,7 +389,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ZipZipSa/Preview Content\"";
-				DEVELOPMENT_TEAM = D23XDL6TZZ;
+				DEVELOPMENT_TEAM = 9Z4SU2Y59A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ZipZipSa/Info.plist;
@@ -484,7 +484,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-	A11CE500000000000000000B /* Build configuration list for PBXNativeTarget "ZipZipSaTests" */ = {
+		A11CE500000000000000000B /* Build configuration list for PBXNativeTarget "ZipZipSaTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A11CE5000000000000000009 /* Debug */,

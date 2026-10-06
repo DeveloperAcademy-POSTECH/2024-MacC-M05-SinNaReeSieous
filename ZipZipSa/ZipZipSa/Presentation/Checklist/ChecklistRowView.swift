@@ -11,9 +11,16 @@ struct ChecklistRowView: View {
     let viewModel: ChecklistViewModel
     let checklistItem: ChecklistItem
 
+    /// 온보딩(관심 카테고리 선택)이 사라지면서 체크리스트에서는 카테고리·추가 칩을
+    /// 노출하지 않는다. 되살릴 수 있도록 계산 로직(chipData)은 그대로 둔다.
+    /// 커스텀 체크리스트 편집 화면은 칩을 계속 보여준다.
+    private let showsCategoryChips = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            CategoryChipStack
+            if showsCategoryChips {
+                CategoryChipStack
+            }
             Question
             if captionType != .none {
                 Caption
@@ -29,10 +36,6 @@ struct ChecklistRowView: View {
 }
 
 private extension ChecklistRowView {
-
-    var selectedCategory: [ChecklistCategory] {
-        viewModel.selectedCategories
-    }
 
     // MARK: - View
 
@@ -85,27 +88,16 @@ private extension ChecklistRowView {
         if checklistItem.checkListType == .advanced {
             result.append((checklistItem.checkListType.text, Color.ChecklistTag.backgroundGray))
         }
-        if checklistItem.basicCategory.isSelectable {
-            result.append((checklistItem.basicCategory.text, Color.ChecklistTag.backgroundYellow))
-        }
-
-        let crossChip = checklistItem.crossTip.keys
-            .filter { selectedCategory.contains($0) }
+        result += checklistItem.displayCategories
             .map { ($0.text, Color.ChecklistTag.backgroundYellow) }
-
-        result += crossChip
 
         return result
     }
 
     var captionType: CaptionType {
-        let isCrossTip = checklistItem.crossTip.keys.contains(where: {
-            selectedCategory.contains($0)
-        })
-
         if checklistItem.remark != nil {
             return .remark
-        } else if isCrossTip {
+        } else if checklistItem.crossTipText != nil {
             return .crossTip
         } else {
             return .none
@@ -117,11 +109,7 @@ private extension ChecklistRowView {
         case .remark:
             return checklistItem.remark ?? ""
         case .crossTip:
-            var textData: [String?] = []
-            selectedCategory.forEach {
-                textData.append(checklistItem.crossTip[$0])
-            }
-            return textData.compactMap { $0 }.joined(separator: "\n")
+            return checklistItem.crossTipText ?? ""
         case .none:
             return ""
         }

@@ -8,9 +8,11 @@
 import SwiftUI
 
 struct ZZSSperator: View {
+    var color: Color = Color.Additional.seperator
+
     var body: some View {
         Rectangle()
-            .fill(Color.Additional.seperator)
+            .fill(color)
             .frame(height: 1)
     }
 }

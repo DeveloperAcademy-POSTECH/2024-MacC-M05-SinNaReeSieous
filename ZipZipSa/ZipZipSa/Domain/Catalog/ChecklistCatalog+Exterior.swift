@@ -23,7 +23,7 @@ extension ChecklistItem {
                                answerOptions: ["없어요", "있어요"]),
             crossTip: [:],
             remark: "밤 늦게 귀가 시 길이 더 밝고, 긴급한 경우 도움을 요청할 수 있어요.",
-            hazard: nil
+            isRetired: true
         ),
         ChecklistItem(
             legacyID: 1,
@@ -36,8 +36,7 @@ extension ChecklistItem {
                                answerType: .twoChoices,
                                answerOptions: ["없어요", "있어요"]),
             crossTip: [:],
-            remark: nil,
-            hazard: nil
+            remark: nil
         ),
         ChecklistItem(
             legacyID: 2,
@@ -73,7 +72,7 @@ extension ChecklistItem {
             question: Question(question: "집 앞에 큰 도로가 있나요?",
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
-            crossTip: [.ventilation: "매연 때문에 환기하기 어려울 수 있어요."]
+            crossTip: [.ventilation: "소음과 매연 때문에 환기하기 어려울 수 있어요."]
         ),
         ChecklistItem(
             legacyID: 5,
@@ -85,7 +84,7 @@ extension ChecklistItem {
             question: Question(question: "쓰레기 처리장이 청결하게 관리되고있나요?",
                                answerType: .multiChoices,
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"]),
-            crossTip: [.insectproof : "쓰레기 처리장에서 발생한 벌레가 집으로 들어올 수 있어요."]
+            crossTip: [.insectproof : "쓰레기 처리장에서 발생한 냄새와 벌레가 집으로 들어올 수 있어요."]
         ),
         ChecklistItem(
             legacyID: 6,
@@ -126,11 +125,22 @@ extension ChecklistItem {
             code: "ext-10",
             space: Space(type: .exterior,
                          questionNumber: 10),
-            checkListType: .basic,
+            checkListType: .quick,
             basicCategory: .facilities,
             question: Question(question: "건물 옵션을 선택해주세요.",
                                answerType: .multiSelect(basicScore: 0, answerDisposition: .neutral),
                                answerOptions: ["택배보관함", "집주인 거주", "반려동물 가능", "소화전", "엘리베이터", "주차 가능"])
+        ),
+        ChecklistItem(
+            legacyID: 57,
+            code: "ext-11",
+            space: Space(type: .exterior,
+                         questionNumber: 11),
+            checkListType: .advanced,
+            basicCategory: .facilities,
+            question: Question(question: "쓰레기 처리를 건물 공동으로 하나요?",
+                               answerType: .twoChoices,
+                               answerOptions: ["공동", "개별"])
         ),
     ]
 }

@@ -14,6 +14,10 @@ struct ChecklistTemplateListView: View {
     @Query private var users: [User]
 
     @State private var editorTarget: EditorTarget?
+    /// 삭제 확인 대상. nil이면 알럿을 띄우지 않는다.
+    @State private var templateToDelete: ChecklistTemplateData?
+    /// 삭제할 수 없는 체크리스트를 지우려 했을 때의 안내. nil이면 알럿을 띄우지 않는다.
+    @State private var deleteBlockReason: DeleteBlockReason?
 
     var body: some View {
         ZStack {
@@ -38,9 +42,44 @@ struct ChecklistTemplateListView: View {
                 CreateButton
             }
         }
+        .alert(
+            ZipLiteral.Alert.deleteTemplateTitle(templateToDelete?.name ?? ""),
+            isPresented: Binding(
+                get: { templateToDelete != nil },
+                set: { if !$0 { templateToDelete = nil } }
+            )
+        ) {
+            // 알럿을 만들 때의 대상을 클로저가 붙잡아두므로 닫히는 순서와 무관하게 안전하다
+            if let template = templateToDelete {
+                Button(ZipLiteral.Alert.delete, role: .destructive) {
+                    delete(template)
+                }
+            }
+            Button(ZipLiteral.Alert.cancel, role: .cancel) { }
+        } message: {
+            Text(ZipLiteral.Alert.deleteTemplateMessage)
+                .multilineTextAlignment(.center)
+        }
+        .alert(
+            deleteBlockReason?.title ?? "",
+            isPresented: Binding(
+                get: { deleteBlockReason != nil },
+                set: { if !$0 { deleteBlockReason = nil } }
+            )
+        ) {
+            Button(ZipLiteral.Alert.cancel, role: .cancel) { }
+        } message: {
+            Text(deleteBlockReason?.message ?? "")
+                .multilineTextAlignment(.center)
+        }
         .fullScreenCover(item: $editorTarget) { target in
-            NavigationStack {
-                ChecklistTemplateEditView(template: target.template)
+            switch target {
+            case .new:
+                ChecklistTemplateCreateFlowView(onClose: { editorTarget = nil })
+            case .edit(let template):
+                NavigationStack {
+                    ChecklistTemplateEditView(template: template)
+                }
             }
         }
     }
@@ -48,7 +87,29 @@ struct ChecklistTemplateListView: View {
 
 private extension ChecklistTemplateListView {
 
-    /// fullScreenCover(item:)용 편집 대상. nil 템플릿(신규)도 항목으로 표현한다.
+    /// 삭제할 수 없는 체크리스트와 그 이유.
+    /// 기본 체크리스트는 애초에 지울 대상이 아니고, 대표는 먼저 다른 걸 대표로 지정해야 한다.
+    enum DeleteBlockReason {
+        case isDefault
+        case isPrimary(name: String)
+
+        var title: String {
+            switch self {
+            case .isDefault: ZipLiteral.Alert.cannotDeleteDefaultTitle
+            case .isPrimary(let name): ZipLiteral.Alert.cannotDeletePrimaryTitle(name)
+            }
+        }
+
+        var message: String {
+            switch self {
+            case .isDefault: ZipLiteral.Alert.cannotDeleteDefaultMessage
+            case .isPrimary: ZipLiteral.Alert.cannotDeletePrimaryMessage
+            }
+        }
+    }
+
+    /// fullScreenCover(item:)용 편집 대상.
+    /// 신규(.new)는 템플릿 선택 화면부터, 수정(.edit)은 편집 화면부터 시작한다.
     enum EditorTarget: Identifiable {
         case new
         case edit(ChecklistTemplateData)
@@ -59,19 +120,12 @@ private extension ChecklistTemplateListView {
             case .edit(let template): return template.id
             }
         }
-
-        var template: ChecklistTemplateData? {
-            switch self {
-            case .new: return nil
-            case .edit(let template): return template
-            }
-        }
     }
 
     var user: User? { users.first }
 
     var defaultQuestionCount: Int {
-        QuestionProvider.questions(selectedCategories: user?.favoriteCategories ?? []).count
+        QuestionProvider.defaultQuestions().count
     }
 
     // MARK: - View
@@ -112,11 +166,23 @@ private extension ChecklistTemplateListView {
             .padding(.vertical, 12)
     }
 
+    /// 대표 체크리스트는 항상 맨 위에 노출한다.
+    var rows: [ChecklistTemplateRow] {
+        ChecklistTemplateRow.ordered(
+            templates: user?.templates ?? [],
+            markedID: user?.activeTemplateID
+        )
+    }
+
     var TemplateCardList: some View {
         VStack(spacing: 10) {
-            DefaultTemplateCard
-            ForEach(user?.templates.sorted { $0.createdAt < $1.createdAt } ?? []) { template in
-                TemplateCard(template: template)
+            ForEach(rows) { row in
+                switch row {
+                case .default:
+                    DefaultTemplateCard
+                case .custom(let template):
+                    TemplateCard(template: template)
+                }
             }
         }
         .padding(.horizontal, 16)
@@ -134,6 +200,18 @@ private extension ChecklistTemplateListView {
                 questionCount: defaultQuestionCount,
                 isPrimary: user?.activeTemplateID == nil
             )
+        }
+        .contextMenu {
+            Button {
+                setPrimary(nil)
+            } label: {
+                Label(ZipLiteral.ChecklistTemplate.setAsPrimary, systemImage: "checkmark.circle")
+            }
+            Button(role: .destructive) {
+                deleteBlockReason = .isDefault
+            } label: {
+                Label(ZipLiteral.ChecklistTemplate.delete, systemImage: "trash")
+            }
         }
     }
 
@@ -154,7 +232,12 @@ private extension ChecklistTemplateListView {
                 Label(ZipLiteral.ChecklistTemplate.setAsPrimary, systemImage: "checkmark.circle")
             }
             Button(role: .destructive) {
-                delete(template)
+                // 대표는 먼저 다른 체크리스트를 대표로 지정해야 지울 수 있다
+                if user?.activeTemplateID == template.id {
+                    deleteBlockReason = .isPrimary(name: template.name)
+                } else {
+                    templateToDelete = template
+                }
             } label: {
                 Label(ZipLiteral.ChecklistTemplate.delete, systemImage: "trash")
             }
