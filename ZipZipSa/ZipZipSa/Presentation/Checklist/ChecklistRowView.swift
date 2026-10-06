@@ -117,11 +117,14 @@ private extension ChecklistRowView {
         case .remark:
             return checklistItem.remark ?? ""
         case .crossTip:
-            var textData: [String?] = []
+            // 여러 카테고리가 같은 통합 문구를 공유하므로 중복 문구는 한 번만 노출
+            var textData: [String] = []
             selectedCategory.forEach {
-                textData.append(checklistItem.crossTip[$0])
+                if let tip = checklistItem.crossTip[$0], !textData.contains(tip) {
+                    textData.append(tip)
+                }
             }
-            return textData.compactMap { $0 }.joined(separator: "\n")
+            return textData.joined(separator: "\n")
         case .none:
             return ""
         }

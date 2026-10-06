@@ -216,9 +216,9 @@ extension ChecklistItem {
             question: Question(question: "벽에 곰팡이가 있나요?",
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
-            crossTip: [.sunlight: "햇빛이 잘 들어오면 벽에 곰팡이가 생길 가능성이 적어요." ,
-                       .ventilation: "환기가 잘 되면 벽에 곰팡이가 생길 가능성이 적어요.",
-                       .cleanliness: "습기가 많이 생기는 창틀 근처나 옆집 화장실이 닿아있는 쪽 벽을 살펴보세요."],
+            crossTip: [.sunlight: "햇빛이 잘 들어오고 환기가 잘 되면, 벽에 곰팡이가 생길 가능성이 적어요. 곰팡이가 잘 생기는 창틀이나 외부와 맞닿은 벽과 모서리를 잘 살펴보세요.",
+                       .ventilation: "햇빛이 잘 들어오고 환기가 잘 되면, 벽에 곰팡이가 생길 가능성이 적어요. 곰팡이가 잘 생기는 창틀이나 외부와 맞닿은 벽과 모서리를 잘 살펴보세요.",
+                       .cleanliness: "햇빛이 잘 들어오고 환기가 잘 되면, 벽에 곰팡이가 생길 가능성이 적어요. 곰팡이가 잘 생기는 창틀이나 외부와 맞닿은 벽과 모서리를 잘 살펴보세요."],
             remark: nil,
             hazard: .mold
         ),

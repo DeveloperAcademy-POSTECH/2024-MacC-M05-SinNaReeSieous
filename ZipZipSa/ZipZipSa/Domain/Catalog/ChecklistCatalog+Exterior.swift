@@ -73,7 +73,7 @@ extension ChecklistItem {
             question: Question(question: "집 앞에 큰 도로가 있나요?",
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
-            crossTip: [.ventilation: "매연 때문에 환기하기 어려울 수 있어요."]
+            crossTip: [.ventilation: "소음과 매연 때문에 환기하기 어려울 수 있어요."]
         ),
         ChecklistItem(
             legacyID: 5,
@@ -85,7 +85,7 @@ extension ChecklistItem {
             question: Question(question: "쓰레기 처리장이 청결하게 관리되고있나요?",
                                answerType: .multiChoices,
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"]),
-            crossTip: [.insectproof : "쓰레기 처리장에서 발생한 벌레가 집으로 들어올 수 있어요."]
+            crossTip: [.insectproof : "쓰레기 처리장에서 발생한 냄새와 벌레가 집으로 들어올 수 있어요."]
         ),
         ChecklistItem(
             legacyID: 6,
