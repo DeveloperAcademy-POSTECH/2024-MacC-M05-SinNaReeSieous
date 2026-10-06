@@ -17,9 +17,27 @@ struct ChecklistTemplateEditView: View {
     @State private var selectedSpaceType: SpaceType = .livingRoom
     @State private var isAddSectionExpanded = false
     @State private var moveToNameEdit = false
+    /// 저장하지 않고 나가려 할 때 확인
+    @State private var showDiscardAlert = false
 
-    init(template: ChecklistTemplateData?) {
-        self._viewModel = State(initialValue: ChecklistTemplateEditViewModel(template: template))
+    /// 관심 카테고리 선택이 사라지면서 카테고리·추가 칩을 노출하지 않는다.
+    /// 체크리스트 작성 화면(ChecklistRowView)과 같은 방식으로, 계산 로직은 그대로 두고 렌더링만 끈다.
+    private let showsCategoryChips = false
+
+    /// 템플릿 선택 화면에서 푸시된 경우 전체 플로우(fullScreenCover)를 닫는 클로저.
+    /// nil이면 이 화면이 플로우 루트이므로 dismiss로 닫는다.
+    private let onClose: (() -> Void)?
+
+    init(
+        template: ChecklistTemplateData?,
+        initialCodes: [String]? = nil,
+        onClose: (() -> Void)? = nil
+    ) {
+        self._viewModel = State(initialValue: ChecklistTemplateEditViewModel(
+            template: template,
+            initialCodes: initialCodes
+        ))
+        self.onClose = onClose
     }
 
     var body: some View {
@@ -56,9 +74,18 @@ struct ChecklistTemplateEditView: View {
         .onAppear {
             viewModel.start(user: users.first)
         }
+        .alert(ZipLiteral.Alert.discardTemplateEditTitle, isPresented: $showDiscardAlert) {
+            Button(ZipLiteral.Alert.leave, role: .destructive) {
+                closeFlow()
+            }
+            Button(ZipLiteral.Alert.cancel, role: .cancel) { }
+        } message: {
+            Text(ZipLiteral.Alert.discardTemplateEditMessage)
+                .multilineTextAlignment(.center)
+        }
         .navigationDestination(isPresented: $moveToNameEdit) {
             ChecklistTemplateNameEditView(viewModel: viewModel) {
-                dismiss()
+                closeFlow()
             }
         }
     }
@@ -66,11 +93,34 @@ struct ChecklistTemplateEditView: View {
 
 private extension ChecklistTemplateEditView {
 
+    var includedItems: [ChecklistItem] {
+        viewModel.includedItems(for: selectedSpaceType)
+    }
+
     // MARK: - View
+
+    var availableItems: [ChecklistItem] {
+        viewModel.availableItems(for: selectedSpaceType)
+    }
+
+    /// 질문 사이 구분선 (Figma 6335-22914: 위아래 24).
+    /// 좌우 여백은 쓰는 쪽에서 준다 — 질문 추가하기 섹션은 이미 안쪽으로 들어와 있다.
+    var QuestionDivider: some View {
+        ZZSSperator(color: Color.Additional.checklistSeperator)
+            .padding(.vertical, 24)
+    }
+
+    func closeFlow() {
+        if let onClose {
+            onClose()
+        } else {
+            dismiss()
+        }
+    }
 
     var CloseButton: some View {
         Button {
-            dismiss()
+            showDiscardAlert = true
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "xmark")
@@ -93,17 +143,30 @@ private extension ChecklistTemplateEditView {
     }
 
     var QuestionList: some View {
-        LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-            Section {
-                Spacer().frame(height: 18)
-                ForEach(viewModel.includedItems(for: selectedSpaceType)) { item in
-                    TemplateQuestionCell(item: item, isIncluded: true)
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 40)
+        // 공간 탭을 바꾸면 고정 헤더 위치로 되돌린다(집 보러가기 체크리스트와 동일).
+        // 최소 스크롤이라 헤더가 이미 보이면 그대로 두고, 타이틀이 보이던 상태면 유지된다.
+        ScrollViewReader { scrollView in
+            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+                Section {
+                    Spacer().frame(height: 18)
+                    ForEach(includedItems) { item in
+                        TemplateQuestionCell(item: item, isIncluded: true)
+                            .padding(.horizontal, 16)
+                        if item.id == includedItems.last?.id {
+                            Spacer().frame(height: 40)
+                        } else {
+                            QuestionDivider
+                                .padding(.horizontal, 16)
+                        }
+                    }
+                    AddSection
+                } header: {
+                    ChecklistSpaceButtonStackView(selectedSpaceType: $selectedSpaceType)
+                        .id(1)
                 }
-                AddSection
-            } header: {
-                ChecklistSpaceButtonStackView(selectedSpaceType: $selectedSpaceType)
+            }
+            .onChange(of: selectedSpaceType) { oldValue, newValue in
+                scrollView.scrollTo(1)
             }
         }
     }
@@ -125,9 +188,12 @@ private extension ChecklistTemplateEditView {
             }
 
             if isAddSectionExpanded {
-                VStack(spacing: 40) {
-                    ForEach(viewModel.availableItems(for: selectedSpaceType)) { item in
+                VStack(spacing: 0) {
+                    ForEach(availableItems) { item in
                         TemplateQuestionCell(item: item, isIncluded: false)
+                        if item.id != availableItems.last?.id {
+                            QuestionDivider
+                        }
                     }
                 }
             }
@@ -137,11 +203,13 @@ private extension ChecklistTemplateEditView {
         .background(Color.Background.disabled)
     }
 
-    /// 질문 셀: 카테고리 칩 + 액션(삭제하기/추가하기) + 질문 + 부연 + 비활성 답변 미리보기.
+    /// 질문 셀: 액션(삭제하기/추가하기) + 질문 + 부연 + 비활성 답변 미리보기.
     func TemplateQuestionCell(item: ChecklistItem, isIncluded: Bool) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .center) {
-                ChipStack(item: item)
+                if showsCategoryChips {
+                    ChipStack(item: item)
+                }
                 Spacer()
                 if isIncluded {
                     Button {
@@ -188,8 +256,8 @@ private extension ChecklistTemplateEditView {
             if item.checkListType == .advanced {
                 Chip(text: item.checkListType.text, color: Color.ChecklistTag.backgroundGray)
             }
-            if item.basicCategory.isSelectable {
-                Chip(text: item.basicCategory.text, color: Color.ChecklistTag.backgroundYellow)
+            ForEach(item.displayCategories, id: \.self) { category in
+                Chip(text: category.text, color: Color.ChecklistTag.backgroundYellow)
             }
         }
     }

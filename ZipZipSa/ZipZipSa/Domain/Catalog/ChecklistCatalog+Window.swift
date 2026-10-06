@@ -51,14 +51,14 @@ extension ChecklistItem {
             code: "win-04",
             space: Space(type: .window,
                          questionNumber: 4),
-            checkListType: .basic,
+            checkListType: .quick,
             basicCategory: .sunlight,
             question: Question(question: "집과 앞 건물 사이의 거리는 어떤가요?",
                                answerType: .multiChoices,
                                answerOptions: ["가까워요", "보통이에요", "멀어요"]),
             crossTip: [.ventilation: "집 앞 건물과 너무 가까우면 햇빛과 바람이 잘 들지 않고, 사생활 보호가 어려울 수 있어요.",
                        .security: "집 앞 건물과 너무 가까우면 햇빛과 바람이 잘 들지 않고, 사생활 보호가 어려울 수 있어요."],
-            hazard: .privacy
+            hazards: [.privacy]
         ),
         ChecklistItem(
             legacyID: 35,
@@ -71,6 +71,19 @@ extension ChecklistItem {
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
             crossTip: [.ventilation: "방충망이 찢어지거나 삭아 있는지 미리 확인하고, 날짜가 남도록 사진을 찍어두세요. 입주 전부터 있던 하자라는 증거가 없으면 퇴거할 때 원상복구 비용을 떠안을 수 있어요. 문제가 있다면 '입주 전 임대인이 수리 완료'를 계약서 특약으로 넣어두는 게 안전해요."]
+        ),
+        ChecklistItem(
+            legacyID: 59,
+            code: "win-06",
+            space: Space(type: .window,
+                         questionNumber: 6),
+            checkListType: .advanced,
+            basicCategory: .environment,
+            question: Question(question: "창문이 이중창인가요?",
+                               answerType: .twoChoices,
+                               answerOptions: ["단창", "이중창"]),
+            remark: "단창은 열 손실이 크고, 결로 때문에 곰팡이가 생기기 쉬워요.",
+            hazards: [.noise, .mold]
         ),
     ]
 }

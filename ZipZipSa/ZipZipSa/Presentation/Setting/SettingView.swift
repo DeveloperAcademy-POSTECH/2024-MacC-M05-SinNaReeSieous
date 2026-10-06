@@ -19,8 +19,10 @@ struct SettingView: View {
                     .ignoresSafeArea()
                 VStack(alignment: .leading, spacing: 0) {
                     NavigationTitle
-                    CategoryChange
-                    CustomDivider
+                    // 관심 카테고리 선택이 없어지면서 변경 항목도 노출하지 않는다.
+                    // CategoryChange / CategoryChangeView 코드는 그대로 둔다.
+                    // CategoryChange
+                    // CustomDivider
                     PrivacyPolicy
                     Support
                     Spacer()

@@ -23,7 +23,7 @@ extension ChecklistItem {
                                answerOptions: ["없어요", "있어요"]),
             crossTip: [:],
             remark: "밤 늦게 귀가 시 길이 더 밝고, 긴급한 경우 도움을 요청할 수 있어요.",
-            hazard: nil
+            isRetired: true
         ),
         ChecklistItem(
             legacyID: 1,
@@ -36,8 +36,7 @@ extension ChecklistItem {
                                answerType: .twoChoices,
                                answerOptions: ["없어요", "있어요"]),
             crossTip: [:],
-            remark: nil,
-            hazard: nil
+            remark: nil
         ),
         ChecklistItem(
             legacyID: 2,
@@ -126,11 +125,22 @@ extension ChecklistItem {
             code: "ext-10",
             space: Space(type: .exterior,
                          questionNumber: 10),
-            checkListType: .basic,
+            checkListType: .quick,
             basicCategory: .facilities,
             question: Question(question: "건물 옵션을 선택해주세요.",
                                answerType: .multiSelect(basicScore: 0, answerDisposition: .neutral),
                                answerOptions: ["택배보관함", "집주인 거주", "반려동물 가능", "소화전", "엘리베이터", "주차 가능"])
+        ),
+        ChecklistItem(
+            legacyID: 57,
+            code: "ext-11",
+            space: Space(type: .exterior,
+                         questionNumber: 11),
+            checkListType: .advanced,
+            basicCategory: .facilities,
+            question: Question(question: "쓰레기 처리를 건물 공동으로 하나요?",
+                               answerType: .twoChoices,
+                               answerOptions: ["공동", "개별"])
         ),
     ]
 }

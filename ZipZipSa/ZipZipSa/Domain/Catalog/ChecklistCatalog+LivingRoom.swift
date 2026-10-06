@@ -60,7 +60,7 @@ extension ChecklistItem {
             code: "lvr-05",
             space: Space(type: .livingRoom,
                          questionNumber: 5),
-            checkListType: .basic,
+            checkListType: .quick,
             basicCategory: .facilities,
             question: Question(question: "가구 옵션을 선택해 주세요.",
                                answerType: .multiSelect(basicScore: 0, answerDisposition: .neutral),
@@ -71,7 +71,7 @@ extension ChecklistItem {
             code: "lvr-06",
             space: Space(type: .livingRoom,
                          questionNumber: 6),
-            checkListType: .basic,
+            checkListType: .quick,
             basicCategory: .facilities,
             question: Question(question: "가전 옵션을 선택해 주세요.",
                                answerType: .multiSelect(basicScore: 0, answerDisposition: .neutral),
@@ -122,7 +122,7 @@ extension ChecklistItem {
             question: Question(question: "에어컨에 누수 흔적이 있나요?",
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
-            hazard: .waterLeak
+            hazards: [.waterLeak]
         ),
         ChecklistItem(
             legacyID: 20,
@@ -151,7 +151,7 @@ extension ChecklistItem {
             code: "lvr-13",
             space: Space(type: .livingRoom,
                          questionNumber: 13),
-            checkListType: .basic,
+            checkListType: .quick,
             basicCategory: .sunlight,
             question: Question(question: "낮 시간에 불을 끄고도 실내가 충분히 밝게 느껴지나요?",
                                answerType: .multiChoices,
@@ -167,7 +167,7 @@ extension ChecklistItem {
             question: Question(question: "위층에서 발소리나 생활소음이 들리나요?",
                                answerType: .multiChoices,
                                answerOptions: ["잘 들려요", "보통이에요", "안 들려요"]),
-            hazard: .noise
+            hazards: [.noise]
         ),
         ChecklistItem(
             legacyID: 24,
@@ -180,14 +180,14 @@ extension ChecklistItem {
                                answerType:.twoChoices,
                                answerOptions: ["가벽", "콘크리트벽"]),
             remark: "두드렸을 때 텅텅 울리는 소리가 나면 가벽이에요.",
-            hazard: .noise
+            hazards: [.noise]
         ),
         ChecklistItem(
             legacyID: 25,
             code: "lvr-16",
             space: Space(type: .livingRoom,
                          questionNumber: 16),
-            checkListType: .basic,
+            checkListType: .quick,
             basicCategory: .cleanliness,
             question: Question(question: "벽지의 상태는 어떤가요?",
                                answerType: .multiChoices,
@@ -204,7 +204,7 @@ extension ChecklistItem {
                                answerType: .twoChoices,
                                answerOptions: ["있어요", "없어요"]),
             remark: "바퀴벌레 배설물일 가능성이 있어요.",
-            hazard: .cockroach
+            hazards: [.cockroach]
         ),
         ChecklistItem(
             legacyID: 27,
@@ -220,7 +220,7 @@ extension ChecklistItem {
                        .ventilation: "햇빛이 잘 들어오고 환기가 잘 되면, 벽에 곰팡이가 생길 가능성이 적어요. 곰팡이가 잘 생기는 창틀이나 외부와 맞닿은 벽과 모서리를 잘 살펴보세요.",
                        .cleanliness: "햇빛이 잘 들어오고 환기가 잘 되면, 벽에 곰팡이가 생길 가능성이 적어요. 곰팡이가 잘 생기는 창틀이나 외부와 맞닿은 벽과 모서리를 잘 살펴보세요."],
             remark: nil,
-            hazard: .mold
+            hazards: [.mold]
         ),
         ChecklistItem(
             legacyID: 28,
@@ -244,7 +244,7 @@ extension ChecklistItem {
                                answerType: .twoChoices,
                                answerOptions: ["나요", "안 나요"]),
             remark: "바퀴벌레가 있는 집에서 이런 냄새가 날 수 있어요.",
-            hazard: .cockroach
+            hazards: [.cockroach]
         ),
         ChecklistItem(
             legacyID: 30,
@@ -256,6 +256,17 @@ extension ChecklistItem {
             question: Question(question: "세탁기 고무패킹이나 세제통의 청결상태는 어떤가요?",
                                answerType: .multiChoices,
                                answerOptions: ["더러워요", "보통이에요", "깨끗해요"])
+        ),
+        ChecklistItem(
+            legacyID: 58,
+            code: "lvr-22",
+            space: Space(type: .livingRoom,
+                         questionNumber: 22),
+            checkListType: .quick,
+            basicCategory: .facilities,
+            question: Question(question: "내부 구조 옵션을 선택해 주세요.",
+                               answerType: .multiSelect(basicScore: 0, answerDisposition: .neutral),
+                               answerOptions: ["원룸", "미니투룸", "투룸", "베란다", "중문"])
         ),
     ]
 }

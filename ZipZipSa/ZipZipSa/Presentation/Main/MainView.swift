@@ -59,7 +59,10 @@ private extension MainView {
         HStack (alignment: .top) {
             NavigationTitle
             Spacer()
-            SettingButton
+            HStack(spacing: 16) {
+                FraudBookButton
+                SettingButton
+            }
         }
         .padding(.top, 12)
         .padding(.bottom, 32)
@@ -75,6 +78,14 @@ private extension MainView {
             .applyZZSFont(zzsFontSet: .largeTitle)
     }
     
+    var FraudBookButton: some View {
+        NavigationLink(destination: FraudBookView()) {
+            Image(systemName: "book")
+                .foregroundStyle(Color.Text.primary)
+                .applyZZSFont(zzsFontSet: .iconLargeTitle)
+        }
+    }
+
     var SettingButton: some View {
         NavigationLink(destination: SettingView()) {
             Image(systemName: "gearshape")

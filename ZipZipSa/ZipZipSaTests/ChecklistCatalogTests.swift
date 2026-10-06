@@ -10,8 +10,8 @@ import Testing
 /// 질문 데이터는 커스텀 체크리스트의 기반이므로, 카탈로그가 깨지면 여기서 먼저 잡혀야 한다.
 struct ChecklistCatalogTests {
 
-    @Test func 질문_개수는_57개다() {
-        #expect(ChecklistItem.checklistItems.count == 57)
+    @Test func 질문_개수는_63개다() {
+        #expect(ChecklistItem.checklistItems.count == 63)
     }
 
     @Test func 질문_code는_유일해야_한다() {
@@ -99,7 +99,7 @@ struct ChecklistCatalogTests {
     @Test func 위험요소_질문은_첫_옵션이_위험_응답이다() {
         // 위험요소 수집(getHazardResult)은 답변이 [0]일 때 hazard로 판단한다.
         // hazard가 달린 질문이 twoChoices가 아니면 이 가정이 깨질 수 있어 방어한다.
-        for item in ChecklistItem.checklistItems where item.hazard != nil {
+        for item in ChecklistItem.checklistItems where !item.hazards.isEmpty {
             if case .twoChoices = item.question.answerType {
                 continue
             }
