@@ -64,21 +64,22 @@ private extension FraudBookView {
                 }
             }
         }
-        .padding(.top, 12)
+        .padding(.top, 16)
         .padding(.bottom, 24)
         .padding(.horizontal, 16)
     }
 
     func CategoryCard(for category: FraudBookCategory) -> some View {
-        RoundedRectangle(cornerRadius: 24)
+        let character = category.character
+
+        return RoundedRectangle(cornerRadius: 24)
             .fill(Color.Button.secondaryRed)
             .frame(height: 130)
             .overlay(alignment: .bottomTrailing) {
-                Image(category.characterImage)
+                Image(character.imageName)
                     .resizable()
-                    .scaledToFit()
-                    .frame(height: 96)
-                    .padding(.trailing, 20)
+                    .frame(width: character.width, height: character.height)
+                    .padding(.trailing, character.trailingInset)
             }
             .overlay(alignment: .topLeading) {
                 VStack(alignment: .leading, spacing: 12) {
