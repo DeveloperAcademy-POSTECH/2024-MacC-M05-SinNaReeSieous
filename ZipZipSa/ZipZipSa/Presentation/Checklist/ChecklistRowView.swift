@@ -37,10 +37,6 @@ struct ChecklistRowView: View {
 
 private extension ChecklistRowView {
 
-    var selectedCategory: [ChecklistCategory] {
-        viewModel.selectedCategories
-    }
-
     // MARK: - View
 
     var CategoryChipStack: some View {
@@ -99,13 +95,9 @@ private extension ChecklistRowView {
     }
 
     var captionType: CaptionType {
-        let isCrossTip = checklistItem.crossTip.keys.contains(where: {
-            selectedCategory.contains($0)
-        })
-
         if checklistItem.remark != nil {
             return .remark
-        } else if isCrossTip {
+        } else if !checklistItem.crossTip.isEmpty {
             return .crossTip
         } else {
             return .none
@@ -117,9 +109,10 @@ private extension ChecklistRowView {
         case .remark:
             return checklistItem.remark ?? ""
         case .crossTip:
+            // 관심 카테고리 선택이 사라져 선택 여부와 무관하게 팁을 노출한다.
             // 여러 카테고리가 같은 통합 문구를 공유하므로 중복 문구는 한 번만 노출
             var textData: [String] = []
-            selectedCategory.forEach {
+            ChecklistCategory.allCases.forEach {
                 if let tip = checklistItem.crossTip[$0], !textData.contains(tip) {
                     textData.append(tip)
                 }
