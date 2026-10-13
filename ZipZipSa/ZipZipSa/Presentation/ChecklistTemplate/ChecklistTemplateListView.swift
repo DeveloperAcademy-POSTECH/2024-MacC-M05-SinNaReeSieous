@@ -18,6 +18,8 @@ struct ChecklistTemplateListView: View {
     @State private var templateToDelete: ChecklistTemplateData?
     /// 삭제할 수 없는 체크리스트를 지우려 했을 때의 안내. nil이면 알럿을 띄우지 않는다.
     @State private var deleteBlockReason: DeleteBlockReason?
+    /// 대표가 아닌 기본 체크리스트를 탭했을 때 수정할 수 없다는 안내
+    @State private var showCannotEditDefaultAlert = false
 
     var body: some View {
         ZStack {
@@ -70,6 +72,15 @@ struct ChecklistTemplateListView: View {
             Button(ZipLiteral.Alert.cancel, role: .cancel) { }
         } message: {
             Text(deleteBlockReason?.message ?? "")
+                .multilineTextAlignment(.center)
+        }
+        .alert(
+            ZipLiteral.Alert.cannotEditDefaultTitle,
+            isPresented: $showCannotEditDefaultAlert
+        ) {
+            Button(ZipLiteral.Alert.cancel, role: .cancel) { }
+        } message: {
+            Text(ZipLiteral.Alert.cannotEditDefaultMessage)
                 .multilineTextAlignment(.center)
         }
         .fullScreenCover(item: $editorTarget) { target in
@@ -190,10 +201,14 @@ private extension ChecklistTemplateListView {
     }
 
     /// 기본 체크리스트는 저장된 템플릿이 아니라 동적 규칙이므로 가상 행으로 그린다.
-    /// 수정/삭제는 불가능하고 대표 지정만 가능하다.
+    /// 수정/삭제는 불가능하고 대표 지정만 가능하다(길게 눌러 메뉴에서 지정).
+    /// 탭으로 대표가 바뀌면 대표 바로 아래에 있는 기본을 눌렀을 때 의도치 않게 대표가 바뀌므로,
+    /// 대표가 아닐 때 탭하면 수정할 수 없다는 안내만 띄운다.
     var DefaultTemplateCard: some View {
         Button {
-            setPrimary(nil)
+            if user?.activeTemplateID != nil {
+                showCannotEditDefaultAlert = true
+            }
         } label: {
             TemplateCardLabel(
                 name: ZipLiteral.ChecklistTemplate.defaultTemplateName,
