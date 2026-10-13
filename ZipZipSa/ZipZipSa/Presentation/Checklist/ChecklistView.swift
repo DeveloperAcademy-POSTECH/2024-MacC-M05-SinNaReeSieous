@@ -50,15 +50,13 @@ struct ChecklistView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(spacing: 24) {
-                    NavigationBarTitle
-                    ChecklistList
-                }
+            ZZSCollapsingTitleScrollView(tab: selectedSpaceType) {
+                NavigationBarTitle
+            } header: {
+                ChecklistSpaceButtonStackView(selectedSpaceType: $selectedSpaceType)
+            } content: {
+                ChecklistList
             }
-            .clipped()
-            .scrollIndicators(.never)
-            .contentMargins(.bottom, 120, for: .scrollContent)
         }
         .overlay(alignment: .bottom) {
             ZZSMainButton(
@@ -138,32 +136,21 @@ private extension ChecklistView {
     }
 
     var ChecklistList: some View {
-        ScrollViewReader { scrollView in
-            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-                Section {
-                    Spacer().frame(height: 18)
-                    ForEach(currentItems) { checklistItem in
-                        ChecklistRowView(
-                            viewModel: viewModel,
-                            checklistItem: checklistItem
-                        )
-                        .padding(.horizontal, 16)
-                        if checklistItem.id == currentItems.last?.id {
-                            Spacer().frame(height: 40)
-                        } else {
-                            QuestionDivider
-                        }
-                    }
-                    Memo
-
-                } header: {
-                    ChecklistSpaceButtonStackView(selectedSpaceType: $selectedSpaceType)
-                        .id(1)
+        VStack(spacing: 0) {
+            Spacer().frame(height: 18)
+            ForEach(currentItems) { checklistItem in
+                ChecklistRowView(
+                    viewModel: viewModel,
+                    checklistItem: checklistItem
+                )
+                .padding(.horizontal, 16)
+                if checklistItem.id == currentItems.last?.id {
+                    Spacer().frame(height: 40)
+                } else {
+                    QuestionDivider
                 }
             }
-            .onChange(of: selectedSpaceType) { oldValue, newValue in
-                scrollView.scrollTo(1)
-            }
+            Memo
         }
     }
 

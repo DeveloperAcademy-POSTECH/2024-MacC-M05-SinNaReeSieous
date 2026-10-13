@@ -42,15 +42,13 @@ struct ChecklistTemplateEditView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(spacing: 24) {
-                    Title
-                    QuestionList
-                }
+            ZZSCollapsingTitleScrollView(tab: selectedSpaceType) {
+                Title
+            } header: {
+                ChecklistSpaceButtonStackView(selectedSpaceType: $selectedSpaceType)
+            } content: {
+                QuestionList
             }
-            .clipped()
-            .scrollIndicators(.never)
-            .contentMargins(.bottom, 120, for: .scrollContent)
         }
         .overlay(alignment: .bottom) {
             ZZSMainButton(
@@ -143,31 +141,19 @@ private extension ChecklistTemplateEditView {
     }
 
     var QuestionList: some View {
-        // 공간 탭을 바꾸면 고정 헤더 위치로 되돌린다(집 보러가기 체크리스트와 동일).
-        // 최소 스크롤이라 헤더가 이미 보이면 그대로 두고, 타이틀이 보이던 상태면 유지된다.
-        ScrollViewReader { scrollView in
-            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-                Section {
-                    Spacer().frame(height: 18)
-                    ForEach(includedItems) { item in
-                        TemplateQuestionCell(item: item, isIncluded: true)
-                            .padding(.horizontal, 16)
-                        if item.id == includedItems.last?.id {
-                            Spacer().frame(height: 40)
-                        } else {
-                            QuestionDivider
-                                .padding(.horizontal, 16)
-                        }
-                    }
-                    AddSection
-                } header: {
-                    ChecklistSpaceButtonStackView(selectedSpaceType: $selectedSpaceType)
-                        .id(1)
+        VStack(spacing: 0) {
+            Spacer().frame(height: 18)
+            ForEach(includedItems) { item in
+                TemplateQuestionCell(item: item, isIncluded: true)
+                    .padding(.horizontal, 16)
+                if item.id == includedItems.last?.id {
+                    Spacer().frame(height: 40)
+                } else {
+                    QuestionDivider
+                        .padding(.horizontal, 16)
                 }
             }
-            .onChange(of: selectedSpaceType) { oldValue, newValue in
-                scrollView.scrollTo(1)
-            }
+            AddSection
         }
     }
 
