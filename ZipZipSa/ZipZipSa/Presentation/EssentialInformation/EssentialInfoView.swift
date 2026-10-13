@@ -34,6 +34,8 @@ struct EssentialInfoView: View {
     @State private var showAddressEnterView: Bool = false
 
     @State private var moveToChecklistView: Bool = false
+    /// homeHunt 전용 — 닫기 눌렀을 때 저장 안 된 기록을 버릴지 확인
+    @State private var showQuitHomeHuntAlert: Bool = false
     @State private var selectedSpaceType: SpaceType = .kitchen
 
     /// review 전용 — 체크리스트 저장 후 결과 카드 시트로 복귀하는 신호
@@ -96,6 +98,15 @@ struct EssentialInfoView: View {
                     CloseButton
                 }
             }
+        }
+        .alert(ZipLiteral.Alert.quitHomeHuntTitle, isPresented: $showQuitHomeHuntAlert) {
+            Button(ZipLiteral.Alert.close, role: .destructive) {
+                showHomeHuntSheet?.wrappedValue = false
+            }
+            Button(ZipLiteral.Alert.cancel, role: .cancel) { }
+        } message: {
+            Text(ZipLiteral.Alert.quitHomeHuntMessage)
+                .multilineTextAlignment(.center)
         }
         .onAppear {
             guard mode == .homeHunt else { return }
@@ -638,7 +649,7 @@ private extension EssentialInfoView {
 
     var CloseButton: some View {
         Button {
-            showHomeHuntSheet?.wrappedValue = false
+            showQuitHomeHuntAlert = true
         } label: {
             Image(systemName: "xmark")
                 .foregroundStyle(Color.Icon.tertiary)

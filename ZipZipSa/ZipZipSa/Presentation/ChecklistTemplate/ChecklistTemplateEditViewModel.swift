@@ -16,6 +16,8 @@ final class ChecklistTemplateEditViewModel {
 
     /// 수정 대상. nil이면 새 템플릿 생성.
     private(set) var template: ChecklistTemplateData?
+    /// 신규 생성 시 초기 선택 질문 code. nil이면 기본 규칙 세트로 시작한다.
+    private let initialCodes: [String]?
 
     var name: String = ""
     var isPrimary: Bool = false
@@ -23,8 +25,9 @@ final class ChecklistTemplateEditViewModel {
 
     private var started = false
 
-    init(template: ChecklistTemplateData? = nil) {
+    init(template: ChecklistTemplateData? = nil, initialCodes: [String]? = nil) {
         self.template = template
+        self.initialCodes = initialCodes
     }
 
     var isNew: Bool { template == nil }
@@ -45,11 +48,10 @@ final class ChecklistTemplateEditViewModel {
             name = template.name
             selectedCodes = Set(template.questionCodes)
             isPrimary = user?.activeTemplateID == template.id
+        } else if let initialCodes {
+            selectedCodes = Set(initialCodes)
         } else {
-            let defaultItems = QuestionProvider.questions(
-                selectedCategories: user?.favoriteCategories ?? []
-            )
-            selectedCodes = Set(defaultItems.map(\.code))
+            selectedCodes = Set(QuestionProvider.defaultQuestions().map(\.code))
         }
     }
 
@@ -74,7 +76,7 @@ final class ChecklistTemplateEditViewModel {
     }
 
     private func items(for spaceType: SpaceType) -> [ChecklistItem] {
-        ChecklistItem.checklistItems
+        ChecklistItem.activeItems
             .filter { $0.space.type == spaceType }
             .sorted { $0.space.questionNumber < $1.space.questionNumber }
     }
@@ -90,7 +92,7 @@ final class ChecklistTemplateEditViewModel {
         let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         let finalName = trimmedName.isEmpty ? defaultName(user: user) : trimmedName
         // 노출 순서는 공간·연번 기준이지만, 저장도 카탈로그 순서로 정규화해둔다
-        let orderedCodes = ChecklistItem.checklistItems
+        let orderedCodes = ChecklistItem.activeItems
             .filter { selectedCodes.contains($0.code) }
             .map(\.code)
 

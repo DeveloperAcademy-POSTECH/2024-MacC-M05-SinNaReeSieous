@@ -56,7 +56,8 @@ extension ChecklistItem {
             case .negative:
                 maxScore = basicScore
             case .positive:
-                maxScore = Float(question.answerOptions.count) * 0.5
+                // 시작 점수가 0이 아닐 수 있으므로 실제 달성 가능한 최댓값으로 계산한다
+                maxScore = basicScore + Float(question.answerOptions.count) * 0.5
             case .neutral:
                 maxScore = 0
             }

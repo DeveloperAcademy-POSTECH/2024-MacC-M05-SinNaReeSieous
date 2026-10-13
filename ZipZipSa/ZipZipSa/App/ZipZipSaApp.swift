@@ -24,6 +24,7 @@ struct ZipZipSaApp: App {
         }
         container.mainContext.autosaveEnabled = true
         LegacyBlobMigrator.migrateIfNeeded(context: container.mainContext)
+        ZZSAlertAppearance.apply()
     }
 
     var body: some Scene {
