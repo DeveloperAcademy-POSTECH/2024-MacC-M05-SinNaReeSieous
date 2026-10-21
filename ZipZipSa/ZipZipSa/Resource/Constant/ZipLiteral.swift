@@ -204,14 +204,6 @@ enum ZipLiteral {
         static let deleteTemplateMessage: String = "삭제할 경우 되돌릴 수 없습니다"
         static let delete: String = "삭제"
 
-        // 기본 체크리스트는 삭제할 수 없다
-        static let cannotDeleteDefaultTitle: String = "'기본 문항'은 삭제할 수 없어요."
-        static let cannotDeleteDefaultMessage: String = "기본 문항은 삭제가 불가능합니다."
-
-        // 기본 체크리스트는 수정할 수 없다
-        static let cannotEditDefaultTitle: String = "'기본 문항'은 수정할 수 없어요."
-        static let cannotEditDefaultMessage: String = "기본 문항은 수정이 불가능합니다.\n길게 눌러 대표로 지정할 수 있어요."
-
         // 대표로 지정된 체크리스트는 삭제할 수 없다
         static func cannotDeletePrimaryTitle(_ name: String) -> String {
             "'\(name)'\(topicParticle(after: name)) 삭제할 수 없어요."

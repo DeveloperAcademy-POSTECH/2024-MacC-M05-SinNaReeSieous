@@ -116,6 +116,7 @@ private extension OnboardingView {
     func endOnboarding() {
         _ = UserService.fetchOrCreateUser(context: modelContext)
         guard (try? modelContext.save()) != nil else { return }
+        DefaultTemplateSeeder.seedIfNeeded(context: modelContext)
         firstLaunch = false
     }
 }

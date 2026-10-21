@@ -6,7 +6,7 @@
 import SwiftUI
 import SwiftData
 
-/// 체크리스트 관리 화면. 기본 체크리스트(가상 행)와 커스텀 템플릿 목록을 보여주고,
+/// 체크리스트 관리 화면. 기본 체크리스트를 포함한 템플릿 목록을 보여주고,
 /// 탭하면 수정 플로우로, +만들기로 생성 플로우로 진입한다.
 struct ChecklistTemplateListView: View {
     @Environment(\.dismiss) private var dismiss
@@ -16,10 +16,8 @@ struct ChecklistTemplateListView: View {
     @State private var editorTarget: EditorTarget?
     /// 삭제 확인 대상. nil이면 알럿을 띄우지 않는다.
     @State private var templateToDelete: ChecklistTemplateData?
-    /// 삭제할 수 없는 체크리스트를 지우려 했을 때의 안내. nil이면 알럿을 띄우지 않는다.
-    @State private var deleteBlockReason: DeleteBlockReason?
-    /// 대표가 아닌 기본 체크리스트를 탭했을 때 수정할 수 없다는 안내
-    @State private var showCannotEditDefaultAlert = false
+    /// 대표 체크리스트를 지우려 했을 때의 안내. 대표의 이름을 담는다. nil이면 알럿을 띄우지 않는다.
+    @State private var primaryNameToBlockDelete: String?
 
     var body: some View {
         ZStack {
@@ -63,24 +61,15 @@ struct ChecklistTemplateListView: View {
                 .multilineTextAlignment(.center)
         }
         .alert(
-            deleteBlockReason?.title ?? "",
+            ZipLiteral.Alert.cannotDeletePrimaryTitle(primaryNameToBlockDelete ?? ""),
             isPresented: Binding(
-                get: { deleteBlockReason != nil },
-                set: { if !$0 { deleteBlockReason = nil } }
+                get: { primaryNameToBlockDelete != nil },
+                set: { if !$0 { primaryNameToBlockDelete = nil } }
             )
         ) {
             Button(ZipLiteral.Alert.cancel, role: .cancel) { }
         } message: {
-            Text(deleteBlockReason?.message ?? "")
-                .multilineTextAlignment(.center)
-        }
-        .alert(
-            ZipLiteral.Alert.cannotEditDefaultTitle,
-            isPresented: $showCannotEditDefaultAlert
-        ) {
-            Button(ZipLiteral.Alert.cancel, role: .cancel) { }
-        } message: {
-            Text(ZipLiteral.Alert.cannotEditDefaultMessage)
+            Text(ZipLiteral.Alert.cannotDeletePrimaryMessage)
                 .multilineTextAlignment(.center)
         }
         .fullScreenCover(item: $editorTarget) { target in
@@ -98,27 +87,6 @@ struct ChecklistTemplateListView: View {
 
 private extension ChecklistTemplateListView {
 
-    /// 삭제할 수 없는 체크리스트와 그 이유.
-    /// 기본 체크리스트는 애초에 지울 대상이 아니고, 대표는 먼저 다른 걸 대표로 지정해야 한다.
-    enum DeleteBlockReason {
-        case isDefault
-        case isPrimary(name: String)
-
-        var title: String {
-            switch self {
-            case .isDefault: ZipLiteral.Alert.cannotDeleteDefaultTitle
-            case .isPrimary(let name): ZipLiteral.Alert.cannotDeletePrimaryTitle(name)
-            }
-        }
-
-        var message: String {
-            switch self {
-            case .isDefault: ZipLiteral.Alert.cannotDeleteDefaultMessage
-            case .isPrimary: ZipLiteral.Alert.cannotDeletePrimaryMessage
-            }
-        }
-    }
-
     /// fullScreenCover(item:)용 편집 대상.
     /// 신규(.new)는 템플릿 선택 화면부터, 수정(.edit)은 편집 화면부터 시작한다.
     enum EditorTarget: Identifiable {
@@ -134,10 +102,6 @@ private extension ChecklistTemplateListView {
     }
 
     var user: User? { users.first }
-
-    var defaultQuestionCount: Int {
-        QuestionProvider.defaultQuestions().count
-    }
 
     // MARK: - View
 
@@ -178,7 +142,7 @@ private extension ChecklistTemplateListView {
     }
 
     /// 대표 체크리스트는 항상 맨 위에 노출한다.
-    var rows: [ChecklistTemplateRow] {
+    var rows: [ChecklistTemplateData] {
         ChecklistTemplateRow.ordered(
             templates: user?.templates ?? [],
             markedID: user?.activeTemplateID
@@ -187,47 +151,12 @@ private extension ChecklistTemplateListView {
 
     var TemplateCardList: some View {
         VStack(spacing: 10) {
-            ForEach(rows) { row in
-                switch row {
-                case .default:
-                    DefaultTemplateCard
-                case .custom(let template):
-                    TemplateCard(template: template)
-                }
+            ForEach(rows) { template in
+                TemplateCard(template: template)
             }
         }
         .padding(.horizontal, 16)
         .padding(.top, 24)
-    }
-
-    /// 기본 체크리스트는 저장된 템플릿이 아니라 동적 규칙이므로 가상 행으로 그린다.
-    /// 수정/삭제는 불가능하고 대표 지정만 가능하다(길게 눌러 메뉴에서 지정).
-    /// 탭으로 대표가 바뀌면 대표 바로 아래에 있는 기본을 눌렀을 때 의도치 않게 대표가 바뀌므로,
-    /// 대표가 아닐 때 탭하면 수정할 수 없다는 안내만 띄운다.
-    var DefaultTemplateCard: some View {
-        Button {
-            if user?.activeTemplateID != nil {
-                showCannotEditDefaultAlert = true
-            }
-        } label: {
-            TemplateCardLabel(
-                name: ZipLiteral.ChecklistTemplate.defaultTemplateName,
-                questionCount: defaultQuestionCount,
-                isPrimary: user?.activeTemplateID == nil
-            )
-        }
-        .contextMenu {
-            Button {
-                setPrimary(nil)
-            } label: {
-                Label(ZipLiteral.ChecklistTemplate.setAsPrimary, systemImage: "checkmark.circle")
-            }
-            Button(role: .destructive) {
-                deleteBlockReason = .isDefault
-            } label: {
-                Label(ZipLiteral.ChecklistTemplate.delete, systemImage: "trash")
-            }
-        }
     }
 
     func TemplateCard(template: ChecklistTemplateData) -> some View {
@@ -249,7 +178,7 @@ private extension ChecklistTemplateListView {
             Button(role: .destructive) {
                 // 대표는 먼저 다른 체크리스트를 대표로 지정해야 지울 수 있다
                 if user?.activeTemplateID == template.id {
-                    deleteBlockReason = .isPrimary(name: template.name)
+                    primaryNameToBlockDelete = template.name
                 } else {
                     templateToDelete = template
                 }
@@ -299,19 +228,17 @@ private extension ChecklistTemplateListView {
 
     // MARK: - Action
 
-    /// nil이면 기본 체크리스트를 대표로 지정한다.
-    func setPrimary(_ template: ChecklistTemplateData?) {
+    func setPrimary(_ template: ChecklistTemplateData) {
         let user = UserService.fetchOrCreateUser(context: modelContext)
-        user.activeTemplateID = template?.id
+        user.activeTemplateID = template.id
         try? modelContext.save()
         HapticManager.shared.impact(style: .light)
     }
 
     func delete(_ template: ChecklistTemplateData) {
         let user = UserService.fetchOrCreateUser(context: modelContext)
-        if user.activeTemplateID == template.id {
-            user.activeTemplateID = nil
-        }
+        // 대표는 삭제 메뉴에서 미리 막는다
+        guard user.activeTemplateID != template.id else { return }
         user.templates.removeAll { $0.id == template.id }
         modelContext.delete(template)
         try? modelContext.save()

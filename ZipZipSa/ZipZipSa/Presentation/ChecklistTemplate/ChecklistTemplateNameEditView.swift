@@ -117,6 +117,8 @@ private extension ChecklistTemplateNameEditView {
                     .applyZZSFont(zzsFontSet: .subheadlineRegular)
             }
         }
+        // 대표는 해제할 수 없다. 다른 체크리스트를 대표로 지정하면 바뀐다.
+        .disabled(viewModel.wasPrimary)
         .padding(.horizontal, 16)
         .padding(.top, 24)
     }

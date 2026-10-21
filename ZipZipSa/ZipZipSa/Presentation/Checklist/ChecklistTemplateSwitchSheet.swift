@@ -12,7 +12,7 @@ struct ChecklistTemplateSwitchSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Query private var users: [User]
 
-    /// 현재 세션에서 사용 중인 템플릿 id. nil이면 기본 체크리스트.
+    /// 현재 세션에서 사용 중인 템플릿 id. nil이면 저장된 템플릿이 없어 기본 질문 세트로 폴백한 상태.
     let currentTemplateID: UUID?
     let onSelect: (ChecklistTemplateData?) -> Void
 
@@ -35,10 +35,6 @@ private extension ChecklistTemplateSwitchSheet {
 
     var user: User? { users.first }
 
-    var defaultQuestionCount: Int {
-        QuestionProvider.defaultQuestions().count
-    }
-
     // MARK: - View
 
     var Title: some View {
@@ -51,7 +47,7 @@ private extension ChecklistTemplateSwitchSheet {
     }
 
     /// 사용 중인 체크리스트는 항상 맨 위에 노출한다.
-    var rows: [ChecklistTemplateRow] {
+    var rows: [ChecklistTemplateData] {
         ChecklistTemplateRow.ordered(
             templates: user?.templates ?? [],
             markedID: currentTemplateID
@@ -60,24 +56,13 @@ private extension ChecklistTemplateSwitchSheet {
 
     var TemplateCardList: some View {
         VStack(spacing: 10) {
-            ForEach(rows) { row in
-                switch row {
-                case .default:
-                    TemplateCard(
-                        name: ZipLiteral.ChecklistTemplate.defaultTemplateName,
-                        questionCount: defaultQuestionCount,
-                        isCurrent: currentTemplateID == nil
-                    ) {
-                        select(nil)
-                    }
-                case .custom(let template):
-                    TemplateCard(
-                        name: template.name,
-                        questionCount: template.questionCodes.count,
-                        isCurrent: currentTemplateID == template.id
-                    ) {
-                        select(template)
-                    }
+            ForEach(rows) { template in
+                TemplateCard(
+                    name: template.name,
+                    questionCount: template.questionCodes.count,
+                    isCurrent: currentTemplateID == template.id
+                ) {
+                    select(template)
                 }
             }
         }

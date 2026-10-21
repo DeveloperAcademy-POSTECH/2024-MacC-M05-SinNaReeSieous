@@ -86,20 +86,33 @@ struct ChecklistTemplateEditViewModelTests {
         #expect(user.templates[0].name == "내 체크리스트 1")
     }
 
-    @Test func 대표_해제하고_저장하면_기본으로_폴백한다() throws {
+    @Test func 대표는_해제할_수_없어_저장해도_대표로_남는다() throws {
         let container = try makeContainer()
         let user = makeUser(in: container)
-        let template = ChecklistTemplateData(name: "대표였음", questionCodes: [ChecklistItem.checklistItems[0].code])
+        let template = ChecklistTemplateData(name: "대표", questionCodes: [ChecklistItem.checklistItems[0].code])
         user.templates.append(template)
         user.activeTemplateID = template.id
 
         let vm = ChecklistTemplateEditViewModel(template: template)
         vm.start(user: user)
+        #expect(vm.wasPrimary)
         vm.isPrimary = false
         vm.save(context: container.mainContext)
 
-        #expect(user.activeTemplateID == nil)
-        #expect(user.activeTemplate == nil)
+        #expect(user.activeTemplateID == template.id)
+    }
+
+    @Test func 자동_이름은_기본_체크리스트를_세지_않고_빈_번호를_쓴다() throws {
+        let container = try makeContainer()
+        let user = makeUser(in: container)
+        user.templates.append(ChecklistTemplateData(name: "기본", questionCodes: [ChecklistItem.checklistItems[0].code]))
+        user.templates.append(ChecklistTemplateData(name: "내 체크리스트 1", questionCodes: [ChecklistItem.checklistItems[0].code]))
+
+        let vm = ChecklistTemplateEditViewModel()
+        vm.start(user: user)
+        vm.save(context: container.mainContext)
+
+        #expect(user.templates.contains { $0.name == "내 체크리스트 2" })
     }
 
     @Test func 질문이_없으면_저장하지_않는다() throws {

@@ -21,6 +21,9 @@ final class ChecklistTemplateEditViewModel {
 
     var name: String = ""
     var isPrimary: Bool = false
+    /// 편집을 시작할 때 이미 대표였는지.
+    /// 대표가 하나도 없어지지 않도록 대표는 해제할 수 없고, 다른 체크리스트를 대표로 지정해야 바뀐다.
+    private(set) var wasPrimary: Bool = false
     private(set) var selectedCodes: Set<String> = []
 
     private var started = false
@@ -48,6 +51,7 @@ final class ChecklistTemplateEditViewModel {
             name = template.name
             selectedCodes = Set(template.questionCodes)
             isPrimary = user?.activeTemplateID == template.id
+            wasPrimary = isPrimary
         } else if let initialCodes {
             selectedCodes = Set(initialCodes)
         } else {
@@ -107,16 +111,21 @@ final class ChecklistTemplateEditViewModel {
             saved = newTemplate
         }
 
-        if isPrimary {
+        // 대표 해제는 막혀 있으므로(wasPrimary) 체크된 경우만 반영한다
+        if isPrimary || wasPrimary {
             user.activeTemplateID = saved.id
-        } else if user.activeTemplateID == saved.id {
-            // 대표였던 템플릿에서 체크를 해제하면 기본 체크리스트가 대표가 된다
-            user.activeTemplateID = nil
         }
         try? context.save()
     }
 
+    /// "내 체크리스트 N"에서 아직 쓰이지 않은 가장 작은 N을 고른다.
+    /// 기본 체크리스트도 템플릿 목록에 들어 있어 개수로 매기면 번호가 하나씩 밀린다.
     private func defaultName(user: User) -> String {
-        "내 체크리스트 \(user.templates.count + 1)"
+        let names = Set(user.templates.map(\.name))
+        var number = 1
+        while names.contains("내 체크리스트 \(number)") {
+            number += 1
+        }
+        return "내 체크리스트 \(number)"
     }
 }
