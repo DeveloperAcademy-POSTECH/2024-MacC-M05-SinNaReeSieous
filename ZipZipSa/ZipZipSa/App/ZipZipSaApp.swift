@@ -24,7 +24,7 @@ struct ZipZipSaApp: App {
         }
         container.mainContext.autosaveEnabled = true
         LegacyBlobMigrator.migrateIfNeeded(context: container.mainContext)
-        // 이관(선택 카테고리 반영 체크리스트) 뒤에 돌려야 그 체크리스트를 쓰던 사용자의 대표가 유지된다
+        // 이관(선택 카테고리 체크리스트) 뒤에 돌려야 그 체크리스트를 쓰던 사용자의 대표가 유지된다
         DefaultTemplateSeeder.seedIfNeeded(context: container.mainContext)
         ZZSAlertAppearance.apply()
         ZZSNavigationBarAppearance.apply()
