@@ -41,6 +41,7 @@ enum ZipLiteral {
         static let navigationTitle: String = "용북이의\n전월세사기 도감"
         static let back: String = "뒤로"
         static let emptyContent: String = "아직 준비 중인 내용이에요.\n조금만 기다려 주세요."
+        static let disclaimer: String = "용북이의 전월세사기 도감은 집을 구할 때 참고할 수 있도록 정리한 일반적인 정보예요. 법적 효력이 있는 안내가 아니며, 실제 계약 전에는 공인중개사·법률 전문가나 HUG(주택도시보증공사) 등 관련 기관에 꼭 확인해 주세요."
     }
 
     enum Checklist {

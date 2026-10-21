@@ -17,6 +17,7 @@ struct FraudBookView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Title
                     CategoryCardList
+                    Disclaimer
                 }
             }
             .scrollIndicators(.never)
@@ -67,6 +68,18 @@ private extension FraudBookView {
         .padding(.top, 16)
         .padding(.bottom, 24)
         .padding(.horizontal, 16)
+    }
+
+    /// 도감이 참고용 일반 정보라는 안내. 내용을 가리지 않도록 작고 옅은 글씨로 둔다.
+    var Disclaimer: some View {
+        Text(ZipLiteral.FraudBook.disclaimer)
+            .foregroundStyle(Color.Text.placeholder)
+            .applyZZSFont(zzsFontSet: .caption1Regular)
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 16)
+            .padding(.top, 8)
+            .padding(.bottom, 40)
     }
 
     func CategoryCard(for category: FraudBookCategory) -> some View {
