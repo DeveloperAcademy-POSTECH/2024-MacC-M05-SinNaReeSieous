@@ -74,6 +74,9 @@ private extension FraudBookView {
     var Disclaimer: some View {
         Text(ZipLiteral.FraudBook.disclaimer)
             .foregroundStyle(Color.Text.placeholder)
+            // caption1Regular는 행간이 좁아(줄 높이 14pt) 여러 줄 안내문이 빽빽해 보인다.
+            // applyZZSFont 안쪽에 둬야 폰트 세트의 lineSpacing보다 우선 적용된다.
+            .lineSpacing(6)
             .applyZZSFont(zzsFontSet: .caption1Regular)
             .multilineTextAlignment(.center)
             .frame(maxWidth: .infinity)
