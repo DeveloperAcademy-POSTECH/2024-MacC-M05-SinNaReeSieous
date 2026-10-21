@@ -163,6 +163,8 @@ private extension EssentialInfoView {
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .largeTitle)
             .padding(.horizontal, 16)
+            // 상단 버튼과 타이틀 사이 간격은 전월세사기 도감과 같게(위 12) 맞춘다
+            .padding(.top, 12)
             .padding(.bottom, 32)
     }
 
