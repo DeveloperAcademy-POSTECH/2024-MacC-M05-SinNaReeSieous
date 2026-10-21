@@ -26,6 +26,8 @@ struct MainView: View {
                     .ignoresSafeArea()
                 VStack(alignment: .leading, spacing: 0){
                     TopBar
+                        // 도감 안내 말풍선이 아래 팁 카드에 가려지지 않게 위로 올린다
+                        .zIndex(1)
                     ZipZipSaTips
                     MainButtons
                     RecentlyViewedHomeTitle
@@ -61,6 +63,13 @@ private extension MainView {
             Spacer()
             HStack(spacing: 16) {
                 FraudBookButton
+                    // 꼬리가 책 아이콘을 가리키고, 말풍선은 두 번째 타이틀 줄 오른쪽 빈자리에 온다
+                    .zzsOneTimeTipBelow(
+                        key: ZipLiteral.OneTimeTip.fraudBookKey,
+                        text: ZipLiteral.OneTimeTip.fraudBook,
+                        trailingOverhang: 27,
+                        spacing: 6
+                    )
                 SettingButton
             }
         }

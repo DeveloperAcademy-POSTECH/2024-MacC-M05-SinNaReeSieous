@@ -58,6 +58,16 @@ struct ChecklistView: View {
                 ChecklistList
             }
         }
+        // iOS 26은 "체크리스트 변경"이 아이콘만 보이므로 처음 한 번 무슨 버튼인지 알려준다
+        // 꼬리가 툴바의 유리 버튼(가운데 x: 화면 오른쪽 끝에서 38)을 가리키도록 버튼 바로 아래에 붙인다
+        .zzsOneTimeTipTopTrailing(
+            key: ZipLiteral.OneTimeTip.checklistSwitchKey,
+            text: ZipLiteral.OneTimeTip.checklistSwitch,
+            isEnabled: showsChecklistSwitchTip,
+            top: -6,
+            trailing: 16,
+            arrowInsetFromTrailing: 22
+        )
         .overlay(alignment: .bottom) {
             ZZSMainButton(
                 action: {
@@ -121,6 +131,12 @@ struct ChecklistView: View {
 }
 
 private extension ChecklistView {
+
+    var showsChecklistSwitchTip: Bool {
+        guard mode == .homeHunt else { return false }
+        if #available(iOS 26, *) { return true }
+        return false
+    }
 
     var currentItems: [ChecklistItem] {
         viewModel.items(for: selectedSpaceType)

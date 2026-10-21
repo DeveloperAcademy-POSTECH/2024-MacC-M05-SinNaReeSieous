@@ -50,6 +50,13 @@ enum ZipLiteral {
         static let memoPlaceHolder = "메모를 입력해 주세요"
     }
 
+    enum OneTimeTip {
+        static let fraudBookKey = "didShowFraudBookTip"
+        static let fraudBook = "전월세사기 도감이 생겼어요!"
+        static let checklistSwitchKey = "didShowChecklistSwitchTip"
+        static let checklistSwitch = "여기서 다른 체크리스트로 바꿀 수 있어요"
+    }
+
     enum ChecklistTemplate {
         // 관리(목록) 화면
         static let listTitle = "수정할 체크리스트를\n알려주세요"
