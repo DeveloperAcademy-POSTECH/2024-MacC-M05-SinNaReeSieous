@@ -89,16 +89,16 @@ struct ChecklistView: View {
         .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             if mode == .homeHunt {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
+                    // iOS 26은 아이콘만(유리), iOS 18은 "아이콘 + 체크리스트 변경"
+                    ZZSToolbarButton(
+                        title: ZipLiteral.ChecklistTemplate.switchButton,
+                        systemImage: "pencil.and.list.clipboard",
+                        iconFont: .iconBody
+                    ) {
                         showTemplateSwitchSheet = true
-                    } label: {
-                        Text(ZipLiteral.ChecklistTemplate.switchButton)
-                            .foregroundStyle(Color.Button.tertiary)
-                            .applyZZSFont(zzsFontSet: .subheadlineRegular)
                     }
                 }
             }

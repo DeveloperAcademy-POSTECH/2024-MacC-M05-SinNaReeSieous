@@ -22,14 +22,18 @@ struct HomeListView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                TopBar
                 if homes.isEmpty {
+                    TopBar
                     Spacer().frame(height: UIScreen.screenSize.height/812*48)
                     NoHome
                 } else {
+                    // 타이틀도 목록과 함께 스크롤되고, 고정되는 건 뒤로 버튼이 있는 바뿐이다
                     ScrollView {
-                        ViewedHomeList
-                            .padding(.horizontal, 16)
+                        VStack(spacing: 0) {
+                            TopBar
+                            ViewedHomeList
+                                .padding(.horizontal, 16)
+                        }
                     }
                     .contentMargins(.bottom, 24, for: .automatic)
                     .scrollIndicators(.hidden)

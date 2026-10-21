@@ -55,30 +55,15 @@ struct ChecklistTemplatePresetSelectView: View {
             .scrollIndicators(.never)
         }
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                BackButton
+                ZZSCloseButton(action: onClose)
             }
         }
     }
 }
 
 private extension ChecklistTemplatePresetSelectView {
-
-    var BackButton: some View {
-        Button {
-            onClose()
-        } label: {
-            HStack(spacing: 8) {
-                Image(systemName: "chevron.left")
-                    .applyZZSFont(zzsFontSet: .iconTitle1)
-                Text(ZipLiteral.ChecklistTemplate.back)
-                    .applyZZSFont(zzsFontSet: .bodyRegular)
-            }
-            .foregroundStyle(Color.Button.tertiary)
-        }
-    }
 
     var Title: some View {
         Text(ZipLiteral.ChecklistTemplate.presetSelectTitle)

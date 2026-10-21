@@ -7,7 +7,6 @@ import SwiftUI
 
 /// 전월세사기 도감 목록 화면. 카테고리 카드를 탭하면 상세(아코디언) 화면으로 이동한다.
 struct FraudBookView: View {
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         ZStack {
@@ -22,32 +21,12 @@ struct FraudBookView: View {
             }
             .scrollIndicators(.never)
         }
-        .navigationBarBackButtonHidden()
+        // 시스템 뒤로 버튼(ZZSNavigationBarAppearance)을 쓴다
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.hidden, for: .navigationBar)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                BackButton
-            }
-        }
     }
 }
 
 private extension FraudBookView {
-
-    var BackButton: some View {
-        Button {
-            dismiss()
-        } label: {
-            HStack(spacing: 8) {
-                Image(systemName: "chevron.left")
-                    .applyZZSFont(zzsFontSet: .iconTitle1)
-                Text(ZipLiteral.FraudBook.back)
-                    .applyZZSFont(zzsFontSet: .bodyRegular)
-            }
-            .foregroundStyle(Color.Button.tertiary)
-        }
-    }
 
     var Title: some View {
         Text(ZipLiteral.FraudBook.navigationTitle)

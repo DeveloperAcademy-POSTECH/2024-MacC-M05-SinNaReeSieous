@@ -63,10 +63,11 @@ struct ChecklistTemplateEditView: View {
         }
         .background(Color.Background.primary)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                CloseButton
+                ZZSCloseButton {
+                    showDiscardAlert = true
+                }
             }
         }
         .onAppear {
@@ -113,20 +114,6 @@ private extension ChecklistTemplateEditView {
             onClose()
         } else {
             dismiss()
-        }
-    }
-
-    var CloseButton: some View {
-        Button {
-            showDiscardAlert = true
-        } label: {
-            HStack(spacing: 8) {
-                Image(systemName: "xmark")
-                    .applyZZSFont(zzsFontSet: .iconTitle1)
-                Text(ZipLiteral.ChecklistTemplate.close)
-                    .applyZZSFont(zzsFontSet: .bodyRegular)
-            }
-            .foregroundStyle(Color.Button.tertiary)
         }
     }
 

@@ -91,11 +91,12 @@ struct EssentialInfoView: View {
         .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             if mode == .homeHunt {
                 ToolbarItem(placement: .topBarLeading) {
-                    CloseButton
+                    ZZSCloseButton {
+                        showQuitHomeHuntAlert = true
+                    }
                 }
             }
         }
@@ -647,16 +648,6 @@ private extension EssentialInfoView {
         Text(text)
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .bodyBold)
-    }
-
-    var CloseButton: some View {
-        Button {
-            showQuitHomeHuntAlert = true
-        } label: {
-            Image(systemName: "xmark")
-                .foregroundStyle(Color.Icon.tertiary)
-                .applyZZSFont(zzsFontSet: .bodyBold)
-        }
     }
 
     // MARK: - Action

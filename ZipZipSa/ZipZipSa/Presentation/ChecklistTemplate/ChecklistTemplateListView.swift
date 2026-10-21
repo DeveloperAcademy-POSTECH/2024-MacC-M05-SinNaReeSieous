@@ -9,7 +9,6 @@ import SwiftData
 /// 체크리스트 관리 화면. 기본 체크리스트를 포함한 템플릿 목록을 보여주고,
 /// 탭하면 수정 플로우로, +만들기로 생성 플로우로 진입한다.
 struct ChecklistTemplateListView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Query private var users: [User]
 
@@ -31,13 +30,9 @@ struct ChecklistTemplateListView: View {
             }
             .scrollIndicators(.never)
         }
-        .navigationBarBackButtonHidden()
+        // 시스템 뒤로 버튼(ZZSNavigationBarAppearance)을 쓴다
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                BackButton
-            }
             ToolbarItem(placement: .topBarTrailing) {
                 CreateButton
             }
@@ -105,31 +100,10 @@ private extension ChecklistTemplateListView {
 
     // MARK: - View
 
-    var BackButton: some View {
-        Button {
-            dismiss()
-        } label: {
-            HStack(spacing: 8) {
-                Image(systemName: "chevron.left")
-                    .applyZZSFont(zzsFontSet: .iconTitle1)
-                Text(ZipLiteral.ChecklistTemplate.back)
-                    .applyZZSFont(zzsFontSet: .bodyRegular)
-            }
-            .foregroundStyle(Color.Button.tertiary)
-        }
-    }
-
+    /// iOS 26은 +만(유리), iOS 18은 "+ 만들기".
     var CreateButton: some View {
-        Button {
+        ZZSToolbarButton(title: ZipLiteral.ChecklistTemplate.create, systemImage: "plus") {
             editorTarget = .new
-        } label: {
-            HStack(spacing: 8) {
-                Image(systemName: "plus")
-                    .applyZZSFont(zzsFontSet: .iconTitle1)
-                Text(ZipLiteral.ChecklistTemplate.create)
-                    .applyZZSFont(zzsFontSet: .bodyRegular)
-            }
-            .foregroundStyle(Color.Button.tertiary)
         }
     }
 
