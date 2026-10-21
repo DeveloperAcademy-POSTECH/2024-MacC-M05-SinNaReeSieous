@@ -13,7 +13,7 @@ enum ZipLiteral {
        static let onboardingGreetings = [
             "안녕하세요.\n저는 용궁에서 올라온 거북이, 용북이에요!",
             "저와 함께라면 빠르고 꼼꼼하게 \n집을 살펴볼 수 있어요.",
-            "주인님이 집을 볼 때, 어디를 더 신경써서 \n보고싶은지 알려주세요. 주인님의 선호에 \n맞게 체크리스트를 준비할게요!",
+            "주인님만의 체크리스트를 만들 수 있어요. \n집 볼 때 꼭 확인하고 싶은 항목을 \n직접 추가해 보세요!",
             "그럼 바로 시작할까요?"
         ]
         static let startButtonText: String = "시작하기"
@@ -36,7 +36,13 @@ enum ZipLiteral {
         static let seeAllViewedHomes: String = "전체보기"
         static let recentlyViewedHomeContent: String = "아직 내가 둘러본 집이 없어요.\n집을 보러 가서 집을 추가해 보세요."
     }
-    
+
+    enum FraudBook {
+        static let navigationTitle: String = "용북이의\n전월세사기 도감"
+        static let emptyContent: String = "아직 준비 중인 내용이에요.\n조금만 기다려 주세요."
+        static let disclaimer: String = "용북이의 전월세사기 도감은 집을 구할 때 참고할 수 있도록 정리한 일반적인 정보예요. 법적 효력이 있는 안내가 아니며, 실제 계약 전에는 공인중개사·법률 전문가나 HUG(주택도시보증공사) 등 관련 기관에 꼭 확인해 주세요."
+    }
+
     enum Checklist {
         static let bottomButton = "집 구조 스캔하기"
         static let navigationTitle = "주인님을 위한\n맞춤 체크리스트예요"
@@ -44,16 +50,31 @@ enum ZipLiteral {
         static let memoPlaceHolder = "메모를 입력해 주세요"
     }
 
+    enum OneTimeTip {
+        static let fraudBookKey = "didShowFraudBookTip"
+        static let fraudBook = "전월세사기 도감이 생겼어요!"
+        static let checklistSwitchKey = "didShowChecklistSwitchTip"
+        static let checklistSwitch = "여기서 다른 체크리스트로 바꿀 수 있어요"
+    }
+
     enum ChecklistTemplate {
         // 관리(목록) 화면
         static let listTitle = "수정할 체크리스트를\n알려주세요"
-        static let back = "뒤로"
         static let create = "만들기"
         static let defaultTemplateName = "기본"
+        /// 관심 카테고리를 골라둔 기존 사용자의 세트를 옮겨 담은 템플릿 이름
+        static let favoriteMigratedName = "선택 카테고리 체크리스트"
         static let primaryBadge = "대표"
         static let questionCountSuffix = "개 문항"
         static let setAsPrimary = "대표로 지정"
         static let delete = "삭제"
+
+        // 템플릿 선택 화면
+        static let presetSelectTitle = "질문 템플릿을 선택하여\n시작할 수 있어요"
+        static let presetBasic = "기본"
+        static let presetDetailed = "자세히보기"
+        static let presetQuick = "빠르게보기"
+        static let presetCustom = "직접 추가하기"
 
         // 편집 화면
         static let close = "닫기"
@@ -171,6 +192,54 @@ enum ZipLiteral {
         static let cancel: String = "취소"
         static let skip: String = "건너뛰기"
         static let quit: String = "그만두기"
+
+        // 집 둘러보기 그만두기
+        static let quitHomeHuntTitle: String = "집 둘러보기를 그만두시겠어요?"
+        static let quitHomeHuntMessage: String = "저장하지 않은 내용은 모두 삭제됩니다."
+        static let close: String = "닫기"
+
+        // 체크리스트 편집 중 나가기
+        static let discardTemplateEditTitle: String = "변경 내용을 저장하지 않고 나갈까요?"
+        static let discardTemplateEditMessage: String = "저장되지 않은 수정 내용이 사라집니다."
+        static let leave: String = "나가기"
+
+        // 체크리스트 삭제
+        static func deleteTemplateTitle(_ name: String) -> String {
+            "'\(name)'\(objectParticle(after: name)) 삭제할까요?"
+        }
+        static let deleteTemplateMessage: String = "삭제할 경우 되돌릴 수 없습니다"
+        static let delete: String = "삭제"
+
+        // 대표로 지정된 체크리스트는 삭제할 수 없다
+        static func cannotDeletePrimaryTitle(_ name: String) -> String {
+            "'\(name)'\(topicParticle(after: name)) 삭제할 수 없어요."
+        }
+        static let cannotDeletePrimaryMessage: String = "대표 체크리스트는 삭제가 불가능합니다."
+
+        /// 마지막 글자에 받침이 있는지. 판별할 수 없으면 nil.
+        /// 체크리스트 이름은 사용자가 정하므로 "체크리스트을" 같은 문장이 나오지 않게 한다.
+        /// 한글과 숫자만 판별한다.
+        private static func hasFinalConsonant(_ word: String) -> Bool? {
+            guard let last = word.last else { return nil }
+            if let scalar = last.unicodeScalars.first?.value, (0xAC00...0xD7A3).contains(scalar) {
+                return (scalar - 0xAC00) % 28 != 0
+            }
+            // 1(일)·3(삼)처럼 읽었을 때 받침이 있는 숫자
+            if let digit = last.wholeNumberValue, (0...9).contains(digit) {
+                return [0, 1, 3, 6, 7, 8].contains(digit)
+            }
+            return nil
+        }
+
+        /// 목적격 조사 (을/를)
+        private static func objectParticle(after word: String) -> String {
+            (hasFinalConsonant(word) ?? false) ? "을" : "를"
+        }
+
+        /// 주제 조사 (은/는)
+        private static func topicParticle(after word: String) -> String {
+            (hasFinalConsonant(word) ?? false) ? "은" : "는"
+        }
     }
     
     enum APIEndpoints {

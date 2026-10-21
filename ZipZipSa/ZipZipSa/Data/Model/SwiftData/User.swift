@@ -17,7 +17,9 @@ final class User {
     @Relationship(deleteRule: .cascade)
     var templates: [ChecklistTemplateData] = []
 
-    /// 현재 사용 중인 템플릿 id. nil이면 기본 템플릿(관심 카테고리 기반 동적 규칙).
+    /// 현재 사용 중인(대표) 템플릿 id.
+    /// 기본 체크리스트도 저장된 템플릿(DefaultTemplateSeeder)이라 보통 nil이 아니다.
+    /// nil이거나 삭제된 템플릿을 가리키면 기본 질문 세트(QuestionProvider.defaultQuestions)로 폴백한다.
     var activeTemplateID: UUID? = nil
 
     init(favoriteCategoryData: [ChecklistCategoryData] = []) {

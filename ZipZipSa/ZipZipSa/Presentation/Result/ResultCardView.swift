@@ -43,7 +43,14 @@ struct ResultCardView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    CloseButton
+                    // 툴바 시스템 버튼. iOS 26은 tint를 따르지 않아 글씨 색·폰트를 직접 지정한다
+                    Button {
+                        showHomeHuntSheet = false
+                    } label: {
+                        Text("저장")
+                            .foregroundStyle(Color.Icon.tertiary)
+                            .applyZZSFont(zzsFontSet: .bodyBold)
+                    }
                 }
             }
             .task {
@@ -68,15 +75,6 @@ private extension ResultCardView {
         .padding(.bottom, 16)
     }
     
-    var CloseButton: some View {
-        Button {
-            showHomeHuntSheet = false
-        } label: {
-            Text("저장")
-                .foregroundStyle(Color.Icon.tertiary)
-                .applyZZSFont(zzsFontSet: .bodyBold)
-        }
-    }
     
     var BackgroundForCapture: some View {
         GeometryReader { proxy in

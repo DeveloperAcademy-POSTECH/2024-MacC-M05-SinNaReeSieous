@@ -41,12 +41,16 @@ final class ChecklistViewModel {
     // MARK: - 질문 목록
 
     var filteredItems: [ChecklistItem] {
-        if mode == .review && !snapshotCodes.isEmpty {
+        if mode == .review {
             // 템플릿이 이후 수정/삭제돼도 과거 기록은 당시 질문 세트로 재현한다
-            let codes = Set(snapshotCodes)
-            return ChecklistItem.checklistItems.filter { codes.contains($0.code) }
+            if !snapshotCodes.isEmpty {
+                let codes = Set(snapshotCodes)
+                return ChecklistItem.checklistItems.filter { codes.contains($0.code) }
+            }
+            // 스냅샷이 없는 옛 기록은 당시 규칙(관심 카테고리 기반)으로 재현한다
+            return ChecklistScoringService.filteredItems(selectedCategories: selectedCategories)
         }
-        return QuestionProvider.questions(for: template, selectedCategories: selectedCategories)
+        return QuestionProvider.questions(for: template)
     }
 
     func items(for spaceType: SpaceType) -> [ChecklistItem] {
@@ -143,7 +147,7 @@ final class ChecklistViewModel {
     private func applyTemplate(_ template: ChecklistTemplateData?, homeData: HomeData) {
         self.template = (template?.isDefault == true) ? nil : template
         if let template = self.template {
-            let items = QuestionProvider.questions(for: template, selectedCategories: [])
+            let items = QuestionProvider.questions(for: template)
             selectedCategories = QuestionProvider.scoringCategories(for: items)
         } else {
             selectedCategories = userFavorites

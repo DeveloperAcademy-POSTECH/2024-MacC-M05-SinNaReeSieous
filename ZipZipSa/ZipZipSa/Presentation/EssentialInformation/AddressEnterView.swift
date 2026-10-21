@@ -45,7 +45,14 @@ struct AddressEnterView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    CancelButton
+                    // 툴바 시스템 버튼. iOS 26은 tint를 따르지 않아 글씨 색·폰트를 직접 지정한다
+                    Button {
+                        cancelSearch()
+                    } label: {
+                        Text("취소")
+                            .foregroundStyle(Color.Text.tertiary)
+                            .applyZZSFont(zzsFontSet: .bodyRegular)
+                    }
                 }
             }
             .onAppear {
@@ -145,15 +152,6 @@ private extension AddressEnterView {
             .applyZZSFont(zzsFontSet: .bodyRegular)
     }
     
-    var CancelButton: some View {
-        Button {
-            cancelSearch()
-        } label: {
-            Text("취소")
-                .foregroundStyle(Color.Text.tertiary)
-                .applyZZSFont(zzsFontSet: .bodyRegular)
-        }
-    }
     
     var CompleteButton: some View {
         let isDisabled = selectedCoordinates == nil

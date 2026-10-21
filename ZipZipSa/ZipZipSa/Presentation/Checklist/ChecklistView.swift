@@ -50,16 +50,24 @@ struct ChecklistView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ScrollView {
-                VStack(spacing: 24) {
-                    NavigationBarTitle
-                    ChecklistList
-                }
+            ZZSCollapsingTitleScrollView(tab: selectedSpaceType) {
+                NavigationBarTitle
+            } header: {
+                ChecklistSpaceButtonStackView(selectedSpaceType: $selectedSpaceType)
+            } content: {
+                ChecklistList
             }
-            .clipped()
-            .scrollIndicators(.never)
-            .contentMargins(.bottom, 120, for: .scrollContent)
         }
+        // iOS 26은 "체크리스트 변경"이 아이콘만 보이므로 처음 한 번 무슨 버튼인지 알려준다
+        // 꼬리가 툴바의 유리 버튼(가운데 x: 화면 오른쪽 끝에서 38)을 가리키도록 버튼 바로 아래에 붙인다
+        .zzsOneTimeTipTopTrailing(
+            key: ZipLiteral.OneTimeTip.checklistSwitchKey,
+            text: ZipLiteral.OneTimeTip.checklistSwitch,
+            isEnabled: showsChecklistSwitchTip,
+            top: -6,
+            trailing: 16,
+            arrowInsetFromTrailing: 22
+        )
         .overlay(alignment: .bottom) {
             ZZSMainButton(
                 action: {
@@ -91,16 +99,16 @@ struct ChecklistView: View {
         .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             if mode == .homeHunt {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
+                    // iOS 26은 아이콘만(유리), iOS 18은 "아이콘 + 체크리스트 변경"
+                    ZZSToolbarButton(
+                        title: ZipLiteral.ChecklistTemplate.switchButton,
+                        systemImage: "pencil.and.list.clipboard",
+                        iconFont: .iconBody
+                    ) {
                         showTemplateSwitchSheet = true
-                    } label: {
-                        Text(ZipLiteral.ChecklistTemplate.switchButton)
-                            .foregroundStyle(Color.Button.tertiary)
-                            .applyZZSFont(zzsFontSet: .subheadlineRegular)
                     }
                 }
             }
@@ -124,31 +132,41 @@ struct ChecklistView: View {
 
 private extension ChecklistView {
 
+    var showsChecklistSwitchTip: Bool {
+        guard mode == .homeHunt else { return false }
+        if #available(iOS 26, *) { return true }
+        return false
+    }
+
+    var currentItems: [ChecklistItem] {
+        viewModel.items(for: selectedSpaceType)
+    }
+
     // MARK: - View
 
-    var ChecklistList: some View {
-        ScrollViewReader { scrollView in
-            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-                Section {
-                    Spacer().frame(height: 18)
-                    ForEach(viewModel.items(for: selectedSpaceType)) { checklistItem in
-                        ChecklistRowView(
-                            viewModel: viewModel,
-                            checklistItem: checklistItem
-                        )
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 40)
-                    }
-                    Memo
+    /// 질문 사이 구분선 (Figma 5120-12035: 좌우 16, 위아래 24)
+    var QuestionDivider: some View {
+        ZZSSperator(color: Color.Additional.checklistSeperator)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 24)
+    }
 
-                } header: {
-                    ChecklistSpaceButtonStackView(selectedSpaceType: $selectedSpaceType)
-                        .id(1)
+    var ChecklistList: some View {
+        VStack(spacing: 0) {
+            Spacer().frame(height: 18)
+            ForEach(currentItems) { checklistItem in
+                ChecklistRowView(
+                    viewModel: viewModel,
+                    checklistItem: checklistItem
+                )
+                .padding(.horizontal, 16)
+                if checklistItem.id == currentItems.last?.id {
+                    Spacer().frame(height: 40)
+                } else {
+                    QuestionDivider
                 }
             }
-            .onChange(of: selectedSpaceType) { oldValue, newValue in
-                scrollView.scrollTo(1)
-            }
+            Memo
         }
     }
 
@@ -160,6 +178,8 @@ private extension ChecklistView {
             Spacer()
         }
         .padding(.horizontal, 16)
+        // 상단 버튼과 타이틀 사이 간격은 전월세사기 도감과 같게(위 12) 맞춘다
+        .padding(.top, 12)
     }
 
     var Memo: some View {
