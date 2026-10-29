@@ -10,7 +10,6 @@ import SwiftData
 /// "완료하기"는 입력한 이름으로, "나중에 할래요"는 기존/자동 이름으로 저장한다.
 /// 저장 후 onComplete로 생성/수정 플로우(fullScreenCover) 전체를 닫는다.
 struct ChecklistTemplateNameEditView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
 
     @Bindable var viewModel: ChecklistTemplateEditViewModel
@@ -34,14 +33,8 @@ struct ChecklistTemplateNameEditView: View {
         .overlay(alignment: .bottom) {
             BottomButtons
         }
-        .navigationBarBackButtonHidden()
+        // 시스템 뒤로 버튼(ZZSNavigationBarAppearance)을 쓴다
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.hidden, for: .navigationBar)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                BackButton
-            }
-        }
         .dismissKeyboard()
         .onAppear {
             originalName = viewModel.isNew ? "" : viewModel.name
@@ -52,20 +45,6 @@ struct ChecklistTemplateNameEditView: View {
 private extension ChecklistTemplateNameEditView {
 
     // MARK: - View
-
-    var BackButton: some View {
-        Button {
-            dismiss()
-        } label: {
-            HStack(spacing: 8) {
-                Image(systemName: "chevron.left")
-                    .applyZZSFont(zzsFontSet: .iconTitle1)
-                Text(ZipLiteral.ChecklistTemplate.back)
-                    .applyZZSFont(zzsFontSet: .bodyRegular)
-            }
-            .foregroundStyle(Color.Button.tertiary)
-        }
-    }
 
     var Title: some View {
         Text(viewModel.isNew ? ZipLiteral.ChecklistTemplate.nameNewTitle
@@ -117,6 +96,8 @@ private extension ChecklistTemplateNameEditView {
                     .applyZZSFont(zzsFontSet: .subheadlineRegular)
             }
         }
+        // 대표는 해제할 수 없다. 다른 체크리스트를 대표로 지정하면 바뀐다.
+        .disabled(viewModel.wasPrimary)
         .padding(.horizontal, 16)
         .padding(.top, 24)
     }

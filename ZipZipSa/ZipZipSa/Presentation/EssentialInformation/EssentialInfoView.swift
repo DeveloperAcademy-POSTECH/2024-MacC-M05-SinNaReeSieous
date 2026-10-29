@@ -34,6 +34,8 @@ struct EssentialInfoView: View {
     @State private var showAddressEnterView: Bool = false
 
     @State private var moveToChecklistView: Bool = false
+    /// homeHunt 전용 — 닫기 눌렀을 때 저장 안 된 기록을 버릴지 확인
+    @State private var showQuitHomeHuntAlert: Bool = false
     @State private var selectedSpaceType: SpaceType = .kitchen
 
     /// review 전용 — 체크리스트 저장 후 결과 카드 시트로 복귀하는 신호
@@ -89,13 +91,23 @@ struct EssentialInfoView: View {
         .background(Color.Background.primary)
         .dismissKeyboard()
         .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(.hidden, for: .navigationBar)
         .toolbar {
             if mode == .homeHunt {
                 ToolbarItem(placement: .topBarLeading) {
-                    CloseButton
+                    ZZSCloseButton {
+                        showQuitHomeHuntAlert = true
+                    }
                 }
             }
+        }
+        .alert(ZipLiteral.Alert.quitHomeHuntTitle, isPresented: $showQuitHomeHuntAlert) {
+            Button(ZipLiteral.Alert.close, role: .destructive) {
+                showHomeHuntSheet?.wrappedValue = false
+            }
+            Button(ZipLiteral.Alert.cancel, role: .cancel) { }
+        } message: {
+            Text(ZipLiteral.Alert.quitHomeHuntMessage)
+                .multilineTextAlignment(.center)
         }
         .onAppear {
             guard mode == .homeHunt else { return }
@@ -152,6 +164,8 @@ private extension EssentialInfoView {
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .largeTitle)
             .padding(.horizontal, 16)
+            // 상단 버튼과 타이틀 사이 간격은 전월세사기 도감과 같게(위 12) 맞춘다
+            .padding(.top, 12)
             .padding(.bottom, 32)
     }
 
@@ -634,16 +648,6 @@ private extension EssentialInfoView {
         Text(text)
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .bodyBold)
-    }
-
-    var CloseButton: some View {
-        Button {
-            showHomeHuntSheet?.wrappedValue = false
-        } label: {
-            Image(systemName: "xmark")
-                .foregroundStyle(Color.Icon.tertiary)
-                .applyZZSFont(zzsFontSet: .bodyBold)
-        }
     }
 
     // MARK: - Action

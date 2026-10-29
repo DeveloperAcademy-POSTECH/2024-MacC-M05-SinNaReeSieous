@@ -13,19 +13,21 @@ struct SettingView: View {
     @Query var users: [User]
     
     var body: some View {
-        NavigationStack{
-            ZStack {
-                Color.Background.primary
-                    .ignoresSafeArea()
-                VStack(alignment: .leading, spacing: 0) {
-                    NavigationTitle
-                    CategoryChange
-                    CustomDivider
-                    PrivacyPolicy
-                    Support
-                    Spacer()
-                    AppVersion
-                }
+        // 메인의 NavigationStack에서 푸시되는 화면이라 자체 NavigationStack을 두지 않는다.
+        // 두면 빈 네비게이션 바가 하나 더 생겨 뒤로 버튼과 타이틀 사이가 다른 화면보다 벌어진다.
+        ZStack {
+            Color.Background.primary
+                .ignoresSafeArea()
+            VStack(alignment: .leading, spacing: 0) {
+                NavigationTitle
+                // 관심 카테고리 선택이 없어지면서 변경 항목도 노출하지 않는다.
+                // CategoryChange / CategoryChangeView 코드는 그대로 둔다.
+                // CategoryChange
+                // CustomDivider
+                PrivacyPolicy
+                Support
+                Spacer()
+                AppVersion
             }
         }
     }
@@ -38,6 +40,8 @@ private extension SettingView {
         Text(ZipLiteral.Setting.setting)
             .foregroundStyle(Color.Text.primary)
             .applyZZSFont(zzsFontSet: .largeTitle)
+            // 상단 버튼과 타이틀 사이 간격은 전월세사기 도감과 같게(위 12) 맞춘다
+            .padding(.top, 12)
             .padding(.bottom, 27)
             .padding(.horizontal, 16)
     }

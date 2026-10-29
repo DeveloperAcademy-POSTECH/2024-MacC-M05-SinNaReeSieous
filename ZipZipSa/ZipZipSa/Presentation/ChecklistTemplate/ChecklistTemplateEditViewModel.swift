@@ -16,15 +16,21 @@ final class ChecklistTemplateEditViewModel {
 
     /// 수정 대상. nil이면 새 템플릿 생성.
     private(set) var template: ChecklistTemplateData?
+    /// 신규 생성 시 초기 선택 질문 code. nil이면 기본 규칙 세트로 시작한다.
+    private let initialCodes: [String]?
 
     var name: String = ""
     var isPrimary: Bool = false
+    /// 편집을 시작할 때 이미 대표였는지.
+    /// 대표가 하나도 없어지지 않도록 대표는 해제할 수 없고, 다른 체크리스트를 대표로 지정해야 바뀐다.
+    private(set) var wasPrimary: Bool = false
     private(set) var selectedCodes: Set<String> = []
 
     private var started = false
 
-    init(template: ChecklistTemplateData? = nil) {
+    init(template: ChecklistTemplateData? = nil, initialCodes: [String]? = nil) {
         self.template = template
+        self.initialCodes = initialCodes
     }
 
     var isNew: Bool { template == nil }
@@ -45,11 +51,11 @@ final class ChecklistTemplateEditViewModel {
             name = template.name
             selectedCodes = Set(template.questionCodes)
             isPrimary = user?.activeTemplateID == template.id
+            wasPrimary = isPrimary
+        } else if let initialCodes {
+            selectedCodes = Set(initialCodes)
         } else {
-            let defaultItems = QuestionProvider.questions(
-                selectedCategories: user?.favoriteCategories ?? []
-            )
-            selectedCodes = Set(defaultItems.map(\.code))
+            selectedCodes = Set(QuestionProvider.defaultQuestions().map(\.code))
         }
     }
 
@@ -74,7 +80,7 @@ final class ChecklistTemplateEditViewModel {
     }
 
     private func items(for spaceType: SpaceType) -> [ChecklistItem] {
-        ChecklistItem.checklistItems
+        ChecklistItem.activeItems
             .filter { $0.space.type == spaceType }
             .sorted { $0.space.questionNumber < $1.space.questionNumber }
     }
@@ -90,7 +96,7 @@ final class ChecklistTemplateEditViewModel {
         let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         let finalName = trimmedName.isEmpty ? defaultName(user: user) : trimmedName
         // 노출 순서는 공간·연번 기준이지만, 저장도 카탈로그 순서로 정규화해둔다
-        let orderedCodes = ChecklistItem.checklistItems
+        let orderedCodes = ChecklistItem.activeItems
             .filter { selectedCodes.contains($0.code) }
             .map(\.code)
 
@@ -105,16 +111,21 @@ final class ChecklistTemplateEditViewModel {
             saved = newTemplate
         }
 
-        if isPrimary {
+        // 대표 해제는 막혀 있으므로(wasPrimary) 체크된 경우만 반영한다
+        if isPrimary || wasPrimary {
             user.activeTemplateID = saved.id
-        } else if user.activeTemplateID == saved.id {
-            // 대표였던 템플릿에서 체크를 해제하면 기본 체크리스트가 대표가 된다
-            user.activeTemplateID = nil
         }
         try? context.save()
     }
 
+    /// "내 체크리스트 N"에서 아직 쓰이지 않은 가장 작은 N을 고른다.
+    /// 기본 체크리스트도 템플릿 목록에 들어 있어 개수로 매기면 번호가 하나씩 밀린다.
     private func defaultName(user: User) -> String {
-        "내 체크리스트 \(user.templates.count + 1)"
+        let names = Set(user.templates.map(\.name))
+        var number = 1
+        while names.contains("내 체크리스트 \(number)") {
+            number += 1
+        }
+        return "내 체크리스트 \(number)"
     }
 }

@@ -22,14 +22,18 @@ struct HomeListView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                TopBar
                 if homes.isEmpty {
+                    TopBar
                     Spacer().frame(height: UIScreen.screenSize.height/812*48)
                     NoHome
                 } else {
+                    // 타이틀도 목록과 함께 스크롤되고, 고정되는 건 뒤로 버튼이 있는 바뿐이다
                     ScrollView {
-                        ViewedHomeList
-                            .padding(.horizontal, 16)
+                        VStack(spacing: 0) {
+                            TopBar
+                            ViewedHomeList
+                                .padding(.horizontal, 16)
+                        }
                     }
                     .contentMargins(.bottom, 24, for: .automatic)
                     .scrollIndicators(.hidden)
@@ -67,6 +71,8 @@ private extension HomeListView {
             Spacer()
         }
         .padding(.leading, 16)
+        // 상단 버튼과 타이틀 사이 간격은 전월세사기 도감과 같게(위 12) 맞춘다
+        .padding(.top, 12)
         .padding(.bottom, 12)
     }
     

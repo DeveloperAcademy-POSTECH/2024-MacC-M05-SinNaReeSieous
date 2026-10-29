@@ -12,7 +12,7 @@ struct ChecklistTemplateSwitchSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Query private var users: [User]
 
-    /// 현재 세션에서 사용 중인 템플릿 id. nil이면 기본 체크리스트.
+    /// 현재 세션에서 사용 중인 템플릿 id. nil이면 저장된 템플릿이 없어 기본 질문 세트로 폴백한 상태.
     let currentTemplateID: UUID?
     let onSelect: (ChecklistTemplateData?) -> Void
 
@@ -35,10 +35,6 @@ private extension ChecklistTemplateSwitchSheet {
 
     var user: User? { users.first }
 
-    var defaultQuestionCount: Int {
-        QuestionProvider.questions(selectedCategories: user?.favoriteCategories ?? []).count
-    }
-
     // MARK: - View
 
     var Title: some View {
@@ -50,16 +46,17 @@ private extension ChecklistTemplateSwitchSheet {
             .padding(.bottom, 12)
     }
 
+    /// 사용 중인 체크리스트는 항상 맨 위에 노출한다.
+    var rows: [ChecklistTemplateData] {
+        ChecklistTemplateRow.ordered(
+            templates: user?.templates ?? [],
+            markedID: currentTemplateID
+        )
+    }
+
     var TemplateCardList: some View {
         VStack(spacing: 10) {
-            TemplateCard(
-                name: ZipLiteral.ChecklistTemplate.defaultTemplateName,
-                questionCount: defaultQuestionCount,
-                isCurrent: currentTemplateID == nil
-            ) {
-                select(nil)
-            }
-            ForEach(user?.templates.sorted { $0.createdAt < $1.createdAt } ?? []) { template in
+            ForEach(rows) { template in
                 TemplateCard(
                     name: template.name,
                     questionCount: template.questionCodes.count,
@@ -87,6 +84,7 @@ private extension ChecklistTemplateSwitchSheet {
                         .applyZZSFont(zzsFontSet: .title2)
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)
+                        .frame(minHeight: 48, alignment: .top)
                     Text("\(questionCount)\(ZipLiteral.ChecklistTemplate.questionCountSuffix)")
                         .foregroundStyle(Color.Text.primary)
                         .applyZZSFont(zzsFontSet: .caption1Regular)
